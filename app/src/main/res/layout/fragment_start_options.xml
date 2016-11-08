@@ -1,0 +1,106 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mdb.wingit.wingit.startOptions">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:text="What would you like to do?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="41dp"
+        tools:layout_editor_absoluteX="50dp"
+        android:id="@+id/textView5"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="110dp"
+        tools:layout_editor_absoluteX="84dp"
+        android:id="@+id/@+id/option1">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/food"
+            android:id="@+id/imageView"
+            tools:layout_editor_absoluteY="110dp"
+            tools:layout_editor_absoluteX="84dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:text="Get food"
+            android:layout_width="105dp"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteY="191dp"
+            tools:layout_editor_absoluteX="155dp"
+            android:id="@+id/textView2"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:paddingLeft="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="262dp"
+        tools:layout_editor_absoluteX="84dp"
+        android:id="@+id/@+id/option2">
+
+        <ImageView
+            app:srcCompat="@drawable/activity"
+            android:id="@+id/imageView2"
+            tools:layout_editor_absoluteY="176dp"
+            tools:layout_editor_absoluteX="84dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="113dp"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteY="192dp"
+            tools:layout_editor_absoluteX="163dp"
+            android:id="@+id/textView3"
+            android:text="Sightsee"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        tools:layout_editor_absoluteY="184dp"
+        tools:layout_editor_absoluteX="84dp"
+        android:id="@+id/@+id/option3">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/sightseeing"
+            android:id="@+id/imageView3"
+            tools:layout_editor_absoluteY="242dp"
+            tools:layout_editor_absoluteX="82dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="109dp"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteY="254dp"
+            tools:layout_editor_absoluteX="156dp"
+            android:id="@+id/textView4"
+            android:gravity="center"
+            android:text="Activities"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
