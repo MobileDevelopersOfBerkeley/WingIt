@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -18,15 +17,7 @@ import android.widget.LinearLayout;
  * Use the {@link startOptions#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class startOptions extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class startOptions extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,39 +29,49 @@ public class startOptions extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * can have params that are kept even if even after this fragment is recreated by Android
+     * add this into a bundle and setArguments(bundle)
      * @return A new instance of fragment startOptions.
      */
-    // TODO: Rename and change types and number of parameters
-    public static startOptions newInstance(String param1, String param2) {
+    public static startOptions newInstance() {
         startOptions fragment = new startOptions();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View v = getView();
+        LinearLayout op1 = (LinearLayout) v.findViewById(R.id.option1);
+        LinearLayout op2 = (LinearLayout) v.findViewById(R.id.option2);
+        LinearLayout op3 = (LinearLayout) v.findViewById(R.id.option3);
+        op1.setOnClickListener(this);
+        op2.setOnClickListener(this);
+        op3.setOnClickListener(this);
         return inflater.inflate(R.layout.fragment_start_options, container, false);
     }
 
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.option1:
+                //open food stuff
+                break;
+            case R.id.option2:
+                //open activity stuff
+                break;
+            case R.id.option3:
+                //open sightseeing stuff
+                break;
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
+    // what is the point of this ? ? can i just use onClick
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

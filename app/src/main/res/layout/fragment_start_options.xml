@@ -11,18 +11,31 @@
         android:text="What would you like to do?"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="41dp"
-        tools:layout_editor_absoluteX="50dp"
         android:id="@+id/textView5"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/option1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="41dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="110dp"
-        tools:layout_editor_absoluteX="84dp"
-        android:id="@+id/@+id/option1">
+        android:id="@+id/option1"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="110dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="34dp">
 
         <ImageView
             android:layout_width="50dp"
@@ -34,14 +47,14 @@
             android:layout_weight="1" />
 
         <TextView
-            android:text="Get food"
-            android:layout_width="105dp"
+            android:text="Food"
+            android:layout_width="106dp"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteY="191dp"
             tools:layout_editor_absoluteX="155dp"
             android:id="@+id/textView2"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textAlignment="center"
             android:paddingLeft="0dp" />
     </LinearLayout>
@@ -50,9 +63,12 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="262dp"
-        tools:layout_editor_absoluteX="84dp"
-        android:id="@+id/@+id/option2">
+        android:id="@+id/option2"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="199dp"
+        app:layout_constraintLeft_toLeftOf="@+id/option3">
 
         <ImageView
             app:srcCompat="@drawable/activity"
@@ -64,13 +80,13 @@
             android:layout_weight="1" />
 
         <TextView
-            android:layout_width="113dp"
+            android:layout_width="135dp"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteY="192dp"
             tools:layout_editor_absoluteX="163dp"
             android:id="@+id/textView3"
             android:text="Sightsee"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:gravity="center" />
 
     </LinearLayout>
@@ -79,9 +95,15 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        tools:layout_editor_absoluteY="184dp"
-        tools:layout_editor_absoluteX="84dp"
-        android:id="@+id/@+id/option3">
+        android:id="@+id/option3"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="@+id/option2"
+        android:layout_marginTop="74dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="74dp"
+        app:layout_constraintLeft_toLeftOf="@+id/option1"
+        app:layout_constraintTop_toTopOf="@+id/option1">
 
         <ImageView
             android:layout_width="50dp"
@@ -93,14 +115,14 @@
             android:layout_weight="1" />
 
         <TextView
-            android:layout_width="109dp"
+            android:layout_width="144dp"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteY="254dp"
             tools:layout_editor_absoluteX="156dp"
             android:id="@+id/textView4"
             android:gravity="center"
             android:text="Activities"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
