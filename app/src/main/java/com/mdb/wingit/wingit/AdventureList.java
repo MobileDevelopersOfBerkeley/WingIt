@@ -34,23 +34,23 @@ public class AdventureList {
             this.mapURL = mapURL;
         }
 
-        public static String getName() {
+        public String getName() {
             return this.name;
         }
 
-        public static void setName(String newName) {
+        public void setName(String newName) {
             this.name = newName;
         }
 
-        public static String getDate() {
+        public String getDate() {
             return this.date;
         }
 
-        public static ArrayList<String> getActivityKeyList() {
+        public ArrayList<String> getActivityKeyList() {
             return this.activityKeyList;
         }
 
-        public static String getMapURL() {
+        public String getMapURL() {
             return this.mapURL;
         }
     }

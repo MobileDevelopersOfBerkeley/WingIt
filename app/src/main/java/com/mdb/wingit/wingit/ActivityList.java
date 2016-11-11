@@ -28,15 +28,15 @@ public class ActivityList {
             this.pictureURL = pictureURL;
         }
 
-        public static String getName() {
+        public String getName() {
             return this.name;
         }
 
-        public static String getTime() {
+        public String getTime() {
             return this.time;
         }
 
-        public static String getPictureURL() {
+        public String getPictureURL() {
             return this.pictureURL;
         }
     }
