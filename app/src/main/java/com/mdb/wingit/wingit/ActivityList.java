@@ -17,6 +17,10 @@ public class ActivityList {
         return this.activityArrayList;
     }
 
+    public void addActivity(Activity activity) {
+        this.activityArrayList.add(activity);
+    }
+
     public static class Activity {
         String name;
         String time;
