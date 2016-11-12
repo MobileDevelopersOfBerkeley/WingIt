@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -21,9 +22,9 @@ import java.util.ArrayList;
 public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Object> activities = new ArrayList();
+    private ArrayList<ActivityList.Activity> activities = new ArrayList();
 
-    public CarouselAdapter(Context context, ArrayList<Object> activities) {
+    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities) {
         this.context = context;
         this.activities = activities;
     }
@@ -42,8 +43,8 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, int position) {
         ActivityList.Activity activity = activities.get(position);
-        holder.activityTitle.setText(activity.title);
-        holder.activityPic.setImageURI(activity.imageURI);
+        holder.activityTitle.setText(activity.name);
+        // holder.activityPic.setImageURI((URI) activity.pictureURL);
 
     }
 

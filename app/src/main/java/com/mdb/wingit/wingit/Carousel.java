@@ -25,7 +25,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
     private RecyclerView rv;
     private CarouselAdapter adapter;
     private Button go;
-    private ArrayList<Object> activities;
+    private ArrayList<ActivityList.Activity> activities;
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);;
 
     @Override
