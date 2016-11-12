@@ -36,7 +36,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         adapter = new CarouselAdapter(getApplicationContext(), activities);
         activities = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
-        rv = (RecyclerView) findViewById(R.id.rv);
+        rv = (RecyclerView) findViewById(R.id.carouselrv);
 
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -49,7 +49,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.go:
-                Intent intent = new Intent(Carousel.this, Details.class);
+                Intent intent = new Intent(Carousel.this, DetailScreen.class);
                 startActivity(intent);
                 break;
         }

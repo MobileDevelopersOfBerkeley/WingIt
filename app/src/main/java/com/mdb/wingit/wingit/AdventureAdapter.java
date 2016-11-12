@@ -17,9 +17,9 @@ import java.util.ArrayList;
 public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Object> adventures = new ArrayList();
+    private ArrayList<AdventureList.Adventure> adventures = new ArrayList();
 
-    public AdventureAdapter(Context context, ArrayList<Object> adventures) {
+    public AdventureAdapter(Context context, ArrayList<AdventureList.Adventure> adventures) {
         this.context = context;
         this.adventures = adventures;
     }
@@ -39,7 +39,7 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         AdventureList.Adventure adventure = adventures.get(position);
         holder.adventureName.setText(adventure.name);
-        holder.adventurePic.setImageURI(adventure.imageURI);
+        // holder.adventurePic.setImageURI(adventure.imageURI);
     }
 
 

@@ -1,7 +1,13 @@
 package com.mdb.wingit.wingit;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -9,8 +15,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -56,6 +75,67 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static class StartOptions extends Fragment implements View.OnClickListener {
+
+        public StartOptions() {
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View v = getView();
+            LinearLayout op1 = (LinearLayout) v.findViewById(R.id.option1);
+            LinearLayout op2 = (LinearLayout) v.findViewById(R.id.option2);
+            LinearLayout op3 = (LinearLayout) v.findViewById(R.id.option3);
+            op1.setOnClickListener(this);
+            op2.setOnClickListener(this);
+            op3.setOnClickListener(this);
+            return inflater.inflate(R.layout.fragment_start_options, container, false);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.option1:
+                    //open food stuff
+                    break;
+                case R.id.option2:
+                    //open activity stuff
+                    break;
+                case R.id.option3:
+                    //open sightseeing stuff
+                    break;
+            }
+        }
+    }
+
+    public static class AdventureLog extends Fragment {
+
+        private RecyclerView rv;
+        private AdventureAdapter adapter;
+        private AdventureList adventureList;
+        private ArrayList<AdventureList.Adventure> adventures;
+
+        public AdventureLog() {
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            adventureList = new AdventureList();
+            adventures = adventureList.getArrayList();
+            View view = inflater.inflate(R.layout.activity_adventure_log, container, false);
+
+            rv = (RecyclerView) view.findViewById(R.id.adventureLogRv);
+            rv.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            adapter = new AdventureAdapter(getContext(), adventures);
+            rv.setAdapter(adapter);
+
+            return view;
+        }
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -69,11 +149,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            if(position == 0)
+            if (position == 0)
                 //replace with correct fragment
-                return new startOptions();
+                return new StartOptions();
             else
-                return new startOptions();
+                return new AdventureLog();
         }
 
         @Override
@@ -92,4 +172,5 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
 }
