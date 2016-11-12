@@ -83,14 +83,14 @@ public class MainActivity extends AppCompatActivity {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View v = getView();
+            View v = inflater.inflate(R.layout.fragment_start_options, container, false);
             LinearLayout op1 = (LinearLayout) v.findViewById(R.id.option1);
             LinearLayout op2 = (LinearLayout) v.findViewById(R.id.option2);
             LinearLayout op3 = (LinearLayout) v.findViewById(R.id.option3);
             op1.setOnClickListener(this);
             op2.setOnClickListener(this);
             op3.setOnClickListener(this);
-            return inflater.inflate(R.layout.fragment_start_options, container, false);
+            return v;
         }
 
         @Override
