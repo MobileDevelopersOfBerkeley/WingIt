@@ -34,7 +34,6 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Carousel" />
-        <activity android:name=".AdventureLog" />
         <activity
             android:name=".DetailScreen"
             android:label="@string/title_activity_detail_screen"
@@ -54,9 +53,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08" />
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

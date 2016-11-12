@@ -1,5 +1,17 @@
 package com.mdb.wingit.wingit;
 
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +19,7 @@ import java.util.ArrayList;
  */
 
 public class ActivityList {
+
     public ArrayList<Activity> activityArrayList;
 
     public ActivityList() {
@@ -20,6 +33,7 @@ public class ActivityList {
     public void addActivity(Activity activity) {
         this.activityArrayList.add(activity);
     }
+
 
     public static class Activity {
         String name;

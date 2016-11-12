@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataApi;
 
 import org.w3c.dom.Text;
 
@@ -42,6 +44,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
         rv.addOnScrollListener(new CenterScrollListener());
+
+
 
     }
 
