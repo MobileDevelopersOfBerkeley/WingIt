@@ -22,7 +22,11 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Carousel" />
-        <activity android:name=".AdventureLog"></activity>
+        <activity android:name=".AdventureLog" />
+        <activity
+            android:name=".DetailScreen"
+            android:label="@string/title_activity_detail_screen"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
