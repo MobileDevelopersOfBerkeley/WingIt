@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
-public class AdventureLog extends AppCompatActivity, Fragment implements View.OnClickListener {
+public class AdventureLog extends Fragment implements View.OnClickListener {
 
     private startOptions.OnFragmentInteractionListener mListener;
     private RecyclerView rv;
