@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static class StartOptions extends Fragment implements View.OnClickListener {
 
-        public StartOptions() {
-        }
-
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
         private AdventureList adventureList;
         private ArrayList<AdventureList.Adventure> adventures;
 
-        public AdventureLog() {
-        }
 
         @Nullable
         @Override
@@ -136,10 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -149,11 +140,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            if (position == 0)
-                //replace with correct fragment
-                return new StartOptions();
-            else
-                return new AdventureLog();
+            switch (position) {
+                case 0:
+                    StartOptions tab1 = new StartOptions();
+                    return tab1;
+                case 1:
+                    AdventureLog tab2 = new AdventureLog();
+                    return tab2;
+                default:
+                    return null;
+            }
         }
 
         @Override
