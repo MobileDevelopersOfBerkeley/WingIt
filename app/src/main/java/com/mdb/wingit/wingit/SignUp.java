@@ -76,7 +76,6 @@ public class SignUp extends AppCompatActivity {
 
                 } else {
                     // User is signed out
-
                 }
             }
         };
@@ -85,6 +84,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createUser(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                finish();
             }
         });
 
