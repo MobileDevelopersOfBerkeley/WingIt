@@ -39,6 +39,11 @@ public class ActivityList {
         String name;
         String time;
         String pictureURL;
+        String photoRef;
+        String placeID;
+        String rating;
+
+        public Activity(){}
 
         public Activity(String name, String time, String pictureURL) {
             this.name = name;
@@ -49,13 +54,16 @@ public class ActivityList {
         public String getName() {
             return this.name;
         }
-
         public String getTime() {
             return this.time;
         }
-
         public String getPictureURL() {
             return this.pictureURL;
         }
+
+        public void setName(String name){ this.name = name;}
+        public void setPhotoRef(String ref){ this.photoRef = ref;}
+        public void setPlaceID(String id){this.placeID = id;}
+        public void setRating(String rating){this.rating = rating;}
     }
 }

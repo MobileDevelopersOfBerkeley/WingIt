@@ -3,6 +3,7 @@ package com.mdb.wingit.wingit;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,10 +27,22 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Carousel extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,7 +52,10 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
     private Button go;
     private ArrayList<ActivityList.Activity> activities;
     private ArrayList<Place> currentLocations;
+    private int indexPlace = 0;
+    final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
+    private LatLng current;
 
 
     @Override
@@ -49,6 +65,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
 
         adapter = new CarouselAdapter(getApplicationContext(), activities);
         activities = new ArrayList<>();
+        currentLocations = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
         rv = (RecyclerView) findViewById(R.id.carouselrv);
 
@@ -58,6 +75,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         rv.addOnScrollListener(new CenterScrollListener());
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
+
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -74,16 +92,86 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+
+                double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     currentLocations.add(placeLikelihood.getPlace());
                 }
+                for (PlaceLikelihood placeLikelihood : likelyPlaces){
+                    if(placeLikelihood.getLikelihood()>likelihood){
+                        likelihood = placeLikelihood.getLikelihood();
+                        indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
+                    }
+                }
+                current = currentLocations.get(indexPlace).getLatLng();
                 likelyPlaces.release();
             }
         });
 
     }
 
+    public ArrayList<ActivityList.Activity> getNearbyFood(){
 
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
+        return sendRequest(searchRequest);
+    }
+    public ArrayList<ActivityList.Activity> getNearbySights(){
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
+        return sendRequest(searchRequest);
+
+    }
+    public ArrayList<ActivityList.Activity> getNearbyActivity(){
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
+        return sendRequest(searchRequest);
+    }
+
+    public ArrayList<ActivityList.Activity> sendRequest(String request){
+        ArrayList<ActivityList.Activity> result = new ArrayList<>();
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+
+        try {
+            URL url = new URL(request);
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (IOException e) {
+            Log.e("Error", "Error connecting to Places API", e);
+            return result;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        try {
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+
+            // Extract the Place descriptions from the results
+            result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                ActivityList.Activity activity = new ActivityList.Activity();
+                activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
+                activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
+                activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
+                if(predsJsonArray.getJSONObject(i).has("photos[]"))
+                    activity.setPhotoRef(predsJsonArray.getJSONObject(i).getString("photos[]"));
+                else
+                    activity.setPhotoRef("null");
+                result.add(activity);
+            }
+        } catch (JSONException e) {
+            Log.e("Error", "Error processing JSON results", e);
+        }
+
+        return result;
+    }
 
     @Override
     public void onClick(View view) {
