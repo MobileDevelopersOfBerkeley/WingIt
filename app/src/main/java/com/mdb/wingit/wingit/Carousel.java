@@ -55,14 +55,12 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
-    private GoogleApiClient client;
     private Button go;
     private ArrayList<ActivityList.Activity> activities, three_acts;
-    private ArrayList<Place> currentLocations;
-    private int indexPlace = 0;
     final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
+    private GoogleApiClient client;
     private int selectedPos;
     private RecyclerViewClickListener itemListener;
 
@@ -79,9 +77,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             }
         };
 
+        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
         activities = new ArrayList<>();
         three_acts = new ArrayList<>();
-        currentLocations = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
 
         go.setOnClickListener(new View.OnClickListener() {
@@ -91,44 +89,13 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             }
         });
         rv = (RecyclerView) findViewById(R.id.carouselrv);
-
+        current = (LatLng) getIntent().getExtras().get("current");
 //        rv.setLayoutManager(layoutManager);
 //        rv.setHasFixedSize(true);
 //        rv.setAdapter(adapter);
 //        rv.addOnScrollListener(new CenterScrollListener());
 
-        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(client, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-
-                double likelihood = 0;
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    currentLocations.add(placeLikelihood.getPlace());
-                }
-                for (PlaceLikelihood placeLikelihood : likelyPlaces){
-                    if(placeLikelihood.getLikelihood()>likelihood){
-                        likelihood = placeLikelihood.getLikelihood();
-                        indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
-                    }
-                }
-                current = currentLocations.get(indexPlace).getLatLng();
-                likelyPlaces.release();
-            }
-        });
 
         Intent intent = getIntent();
         boolean activityType = intent.getBooleanExtra("food", true);
