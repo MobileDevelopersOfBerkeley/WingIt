@@ -127,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.option1:
+                case R.id.food:
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
                     startActivity(foodIntent);
                     break;
-                case R.id.option2:
+                case R.id.activity:
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     startActivity(activityIntent);

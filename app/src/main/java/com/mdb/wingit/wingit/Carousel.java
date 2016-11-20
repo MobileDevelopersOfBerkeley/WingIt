@@ -1,5 +1,7 @@
 package com.mdb.wingit.wingit;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -65,6 +67,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private LatLng current;
     private int selectedPos;
     private RecyclerViewClickListener itemListener;
+    private final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
+    private boolean checkedPermission = false;
+
 
 
     @Override
@@ -92,12 +97,14 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         });
         rv = (RecyclerView) findViewById(R.id.carouselrv);
 
-//        rv.setLayoutManager(layoutManager);
-//        rv.setHasFixedSize(true);
-//        rv.setAdapter(adapter);
-//        rv.addOnScrollListener(new CenterScrollListener());
+        adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
+        rv.setLayoutManager(layoutManager);
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
+        rv.addOnScrollListener(new CenterScrollListener());
 
-        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
+        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
+        client.connect();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -107,43 +114,25 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    MY_PERMISSION_ACCESS_FINE_LOCATION);
+            Log.i("Permissions???", "rip");
+            checkedPermission = true;
             return;
         }
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(client, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-
-                double likelihood = 0;
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    currentLocations.add(placeLikelihood.getPlace());
-                }
-                for (PlaceLikelihood placeLikelihood : likelyPlaces){
-                    if(placeLikelihood.getLikelihood()>likelihood){
-                        likelihood = placeLikelihood.getLikelihood();
-                        indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
-                    }
-                }
-                current = currentLocations.get(indexPlace).getLatLng();
-                likelyPlaces.release();
-            }
-        });
-
-        Intent intent = getIntent();
-        boolean activityType = intent.getBooleanExtra("food", true);
-        if (activityType) {
-            randomThrees(getNearbyFood());
-        } else {
-            randomThrees(getNearbyActivity());
+        if (!checkedPermission)  {
+            getCurrentPlaces();
         }
+//        Intent intent = getIntent();
+//        boolean activityType = intent.getBooleanExtra("food", true);
+//        if (activityType) {
+//            randomThrees(getNearbyFood());
+//            Log.i("random thress", "function called");
+//        } else {
+//            randomThrees(getNearbyActivity());
+//        }
 
-
-        adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
-        rv.setLayoutManager(layoutManager);
-        rv.setHasFixedSize(true);
-        rv.setAdapter(adapter);
-        rv.addOnScrollListener(new CenterScrollListener());
     }
 
     public int getRandom(int size){
@@ -167,11 +156,12 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         three_acts.add(list.get(one));
         three_acts.add(list.get(two));
         three_acts.add(list.get(three));
+        adapter.notifyDataSetChanged();
     }
 
 
     public ArrayList<ActivityList.Activity> getNearbyFood(){
-
+        Log.i("food log", "it broke");
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
         return sendRequest(searchRequest);
     }
@@ -315,7 +305,71 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    getCurrentPlaces();
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    public void getCurrentPlaces() {
+        try {
+            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                    .getCurrentPlace(client, null);
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    Log.i("ERROR HELP", "Code: " + likelyPlaces.getStatus().getStatusCode());
+
+                    Log.i("ERROR HELP", "Message: " + likelyPlaces.getStatus().getStatusMessage());
+                    double likelihood = 0;
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                        currentLocations.add(placeLikelihood.getPlace());
+                    }
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                        if (placeLikelihood.getLikelihood() > likelihood) {
+                            likelihood = placeLikelihood.getLikelihood();
+                            indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
+                        }
+                    }
+                    current = currentLocations.get(indexPlace).getLatLng();
+                    likelyPlaces.release();
+                    Log.i("API callback", "successful");
+                    Intent intent = getIntent();
+                    boolean activityType = intent.getBooleanExtra("food", true);
+                    if (activityType) {
+                        randomThrees(getNearbyFood());
+                        Log.i("random thress", "function called");
+                    } else {
+                        randomThrees(getNearbyActivity());
+                    }
+
+                }
+            });
+        }
+        catch (SecurityException e) {
+
+            Log.i("Security Exception", "Allergic");
+        }
+    }
 
 
 }
