@@ -1,10 +1,13 @@
 package com.mdb.wingit.wingit;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,9 +55,26 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -82,9 +102,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static class StartOptions extends Fragment implements View.OnClickListener {
 
-        @Nullable
+        public static StartOptions newInstance(int page) {
+            Bundle args = new Bundle();
+            args.putInt("pagenumber", page);
+            StartOptions fragment = new StartOptions();
+            fragment.setArguments(args);
+            return fragment;
+        }
+
         @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_start_options, container, false);
             LinearLayout op1 = (LinearLayout) v.findViewById(R.id.option1);
             LinearLayout op2 = (LinearLayout) v.findViewById(R.id.option2);
@@ -118,10 +145,8 @@ public class MainActivity extends AppCompatActivity {
         private AdventureList adventureList;
         private ArrayList<AdventureList.Adventure> adventures;
 
-
-        @Nullable
         @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             adventureList = new AdventureList();
             adventures = adventureList.getArrayList();
             View view = inflater.inflate(R.layout.activity_adventure_log, container, false);
@@ -147,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    StartOptions tab1 = new StartOptions();
+                    StartOptions tab1 = StartOptions.newInstance(position + 1);
+                    //StartOptions tab1 = new StartOptions();
                     return tab1;
                 case 1:
                     AdventureLog tab2 = new AdventureLog();

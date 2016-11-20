@@ -32,12 +32,12 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBarWithStatus" />
         <activity android:name=".Carousel" />
         <activity
             android:name=".DetailScreen"
             android:label="@string/title_activity_detail_screen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up" />
