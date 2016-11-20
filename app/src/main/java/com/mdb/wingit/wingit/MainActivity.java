@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //
+        // setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -172,12 +173,13 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    StartOptions tab1 = StartOptions.newInstance(position + 1);
-                    //StartOptions tab1 = new StartOptions();
-                    return tab1;
-                case 1:
                     AdventureLog tab2 = new AdventureLog();
+                    //StartOptions tab1 = new StartOptions();
                     return tab2;
+                case 1:
+                    StartOptions tab1 = new StartOptions();
+                    return tab1;
+
                 default:
                     return null;
             }

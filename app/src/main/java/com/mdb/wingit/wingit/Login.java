@@ -63,7 +63,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signIn(email.getText().toString(), password.getText().toString());
-                finish();
             }
         });
     }
