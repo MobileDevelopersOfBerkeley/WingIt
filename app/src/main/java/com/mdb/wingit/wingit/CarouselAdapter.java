@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,17 +31,19 @@ import java.util.ArrayList;
 public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-
     private ArrayList<ActivityList.Activity> activities = new ArrayList();
+    private static RecyclerViewClickListener itemListener;
 
-    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities) {
+    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities, RecyclerViewClickListener itemListener) {
         this.context = context;
         this.activities = activities;
+        this.itemListener = itemListener;
     }
 
     @Override
     public int getItemCount() {
         return activities.size();
+        //return 4;
     }
 
     @Override
@@ -50,10 +53,16 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     }
 
     @Override
-    public void onBindViewHolder(final CustomViewHolder holder, int position) {
+    public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
         holder.activityPic.setImageBitmap(activity.getImage());
+        holder.currCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemListener.recyclerViewListClicked(v, position);
+            }
+        });
     }
 
 
@@ -61,11 +70,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView activityTitle;
         ImageView activityPic;
+        CardView currCard;
+
 
         public CustomViewHolder (View view) {
             super(view);
             this.activityTitle = (TextView) view.findViewById(R.id.activityTitle);
             this.activityPic = (ImageView) view.findViewById(R.id.activityPic);
+            this.currCard = (CardView) view.findViewById(R.id.card_curr_option);
 
         }
     }

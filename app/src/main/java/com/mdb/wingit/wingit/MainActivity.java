@@ -123,18 +123,20 @@ public class MainActivity extends AppCompatActivity {
             return v;
         }
 
-        Intent intent = new Intent(this.getContext(), Carousel.class);
+        //Intent intent = new Intent(getActivity(), Carousel.class);
 
         @Override
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.option1:
-                    intent.putExtra("food", true);
-                    startActivity(intent);
+                    Intent foodIntent = new Intent(getActivity(), Carousel.class);
+                    foodIntent.putExtra("food", true);
+                    startActivity(foodIntent);
                     break;
                 case R.id.option2:
-                    intent.putExtra("food", false);
-                    startActivity(intent);
+                    Intent activityIntent = new Intent(getActivity(), Carousel.class);
+                    activityIntent.putExtra("food", false);
+                    startActivity(activityIntent);
                     break;
                 case R.id.option3:
                     //open sightseeing stuff
