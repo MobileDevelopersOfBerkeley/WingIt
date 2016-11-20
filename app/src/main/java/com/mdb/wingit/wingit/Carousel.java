@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Carousel extends AppCompatActivity implements View.OnClickListener {
+public class Carousel extends AppCompatActivity implements View.OnClickListener, RecyclerViewClickListener {
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
@@ -62,6 +63,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
     final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
+    private int selectedPos;
+    private RecyclerViewClickListener itemListener;
 
 
     @Override
@@ -69,20 +72,32 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
 
-        adapter = new CarouselAdapter(getApplicationContext(), three_acts);
+        itemListener = new RecyclerViewClickListener() {
+            @Override
+            public void recyclerViewListClicked(View v, int position) {
+                selectedPos = position;
+            }
+        };
+
         activities = new ArrayList<>();
         three_acts = new ArrayList<>();
         currentLocations = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Carousel.this, "Position" + selectedPos, Toast.LENGTH_SHORT).show();
+            }
+        });
         rv = (RecyclerView) findViewById(R.id.carouselrv);
 
-        rv.setLayoutManager(layoutManager);
-        rv.setHasFixedSize(true);
-        rv.setAdapter(adapter);
-        rv.addOnScrollListener(new CenterScrollListener());
+//        rv.setLayoutManager(layoutManager);
+//        rv.setHasFixedSize(true);
+//        rv.setAdapter(adapter);
+//        rv.addOnScrollListener(new CenterScrollListener());
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
-
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -114,26 +129,40 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 likelyPlaces.release();
             }
         });
-        //if food:
+
+        Intent intent = getIntent();
+        boolean activityType = intent.getBooleanExtra("food", true);
+        if (activityType) {
             randomThrees(getNearbyFood());
+        } else {
+            randomThrees(getNearbyActivity());
+        }
+
+
+        adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
+        rv.setLayoutManager(layoutManager);
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
+        rv.addOnScrollListener(new CenterScrollListener());
     }
 
-    public int getRandom(){
-        int temp = (int) (Math.random()*activities.size());
+    public int getRandom(int size){
+        int temp = (int) (Math.random()*size);
         return temp;
     }
 
     //Adds three activities from list into three_acts.
     public void randomThrees(ArrayList<ActivityList.Activity> list){
         int one, two, three;
-        one = getRandom();
-        two = getRandom();
+        int listSize = list.size();
+        one = getRandom(listSize);
+        two = getRandom(listSize);
         while(two==one){
-            two = getRandom();
+            two = getRandom(listSize);
         }
-        three = getRandom();
+        three = getRandom(listSize);
         while(two==three||one==three){
-            three = getRandom();
+            three = getRandom(listSize);
         }
         three_acts.add(list.get(one));
         three_acts.add(list.get(two));
@@ -225,6 +254,11 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        this.selectedPos = position;
     }
 
     abstract class PhotoTask extends AsyncTask<String, Void, PhotoTask.AttributedPhoto> {
