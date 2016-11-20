@@ -1,6 +1,7 @@
 package com.mdb.wingit.wingit;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class ActivityList {
         String photoRef;
         String placeID;
         String rating;
+        Bitmap image;
 
         public Activity(){}
 
@@ -60,5 +62,6 @@ public class ActivityList {
         public void setPhotoRef(String ref){ this.photoRef = ref;}
         public void setPlaceID(String id){this.placeID = id;}
         public void setRating(String rating){this.rating = rating;}
+        public void setBitmap(Bitmap image){this.image=image;}
     }
 }

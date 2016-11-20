@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -167,10 +168,12 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
                 activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
                 activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
-                if(predsJsonArray.getJSONObject(i).has("photos[]"))
-                    activity.setPhotoRef(predsJsonArray.getJSONObject(i).getString("photos[]"));
-                else
-                    activity.setPhotoRef("null");
+                placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
+                //Do we we need to get the photos[] from the json tree if we have the async task to handle it
+//                if(predsJsonArray.getJSONObject(i).has("photos[]"))
+//                    activity.setPhotoRef(predsJsonArray.getJSONObject(i).getString("photos[]"));
+//                else
+//                    activity.setPhotoRef("null");
                 result.add(activity);
             }
         } catch (JSONException e) {
@@ -180,28 +183,19 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         return result;
     }
 
-    private void placePhotosTask(String placeId) {
+    private void placePhotosTask(final ActivityList.Activity activity, String placeId) {
         // Create a new AsyncTask that displays the bitmap and attribution once loaded.
-        new PhotoTask(mImageView.getWidth(), mImageView.getHeight()) {
+        new PhotoTask() {
             @Override
             protected void onPreExecute() {
-                // Display a temporary image to show while bitmap is loading.
-                mImageView.setImageResource(R.drawable.empty_photo);
             }
 
             @Override
             protected void onPostExecute(AttributedPhoto attributedPhoto) {
                 if (attributedPhoto != null) {
                     // Photo has been loaded, display it.
-                    mImageView.setImageBitmap(attributedPhoto.bitmap);
-
-                    // Display the attribution as HTML content if set.
-                    if (attributedPhoto.attribution == null) {
-                        mText.setVisibility(View.GONE);
-                    } else {
-                        mText.setVisibility(View.VISIBLE);
-                        mText.setText(Html.fromHtml(attributedPhoto.attribution.toString()));
-                    }
+                    activity.setBitmap(attributedPhoto.bitmap);
+                    //Todo: set attribution somewhere
 
                 }
             }
@@ -222,12 +216,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
 
     abstract class PhotoTask extends AsyncTask<String, Void, PhotoTask.AttributedPhoto> {
 
-        private int mHeight;
-        private int mWidth;
-
-        public PhotoTask(int width, int height) {
-            mHeight = height;
-            mWidth = width;
+        public PhotoTask() {
         }
 
         /**
@@ -247,12 +236,12 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
 
             if (result.getStatus().isSuccess()) {
                 PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
-                if (photoMetadata.getCount() > 0 && !isCancelled()) {
+                if (photoMetadataBuffer.getCount() > 0 && !isCancelled()) {
                     // Get the first bitmap and its attributions.
-                    PlacePhotoMetadata photo = photoMetadata.get(0);
+                    PlacePhotoMetadata photo = photoMetadataBuffer.get(0);
                     CharSequence attribution = photo.getAttributions();
                     // Load a scaled bitmap for this photo.
-                    Bitmap image = photo.getScaledPhoto(client, mWidth, mHeight).await()
+                    Bitmap image = photo.getScaledPhoto(client, photo.getMaxWidth(), photo.getMaxHeight()).await()
                             .getBitmap();
 
                     attributedPhoto = new AttributedPhoto(attribution, image);
