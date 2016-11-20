@@ -42,7 +42,12 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
 
     @Override
     public int getItemCount() {
-        return activities.size();
+        if (activities == null){
+            return 0;
+        }
+        else {
+            return activities.size();
+        }
         //return 4;
     }
 

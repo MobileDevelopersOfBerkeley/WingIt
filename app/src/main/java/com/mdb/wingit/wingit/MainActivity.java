@@ -202,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.activity:
                     String key1 = db.push().getKey();
-
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);
