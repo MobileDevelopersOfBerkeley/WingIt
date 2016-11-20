@@ -2,8 +2,10 @@ package com.mdb.wingit.wingit;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +28,9 @@ import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -121,7 +126,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
 
     }
     public ArrayList<ActivityList.Activity> getNearbyActivity(){
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
+        //Note: types will no longer be supported after feb 2017, must only specify one type in a request
+        String types = "amusement_park|aquarium|art_gallery|bowling_alley|clothing_store|department_store|zoo|shopping_mall|park|museum|movie_theater";
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type=restaurant&opennow=true&key="+API_KEY;
         return sendRequest(searchRequest);
     }
 
@@ -173,6 +180,36 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         return result;
     }
 
+    private void placePhotosTask(String placeId) {
+        // Create a new AsyncTask that displays the bitmap and attribution once loaded.
+        new PhotoTask(mImageView.getWidth(), mImageView.getHeight()) {
+            @Override
+            protected void onPreExecute() {
+                // Display a temporary image to show while bitmap is loading.
+                mImageView.setImageResource(R.drawable.empty_photo);
+            }
+
+            @Override
+            protected void onPostExecute(AttributedPhoto attributedPhoto) {
+                if (attributedPhoto != null) {
+                    // Photo has been loaded, display it.
+                    mImageView.setImageBitmap(attributedPhoto.bitmap);
+
+                    // Display the attribution as HTML content if set.
+                    if (attributedPhoto.attribution == null) {
+                        mText.setVisibility(View.GONE);
+                    } else {
+                        mText.setVisibility(View.VISIBLE);
+                        mText.setText(Html.fromHtml(attributedPhoto.attribution.toString()));
+                    }
+
+                }
+            }
+        }.execute(placeId);
+    }
+
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -182,6 +219,67 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 break;
         }
     }
+
+    abstract class PhotoTask extends AsyncTask<String, Void, PhotoTask.AttributedPhoto> {
+
+        private int mHeight;
+        private int mWidth;
+
+        public PhotoTask(int width, int height) {
+            mHeight = height;
+            mWidth = width;
+        }
+
+        /**
+         * Loads the first photo for a place id from the Geo Data API.
+         * The place id must be the first (and only) parameter.
+         */
+        @Override
+        protected AttributedPhoto doInBackground(String... params){
+            if (params.length != 1) {
+                return null;
+            }
+            final String placeId = params[0];
+            AttributedPhoto attributedPhoto = null;
+
+            PlacePhotoMetadataResult result = Places.GeoDataApi
+                    .getPlacePhotos(client, placeId).await();
+
+            if (result.getStatus().isSuccess()) {
+                PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+                if (photoMetadata.getCount() > 0 && !isCancelled()) {
+                    // Get the first bitmap and its attributions.
+                    PlacePhotoMetadata photo = photoMetadata.get(0);
+                    CharSequence attribution = photo.getAttributions();
+                    // Load a scaled bitmap for this photo.
+                    Bitmap image = photo.getScaledPhoto(client, mWidth, mHeight).await()
+                            .getBitmap();
+
+                    attributedPhoto = new AttributedPhoto(attribution, image);
+                }
+                // Release the PlacePhotoMetadataBuffer.
+                photoMetadataBuffer.release();
+            }
+            return attributedPhoto;
+        }
+
+        /**
+         * Holder for an image and its attribution.
+         */
+        class AttributedPhoto {
+
+            public final CharSequence attribution;
+
+            public final Bitmap bitmap;
+
+            public AttributedPhoto(CharSequence attribution, Bitmap bitmap) {
+                this.attribution = attribution;
+                this.bitmap = bitmap;
+            }
+        }
+    }
+
+
 
 
 }
