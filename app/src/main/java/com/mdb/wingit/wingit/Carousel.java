@@ -113,26 +113,33 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 likelyPlaces.release();
             }
         });
-        //if food:
+
+        Intent intent = getIntent();
+        boolean activityType = intent.getBooleanExtra("food", true);
+        if (activityType) {
             randomThrees(getNearbyFood());
+        } else {
+            randomThrees(getNearbyActivity());
+        }
     }
 
-    public int getRandom(){
-        int temp = (int) (Math.random()*activities.size());
+    public int getRandom(int size){
+        int temp = (int) (Math.random()*size);
         return temp;
     }
 
     //Adds three activities from list into three_acts.
     public void randomThrees(ArrayList<ActivityList.Activity> list){
         int one, two, three;
-        one = getRandom();
-        two = getRandom();
+        int listSize = list.size();
+        one = getRandom(listSize);
+        two = getRandom(listSize);
         while(two==one){
-            two = getRandom();
+            two = getRandom(listSize);
         }
-        three = getRandom();
+        three = getRandom(listSize);
         while(two==three||one==three){
-            three = getRandom();
+            three = getRandom(listSize);
         }
         three_acts.add(list.get(one));
         three_acts.add(list.get(two));
