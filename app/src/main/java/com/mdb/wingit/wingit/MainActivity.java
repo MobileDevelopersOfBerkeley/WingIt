@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -114,27 +115,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_start_options, container, false);
-            LinearLayout op1 = (LinearLayout) v.findViewById(R.id.option1);
-            LinearLayout op2 = (LinearLayout) v.findViewById(R.id.option2);
-            LinearLayout op3 = (LinearLayout) v.findViewById(R.id.option3);
-            op1.setOnClickListener(this);
-            op2.setOnClickListener(this);
-            op3.setOnClickListener(this);
+            CardView food = (CardView) v.findViewById(R.id.food);
+            CardView activity = (CardView) v.findViewById(R.id.activity);
+            food.setOnClickListener(this);
+            activity.setOnClickListener(this);
             return v;
         }
 
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.option1:
+                case R.id.food:
+
                     //open food stuff
                     break;
-                case R.id.option2:
+                case R.id.activity:
                     //open activity stuff
                     break;
-                case R.id.option3:
-                    //open sightseeing stuff
-                    break;
+
             }
         }
     }
