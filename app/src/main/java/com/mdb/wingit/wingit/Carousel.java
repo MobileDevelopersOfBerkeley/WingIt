@@ -83,7 +83,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
 
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
