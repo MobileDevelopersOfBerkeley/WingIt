@@ -114,7 +114,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 likelyPlaces.release();
             }
         });
-        randomThrees();
+        //if food:
+            randomThrees(getNearbyFood());
     }
 
     public int getRandom(){
@@ -122,7 +123,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         return temp;
     }
 
-    public void randomThrees(){
+    //Adds three activities from list into three_acts.
+    public void randomThrees(ArrayList<ActivityList.Activity> list){
         int one, two, three;
         one = getRandom();
         two = getRandom();
@@ -133,9 +135,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         while(two==three||one==three){
             three = getRandom();
         }
-        three_acts.add(activities.get(one));
-        three_acts.add(activities.get(two));
-        three_acts.add(activities.get(three));
+        three_acts.add(list.get(one));
+        three_acts.add(list.get(two));
+        three_acts.add(list.get(three));
     }
 
 
@@ -187,11 +189,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
                 activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
                 placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
-                //Do we we need to get the photos[] from the json tree if we have the async task to handle it
-//                if(predsJsonArray.getJSONObject(i).has("photos[]"))
-//                    activity.setPhotoRef(predsJsonArray.getJSONObject(i).getString("photos[]"));
-//                else
-//                    activity.setPhotoRef("null");
                 result.add(activity);
             }
         } catch (JSONException e) {
