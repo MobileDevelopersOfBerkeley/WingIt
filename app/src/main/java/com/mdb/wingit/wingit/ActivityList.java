@@ -57,6 +57,7 @@ public class ActivityList {
         public String getTime() {
             return this.time;
         }
+        public Bitmap getImage(){ return this.image; }
 
         public void setName(String name){ this.name = name;}
         public void setPhotoRef(String ref){ this.photoRef = ref;}

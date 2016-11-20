@@ -56,7 +56,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
     private CarouselAdapter adapter;
     private GoogleApiClient client;
     private Button go;
-    private ArrayList<ActivityList.Activity> activities;
+    private ArrayList<ActivityList.Activity> activities, three_acts;
     private ArrayList<Place> currentLocations;
     private int indexPlace = 0;
     final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
@@ -69,8 +69,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
 
-        adapter = new CarouselAdapter(getApplicationContext(), activities);
+        adapter = new CarouselAdapter(getApplicationContext(), three_acts);
         activities = new ArrayList<>();
+        three_acts = new ArrayList<>();
         currentLocations = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
         rv = (RecyclerView) findViewById(R.id.carouselrv);
@@ -113,23 +114,40 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
                 likelyPlaces.release();
             }
         });
-
+        randomThrees();
     }
+
+    public int getRandom(){
+        int temp = (int) (Math.random()*activities.size());
+        return temp;
+    }
+
+    public void randomThrees(){
+        int one, two, three;
+        one = getRandom();
+        two = getRandom();
+        while(two==one){
+            two = getRandom();
+        }
+        three = getRandom();
+        while(two==three||one==three){
+            three = getRandom();
+        }
+        three_acts.add(activities.get(one));
+        three_acts.add(activities.get(two));
+        three_acts.add(activities.get(three));
+    }
+
 
     public ArrayList<ActivityList.Activity> getNearbyFood(){
 
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
         return sendRequest(searchRequest);
     }
-    public ArrayList<ActivityList.Activity> getNearbySights(){
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
-        return sendRequest(searchRequest);
-
-    }
     public ArrayList<ActivityList.Activity> getNearbyActivity(){
-        //Note: types will no longer be supported after feb 2017, must only specify one type in a request
-        String types = "amusement_park|aquarium|art_gallery|bowling_alley|clothing_store|department_store|zoo|shopping_mall|park|museum|movie_theater";
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type=restaurant&opennow=true&key="+API_KEY;
+        String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
+        int random = (int)(Math.random()*types.length);
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY;
         return sendRequest(searchRequest);
     }
 
@@ -201,8 +219,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener 
             }
         }.execute(placeId);
     }
-
-
 
     @Override
     public void onClick(View view) {

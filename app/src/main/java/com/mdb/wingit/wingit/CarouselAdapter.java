@@ -53,8 +53,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     public void onBindViewHolder(final CustomViewHolder holder, int position) {
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
-        // holder.activityPic.setImageURI((URI) activity.pictureURL);
-
+        holder.activityPic.setImageBitmap(activity.getImage());
     }
 
 
