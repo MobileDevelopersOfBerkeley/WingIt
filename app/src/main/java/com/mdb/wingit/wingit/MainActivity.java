@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
+        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         currentLocations = new ArrayList<>();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView location;
         FirebaseDatabase database;
-        DatabaseReference db = database.getReference().child("adventures");
+        //DatabaseReference db = database.getReference().child("adventures");
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -178,7 +178,12 @@ public class MainActivity extends AppCompatActivity {
             TextView change = (TextView) v.findViewById(R.id.change);
 
 
-            location.setText("Current location: "+currentLocations.get(indexPlace).getName().toString());
+            if (currentLocations.size() ==0) {
+                location.setText("Berkeley, CA");
+            }
+            else {
+                location.setText("Current location: " + currentLocations.get(indexPlace).getName().toString());
+            }
 
 
             change.setOnClickListener(this);
@@ -193,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.food:
-                    String key = db.push().getKey();
+                    //String key = db.push().getKey();
 
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
@@ -201,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(foodIntent);
                     break;
                 case R.id.activity:
-                    String key1 = db.push().getKey();
+                    //String key1 = db.push().getKey();
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);

@@ -180,6 +180,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         return sendRequest(searchRequest);
     }
 
+    //TODO: Put this into a Async task
     public ArrayList<ActivityList.Activity> sendRequest(String request){
         ArrayList<ActivityList.Activity> result = new ArrayList<>();
         HttpURLConnection conn = null;
@@ -365,7 +366,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                     boolean activityType = intent.getBooleanExtra("food", true);
                     if (activityType) {
                         randomThrees(getNearbyFood());
-                        Log.i("random thress", "function called");
+                        Log.i("random threes", "function called");
                     } else {
                         randomThrees(getNearbyActivity());
                     }
