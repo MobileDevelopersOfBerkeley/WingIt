@@ -1,5 +1,7 @@
 package com.mdb.wingit.wingit;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -37,12 +39,18 @@ public class DetailScreen extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.imageView);
         textView = (TextView) findViewById(R.id.textView);
+
+        Intent activityIntent = getIntent();
+        //TODO: pass coordinate value of destination through intent
+        //String coordinates = activityIntent.getStringExtra("coordinates");
+        String coordinates = "20.5666,45.345";
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
+                startActivity(mapsIntent);
             }
         });
     }
