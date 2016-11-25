@@ -1,36 +1,25 @@
 package com.mdb.wingit.wingit;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
-import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.GeoDataApi;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
@@ -38,21 +27,16 @@ import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import static com.mdb.wingit.wingit.MainActivity.currentLocations;
 import static com.mdb.wingit.wingit.MainActivity.indexPlace;
@@ -63,6 +47,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private CarouselAdapter adapter;
     private Button go;
     private ArrayList<ActivityList.Activity> result, three_acts;
+    private ActivityList.Activity final_pick;
     final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
@@ -71,32 +56,36 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private RecyclerViewClickListener itemListener;
     private final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private boolean checkedPermission = false;
-
+    private boolean isHighlighted = false; // if the current choice is highlighted
+    private ConstraintLayout choice;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
+        choice = (ConstraintLayout) findViewById(R.id.choice);
 
         itemListener = new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
                 selectedPos = position;
+                if (isHighlighted) {
+                    choice.setBackgroundResource(R.drawable.carouselborderoff);
+                    isHighlighted = false;
+                } else {
+                    choice.setBackgroundResource(R.drawable.carouselborderon);
+                    isHighlighted = true;
+                }
             }
         };
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         result = new ArrayList<>();
+        final_pick = new ActivityList.Activity();
         three_acts = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
-
-        go.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(Carousel.this, "Position" + selectedPos, Toast.LENGTH_SHORT).show();
-            }
-        });
+        go.setOnClickListener(this);
         rv = (RecyclerView) findViewById(R.id.carouselrv);
         current = (LatLng) getIntent().getExtras().get("current");
 //        rv.setLayoutManager(layoutManager);
@@ -109,6 +98,14 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                isHighlighted = false;
+
+            }
+        });
         rv.addOnScrollListener(new CenterScrollListener());
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
@@ -226,8 +223,13 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.go:
-                Intent intent = new Intent(Carousel.this, DetailScreen.class);
-                startActivity(intent);
+                Toast.makeText(Carousel.this, "Position" + selectedPos, Toast.LENGTH_SHORT).show();
+                if (isHighlighted) {
+                    final_pick = three_acts.get(selectedPos);
+                    Intent intent = new Intent(Carousel.this, DetailScreen.class);
+                    intent.putExtra("name", final_pick.getName());
+                    startActivity(intent);
+                }
                 break;
         }
     }
