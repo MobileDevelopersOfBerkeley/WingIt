@@ -61,7 +61,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private RecyclerView rv;
     private CarouselAdapter adapter;
     private Button go;
-    private ArrayList<ActivityList.Activity> activities, three_acts;
+    private ArrayList<ActivityList.Activity> result, three_acts;
     final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
@@ -86,7 +86,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         };
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
-        activities = new ArrayList<>();
+        result = new ArrayList<>();
         three_acts = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
 
@@ -171,60 +171,35 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     public ArrayList<ActivityList.Activity> getNearbyFood(){
         Log.i("food log", "it broke");
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
-        return sendRequest(searchRequest);
+        //return sendRequest(searchRequest);
+        sendRequestTask(searchRequest);
+        return result;
     }
     public ArrayList<ActivityList.Activity> getNearbyActivity(){
         String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
         int random = (int)(Math.random()*types.length);
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY;
-        return sendRequest(searchRequest);
-    }
-
-    //TODO: Put this into a Async task
-    public ArrayList<ActivityList.Activity> sendRequest(String request){
-        ArrayList<ActivityList.Activity> result = new ArrayList<>();
-        HttpURLConnection conn = null;
-        StringBuilder jsonResults = new StringBuilder();
-
-        try {
-            URL url = new URL(request);
-            conn = (HttpURLConnection) url.openConnection();
-            InputStreamReader in = new InputStreamReader(conn.getInputStream());
-
-            int read;
-            char[] buff = new char[1024];
-            while ((read = in.read(buff)) != -1) {
-                jsonResults.append(buff, 0, read);
-            }
-        } catch (IOException e) {
-            Log.e("Error", "Error connecting to Places API", e);
-            return result;
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-        try {
-            // Create a JSON object hierarchy from the results
-            JSONObject jsonObj = new JSONObject(jsonResults.toString());
-            JSONArray predsJsonArray = jsonObj.getJSONArray("results");
-
-            // Extract the Place descriptions from the results
-            result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
-            for (int i = 0; i < predsJsonArray.length(); i++) {
-                ActivityList.Activity activity = new ActivityList.Activity();
-                activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
-                activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
-                activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
-                placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
-                result.add(activity);
-            }
-        } catch (JSONException e) {
-            Log.e("Error", "Error processing JSON results", e);
-        }
-
+        //return sendRequest(searchRequest);
+        sendRequestTask(searchRequest);
         return result;
+
     }
+
+
+
+    private void sendRequestTask(String request) {
+        new RequestTask() {
+            @Override
+            protected void onPreExecute() {
+
+            }
+            @Override
+            protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
+                result = activityResult;
+            }
+        }.execute(request);
+    }
+
 
     private void placePhotosTask(final ActivityList.Activity activity, String placeId) {
         // Create a new AsyncTask that displays the bitmap and attribution once loaded.
@@ -260,6 +235,58 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         this.selectedPos = position;
     }
 
+
+    abstract class RequestTask extends AsyncTask<String, Void, ArrayList<ActivityList.Activity>> {
+        public RequestTask() {
+        }
+        protected ArrayList<ActivityList.Activity> doInBackground(String... params) {
+            if (params.length != 1) {
+                return null;
+            }
+            final String request = params[0];
+            HttpURLConnection conn = null;
+            StringBuilder jsonResults = new StringBuilder();
+            ArrayList<ActivityList.Activity> result = new ArrayList<>();
+            try {
+                URL url = new URL(request);
+                conn = (HttpURLConnection) url.openConnection();
+                InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+                int read;
+                char[] buff = new char[1024];
+                while ((read = in.read(buff)) != -1) {
+                    jsonResults.append(buff, 0, read);
+                }
+            } catch (IOException e) {
+                Log.e("Error", "Error connecting to Places API", e);
+                return result;
+            } finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            }
+            try {
+                // Create a JSON object hierarchy from the results
+                JSONObject jsonObj = new JSONObject(jsonResults.toString());
+                JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+
+                // Extract the Place descriptions from the results
+                result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
+                for (int i = 0; i < predsJsonArray.length(); i++) {
+                    ActivityList.Activity activity = new ActivityList.Activity();
+                    activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
+                    activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
+                    activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
+                    placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
+                    result.add(activity);
+                }
+            } catch (JSONException e) {
+                Log.e("Error", "Error processing JSON results", e);
+            }
+
+            return result;
+        }
+    }
     abstract class PhotoTask extends AsyncTask<String, Void, PhotoTask.AttributedPhoto> {
 
         public PhotoTask() {
@@ -379,6 +406,51 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             Log.i("Security Exception", "Allergic");
         }
     }
+    //Nonasync task version
+    //TODO: Put this into a Async task
+    public ArrayList<ActivityList.Activity> sendRequest(String request){
+        ArrayList<ActivityList.Activity> result = new ArrayList<>();
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
 
+        try {
+            URL url = new URL(request);
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (IOException e) {
+            Log.e("Error", "Error connecting to Places API", e);
+            return result;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        try {
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+
+            // Extract the Place descriptions from the results
+            result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                ActivityList.Activity activity = new ActivityList.Activity();
+                activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
+                activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
+                activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
+                placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
+                result.add(activity);
+            }
+        } catch (JSONException e) {
+            Log.e("Error", "Error processing JSON results", e);
+        }
+
+        return result;
+    }
 
 }
