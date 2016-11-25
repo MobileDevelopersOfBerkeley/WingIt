@@ -43,7 +43,7 @@ public class DetailScreen extends AppCompatActivity {
         Intent activityIntent = getIntent();
         //TODO: pass coordinate value of destination through intent
         //String coordinates = activityIntent.getStringExtra("coordinates");
-        String coordinates = "20.5666,45.345";
+        final String coordinates = "20.5666,45.345";
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

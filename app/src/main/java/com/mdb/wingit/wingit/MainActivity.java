@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     currentLocations.add(placeLikelihood.getPlace());
+                    Log.i("Error", String.format("Place '%s' has likelihood: %g",
+                            placeLikelihood.getPlace().getName(),
+                            placeLikelihood.getLikelihood()));
                 }
                 for (PlaceLikelihood placeLikelihood : likelyPlaces){
                     if(placeLikelihood.getLikelihood()>likelihood){

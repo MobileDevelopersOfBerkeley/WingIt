@@ -86,7 +86,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             }
         };
 
-        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
+        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         result = new ArrayList<>();
         three_acts = new ArrayList<>();
         go = (Button) findViewById(R.id.go);
@@ -129,6 +129,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             checkedPermission = true;
             return;
         }
+        //changed from !checkedPermission
         if (!checkedPermission)  {
             getCurrentPlaces();
 
@@ -380,6 +381,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                     double likelihood = 0;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                         currentLocations.add(placeLikelihood.getPlace());
+                        Log.i("Error", String.format("Place '%s' has likelihood: %g",
+                                placeLikelihood.getPlace().getName(),
+                                placeLikelihood.getLikelihood()));
                     }
                     for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                         if (placeLikelihood.getLikelihood() > likelihood) {
