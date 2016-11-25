@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
-public class DetailScreen extends AppCompatActivity {
+public class DetailScreen extends AppCompatActivity implements View.OnClickListener{
 
     Toolbar toolbar;
     CollapsingToolbarLayout toolbarLayout;
@@ -40,18 +40,40 @@ public class DetailScreen extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imageView);
         textView = (TextView) findViewById(R.id.textView);
 
-        Intent activityIntent = getIntent();
-        //TODO: pass coordinate value of destination through intent
-        //String coordinates = activityIntent.getStringExtra("coordinates");
-        final String coordinates = "20.5666,45.345";
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent activityIntent = getIntent();
+                //TODO: pass coordinate value of destination through intent
+                //String coordinates = activityIntent.getStringExtra("coordinates");
+                String coordinates = "20.5666,45.345";
                 Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
             }
         });
+    }
+
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.fab:
+                Intent activityIntent = getIntent();
+                //TODO: pass coordinate value of destination through intent
+                //String coordinates = activityIntent.getStringExtra("coordinates");
+                String coordinates = "20.5666,45.345";
+                Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
+                startActivity(mapsIntent);
+                break;
+            case R.id.nextActivityButton:
+                //TODO: insert dialog to choose between food and activity
+                break;
+            case R.id.endTripButton:
+                //TODO: save trip in log
+                break;
+            default:
+                break;
+        }
     }
 }
