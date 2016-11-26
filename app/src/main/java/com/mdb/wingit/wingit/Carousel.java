@@ -27,6 +27,12 @@ import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,12 +65,19 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private boolean isHighlighted = false; // if the current choice is highlighted
     private ConstraintLayout choice;
 
+    private AdventureList adventures = new AdventureList();
+    private DatabaseReference dbref;
+
+    private String adventureKey;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
         choice = (ConstraintLayout) findViewById(R.id.choice);
+        dbref = FirebaseDatabase.getInstance().getReference();
+        adventureKey = (String) getIntent().getExtras().get("adventureKey");
 
         itemListener = new RecyclerViewClickListener() {
             @Override
@@ -225,7 +238,31 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             case R.id.go:
                 Toast.makeText(Carousel.this, "Position" + selectedPos, Toast.LENGTH_SHORT).show();
                 if (isHighlighted) {
-                    final_pick = three_acts.get(selectedPos);
+                    final_pick = three_acts.get(selectedPos); // selected activity
+                    // TODO: create new activity in database
+                    final DatabaseReference activitydb = dbref.child("Activities").push();
+                    activitydb.setValue(final_pick);
+
+                    // TODO: if adventure is empty, set adventure's first to activity
+                    DatabaseReference adventuredb = dbref.child("Adventures").child(adventureKey).push();
+                    dbref.child("Adventures").child(adventureKey).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            AdventureList.Adventure adventure = (AdventureList.Adventure) dataSnapshot.getValue();
+                            if (adventure.getActivityKeyList().size() == 0) {
+                                adventure.setFirst(final_pick.getName());
+                            }
+
+                            // TODO: add activity to adventure's list
+                            adventure.addActivity(activitydb.getKey());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     Intent intent = new Intent(Carousel.this, DetailScreen.class);
                     intent.putExtra("name", final_pick.getName());
                     startActivity(intent);

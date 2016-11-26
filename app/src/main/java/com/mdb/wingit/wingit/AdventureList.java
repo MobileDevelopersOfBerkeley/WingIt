@@ -21,6 +21,10 @@ public class AdventureList {
         this.adventureArrayList.add(adventure);
     }
 
+    public int size() {
+        return adventureArrayList.size();
+    }
+
     public static class Adventure {
         String first;
         String last;
@@ -28,6 +32,9 @@ public class AdventureList {
         ArrayList<String> activityKeyList;
         String mapURL;
 
+        public Adventure() {
+
+        }
         public Adventure(String name, String date, ArrayList<String> activityKeyList, String mapURL) {
             this.first = name;
             this.date = date;
@@ -57,6 +64,10 @@ public class AdventureList {
 
         public ArrayList<String> getActivityKeyList() {
             return this.activityKeyList;
+        }
+
+        public void addActivity(String activityKey) {
+            activityKeyList.add(activityKey);
         }
 
         public String getMapURL() {

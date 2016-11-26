@@ -55,12 +55,16 @@ public class MainActivity extends AppCompatActivity {
     static String[] topFive = new String[5];
     static ArrayList<Place> currentLocations;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
 
         // setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -162,7 +166,11 @@ public class MainActivity extends AppCompatActivity {
 
         TextView location;
         FirebaseDatabase database;
+        private DatabaseReference mDatabase;
+        private FirebaseUser user;
+        private AdventureList adventures;
         //DatabaseReference db = database.getReference().child("adventures");
+        String adventureKey;
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -180,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
             CardView activity = (CardView) v.findViewById(R.id.activity);
             location = (TextView) v.findViewById(R.id.location2);
             TextView change = (TextView) v.findViewById(R.id.change);
+
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            adventures = new AdventureList();
 
 
             if (currentLocations.size() ==0) {
@@ -204,17 +215,23 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.food:
                     //String key = db.push().getKey();
                     // TODO: Create adventure and add to database
+                    adventureKey = createAdventure();
+
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
                     foodIntent.putExtra("current", current);
+                    foodIntent.putExtra("adventureKey", adventureKey);
                     startActivity(foodIntent);
                     break;
                 case R.id.activity:
                     //String key1 = db.push().getKey();
                     // TODO: Create adventure and add to database
+                    adventureKey = createAdventure();
+
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);
+                    activityIntent.putExtra("adventureKey", adventureKey);
                     startActivity(activityIntent);
                     break;
                 case R.id.change:
@@ -235,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
 
             }
+        }
+
+        public String createAdventure() {
+            DatabaseReference adventuredb = mDatabase.child("Adventures").push();
+            adventuredb.setValue(adventures);
+            DatabaseReference adventurelist = mDatabase.child("Users").child(FirebaseAuth
+                    .getInstance().getCurrentUser().getUid()).child("adventurelist").push();
+            adventurelist.setValue(adventuredb.getKey());
+            return adventuredb.getKey();
         }
 
         public LatLng findFuckinObject(String name){

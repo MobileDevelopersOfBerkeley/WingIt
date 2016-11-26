@@ -50,15 +50,12 @@ public class SignUp extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    // private FirebaseAuth.AuthStateListener mAuthListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         name = (EditText) findViewById(R.id.name);
@@ -67,64 +64,15 @@ public class SignUp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (user != null) {
-//                    // User is signed in
-//                    Intent openMain = new Intent(getApplicationContext(), MainActivity.class);
-//                    startActivity(openMain);
-//
-//                } else {
-//                    // User is signed out
-//                }
-//            }
-//        };
-
         signUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 signup();
-//                createUser(mEmailView.getText().toString(), mPasswordView.getText().toString());
-
             }
         });
 
 
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        if (mAuthListener != null) {
-//            mAuth.removeAuthStateListener(mAuthListener);
-//        }
-//    }
-
-//    public void createUser(String email, String password){
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        // If sign in fails, display a message to the user. If sign in succeeds
-//                        // the auth state listener will be notified and logic to handle the
-//                        // signed in user can be handled in the listener.
-//                        if (!task.isSuccessful()) {
-//                            Toast.makeText(SignUp.this, "Failed to create an account.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            Log.wtf("idklol", task.getException().getMessage());
-//                        }
-//                    }
-//                });
-//
-//    }
 
     private void signup() {
         final String n = name.getText().toString();
@@ -141,11 +89,6 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                            String uid = mAuth.getCurrentUser().getUid();
-//                            Map<String, Object> post = new HashMap<>();
-//                            post.put("uid", uid);
-//                            post.put("name", n);
-//                            post.put("email", em);
                             DatabaseReference userdb = mDatabase.child("Users").push();
                             userdb.setValue(user);
                             startActivity(new Intent(SignUp.this, MainActivity.class));
