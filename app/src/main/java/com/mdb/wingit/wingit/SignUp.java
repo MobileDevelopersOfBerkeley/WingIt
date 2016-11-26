@@ -18,14 +18,8 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +31,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -48,9 +46,11 @@ public class SignUp extends AppCompatActivity {
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView, name;
+    private Button signUpButton;
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
+    // private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -62,28 +62,31 @@ public class SignUp extends AppCompatActivity {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         name = (EditText) findViewById(R.id.name);
-        Button signUpButton = (Button) findViewById(R.id.email_sign_in_button);
+        signUpButton = (Button) findViewById(R.id.email_sign_in_button);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Intent openMain = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(openMain);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                } else {
-                    // User is signed out
-                }
-            }
-        };
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (user != null) {
+//                    // User is signed in
+//                    Intent openMain = new Intent(getApplicationContext(), MainActivity.class);
+//                    startActivity(openMain);
+//
+//                } else {
+//                    // User is signed out
+//                }
+//            }
+//        };
 
         signUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUser(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                signup();
+//                createUser(mEmailView.getText().toString(), mPasswordView.getText().toString());
 
             }
         });
@@ -91,32 +94,64 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if (mAuthListener != null) {
+//            mAuth.removeAuthStateListener(mAuthListener);
+//        }
+//    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+//    public void createUser(String email, String password){
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        // If sign in fails, display a message to the user. If sign in succeeds
+//                        // the auth state listener will be notified and logic to handle the
+//                        // signed in user can be handled in the listener.
+//                        if (!task.isSuccessful()) {
+//                            Toast.makeText(SignUp.this, "Failed to create an account.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            Log.wtf("idklol", task.getException().getMessage());
+//                        }
+//                    }
+//                });
+//
+//    }
+
+    private void signup() {
+        final String n = name.getText().toString();
+        final String em = mEmailView.getText().toString();
+        String pass = mPasswordView.getText().toString();
+        if(n.length()==0 || em.length()==0 || pass.length()==0){
+            Toast.makeText(SignUp.this, "Sign up failed, please fill in all blanks.",
+                    Toast.LENGTH_LONG).show();
+            return;
         }
-    }
-
-    public void createUser(String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
+        final User user = new User(em, n);
+        mAuth.createUserWithEmailAndPassword(em, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(SignUp.this, "Failed to create an account.",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.wtf("idklol", task.getException().getMessage());
+                        if (task.isSuccessful()) {
+//                            String uid = mAuth.getCurrentUser().getUid();
+//                            Map<String, Object> post = new HashMap<>();
+//                            post.put("uid", uid);
+//                            post.put("name", n);
+//                            post.put("email", em);
+                            DatabaseReference userdb = mDatabase.child("Users").push();
+                            userdb.setValue(user);
+                            startActivity(new Intent(SignUp.this, MainActivity.class));
+                        } else if (!(task.isSuccessful())) {
+                            Toast.makeText(SignUp.this, "Sign up problem",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -125,4 +160,3 @@ public class SignUp extends AppCompatActivity {
 
 
 }
-
