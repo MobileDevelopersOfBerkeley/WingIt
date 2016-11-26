@@ -22,24 +22,33 @@ public class AdventureList {
     }
 
     public static class Adventure {
-        String name;
+        String first;
+        String last;
         String date;
         ArrayList<String> activityKeyList;
         String mapURL;
 
         public Adventure(String name, String date, ArrayList<String> activityKeyList, String mapURL) {
-            this.name = name;
+            this.first = name;
             this.date = date;
             this.activityKeyList = activityKeyList;
             this.mapURL = mapURL;
         }
 
-        public String getName() {
-            return this.name;
+        public String getFirst() {
+            return this.first;
         }
 
-        public void setName(String newName) {
-            this.name = newName;
+        public String getLast() {
+            return this.last;
+        }
+
+        public void setFirst(String newName) {
+            this.first = newName;
+        }
+
+        public void setLast(String newName) {
+            this.last = newName;
         }
 
         public String getDate() {

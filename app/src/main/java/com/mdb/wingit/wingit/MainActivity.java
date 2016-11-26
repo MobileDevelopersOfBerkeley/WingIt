@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
+        client.connect();
         currentLocations = new ArrayList<>();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             switch(v.getId()){
                 case R.id.food:
                     //String key = db.push().getKey();
-
+                    // TODO: Create adventure and add to database
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
                     foodIntent.putExtra("current", current);
@@ -210,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.activity:
                     //String key1 = db.push().getKey();
+                    // TODO: Create adventure and add to database
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);

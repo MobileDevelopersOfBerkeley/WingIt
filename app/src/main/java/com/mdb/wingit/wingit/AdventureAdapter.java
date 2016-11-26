@@ -38,7 +38,7 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         AdventureList.Adventure adventure = adventures.get(position);
-        holder.adventureName.setText(adventure.name);
+        holder.adventureName.setText(adventure.first);
         // holder.adventurePic.setImageURI(adventure.imageURI);
     }
 
