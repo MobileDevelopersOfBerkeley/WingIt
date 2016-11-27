@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleApiClient client;
     private int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
-    static LatLng current;
+    static LatLng current; // current location in lat and long
     static int indexPlace = 0;
     static String[] topFive = new String[5];
     static ArrayList<Place> currentLocations;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
+        Log.i("oncreate", "this is stupid");
 
         // setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -112,14 +112,16 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Permissions???", "rip");
             return;
         }
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(client, null);
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                Log.i("onresult", "in result");
+                Log.i("status", likelyPlaces.getStatus().toString());
 
                 double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                    Log.i("place", placeLikelihood.getPlace().getName().toString());
                     currentLocations.add(placeLikelihood.getPlace());
                     Log.i("Error", String.format("Place '%s' has likelihood: %g",
                             placeLikelihood.getPlace().getName(),
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 for(int i=0; i<5; i++){
+                    Log.i("Error", "before top five");
                     topFive[i] = currentLocations.get(i).getName().toString();
                 }
                 current = currentLocations.get(indexPlace).getLatLng();
