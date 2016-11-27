@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-
+                Log.i("Status", likelyPlaces.getStatus().toString());
                 double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     currentLocations.add(placeLikelihood.getPlace());
@@ -131,10 +131,12 @@ public class MainActivity extends AppCompatActivity {
                         indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
                     }
                 }
-                for(int i=0; i<5; i++){
-                    topFive[i] = currentLocations.get(i).getName().toString();
+                if(currentLocations.size() != 0) {
+                    for (int i = 0; i < 5; i++) {
+                        topFive[i] = currentLocations.get(i).getName().toString();
+                    }
+                    current = currentLocations.get(indexPlace).getLatLng();
                 }
-                current = currentLocations.get(indexPlace).getLatLng();
                 likelyPlaces.release();
             }
         });
