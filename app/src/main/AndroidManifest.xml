@@ -25,6 +25,7 @@
         android:label="WingIt"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- the API Key below is Abhi's; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAoGXVG0Setn0ZqQiWeGyHinrspMAA3Kvo" />
