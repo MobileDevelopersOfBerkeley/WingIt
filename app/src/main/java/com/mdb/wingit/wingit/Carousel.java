@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
+import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -54,8 +55,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private Button go;
     private ArrayList<ActivityList.Activity> result, three_acts;
     private ActivityList.Activity final_pick;
-    final String API_KEY = "AIzaSyCVVjztDvgZ6iGwT-2JWp2-5AbfdIs7s7I";
-    final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
+    public static final String API_KEY = "AIzaSyCVVjztDvgZ6iGwT-2JWp2-5AbfdIs7s7I";
+    public static final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
     private GoogleApiClient client;
@@ -109,6 +110,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 
         Log.i("Layout", "before declaring adapter");
         adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
+        layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
@@ -199,12 +201,14 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     public ArrayList<ActivityList.Activity> getNearbyActivity(){
         String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
         int random = (int)(Math.random()*types.length);
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY;
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY_NONRESTRICTED;
         //return sendRequest(searchRequest);
         sendRequestTask(searchRequest);
         return result;
 
     }
+
+
 
 
 
@@ -217,6 +221,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             @Override
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
+                randomThrees(result);
             }
         }.execute(request);
     }
@@ -327,19 +332,32 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                 result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
                 for (int i = 0; i < predsJsonArray.length(); i++) {
                     ActivityList.Activity activity = new ActivityList.Activity();
-                    JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
+                    if(predsJsonArray.getJSONObject(i).has("photos")) {
+                        Log.i("getting", "photos");
+                        JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
+                        if(photos.getJSONObject(0).length()!=0){
+                            Log.i("why","pls");
+                            JSONObject photoObject = photos.getJSONObject(0);
+                            activity.setPhotoRef(photoObject.getString("photo_reference"));
+                        }
+
+                    }
                     activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
                     activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
                     activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
-                    activity.setPhotoRef(photos.getJSONObject(0).getString("photo_reference"));
+
                     result.add(activity);
                 }
             } catch (JSONException e) {
                 Log.e("Error", "Error processing JSON results", e);
             }
+            Log.wtf("wtf", result.size() + "");
             return result;
         }
     }
+
+
+
     abstract class PhotoTask extends AsyncTask<String, Void, PhotoTask.AttributedPhoto> {
 
         public PhotoTask() {
@@ -447,10 +465,12 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                     Intent intent = getIntent();
                     boolean activityType = intent.getBooleanExtra("food", true);
                     if (activityType) {
-                        randomThrees(getNearbyFood());
+                        //randomThrees(getNearbyFood());
+                        getNearbyFood();
                         Log.i("random threes", "function called");
                     } else {
-                        randomThrees(getNearbyActivity());
+                        // randomThrees(getNearbyActivity());
+                        getNearbyActivity();
                     }
 
                 }

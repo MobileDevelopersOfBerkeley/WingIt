@@ -62,7 +62,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
-        Glide.with(context).load(activity.photoRef).into(holder.activityPic);
+        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+activity.photoRef+"&key="+Carousel.API_KEY_NONRESTRICTED).into(holder.activityPic);
         holder.activityPic.setImageBitmap(activity.getImage());
         holder.currCard.setOnClickListener(new View.OnClickListener() {
             @Override
