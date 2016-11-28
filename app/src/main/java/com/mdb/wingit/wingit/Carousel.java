@@ -54,7 +54,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     private Button go;
     private ArrayList<ActivityList.Activity> result, three_acts;
     private ActivityList.Activity final_pick;
-    final String API_KEY = "AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08";
+    final String API_KEY = "AIzaSyCVVjztDvgZ6iGwT-2JWp2-5AbfdIs7s7I";
+    final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
     private LatLng current;
     private GoogleApiClient client;
@@ -187,11 +188,11 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 
     public ArrayList<ActivityList.Activity> getNearbyFood(){
         Log.i("food log", "food send request");
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY;
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY_NONRESTRICTED;
         //return sendRequest(searchRequest);
         sendRequestTask(searchRequest);
         Log.i("food log", "food send request done");
-        Log.i("result length", result.size()+"");
+        Log.i("search", searchRequest);
         return result;
 
     }
@@ -318,6 +319,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             }
             try {
                 // Create a JSON object hierarchy from the results
+                Log.wtf("length of jsonresults", jsonResults.toString());
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
                 JSONArray predsJsonArray = jsonObj.getJSONArray("results");
                 Log.i("size of results", predsJsonArray.length()+"");
@@ -325,10 +327,11 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                 result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
                 for (int i = 0; i < predsJsonArray.length(); i++) {
                     ActivityList.Activity activity = new ActivityList.Activity();
+                    JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
                     activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
                     activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
                     activity.setRating(predsJsonArray.getJSONObject(i).getString("rating"));
-                    placePhotosTask(activity,predsJsonArray.getJSONObject(i).getString("place_id"));
+                    activity.setPhotoRef(photos.getJSONObject(0).getString("photo_reference"));
                     result.add(activity);
                 }
             } catch (JSONException e) {
@@ -364,7 +367,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                     PlacePhotoMetadata photo = photoMetadataBuffer.get(0);
                     CharSequence attribution = photo.getAttributions();
                     // Load a scaled bitmap for this photo.
-                    Bitmap image = photo.getScaledPhoto(client, photo.getMaxWidth(), photo.getMaxHeight()).await()
+                    Bitmap image = photo.getScaledPhoto(client, photo.getMaxWidth()/2, photo.getMaxHeight()/2).await()
                             .getBitmap();
 
                     attributedPhoto = new AttributedPhoto(attribution, image);

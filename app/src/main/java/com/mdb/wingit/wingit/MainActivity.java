@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     static LatLng current; // current location in lat and long
     static int indexPlace = 0;
-    static String[] topFive = new String[5];
+    static String[] topFive;
+
     static ArrayList<String> otherFive = new ArrayList<>();
     static ArrayList<Place> currentLocations;
 
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(currentLocations.size() != 0) {
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < currentLocations.size(); i++) {
                         otherFive.add(currentLocations.get(i).getName().toString());
                     }
                     current = currentLocations.get(indexPlace).getLatLng();
@@ -243,8 +244,15 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.change:
                     // 1. Instantiate an AlertDialog.Builder with its constructor
-                    for(int i=0; i<otherFive.size(); i++){
-                        topFive[i] = otherFive.get(i);
+
+                    if(currentLocations.size()>=5) {
+                        topFive = new String[5];
+                    }
+                    else {
+                        topFive = new String[currentLocations.size()];
+                    }
+                    for (int i = 0; i < currentLocations.size(); i++) {
+                        topFive[i] = currentLocations.get(i).getName().toString();
                     }
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Pick a better location:")

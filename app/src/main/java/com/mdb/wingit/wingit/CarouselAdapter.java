@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
@@ -61,6 +62,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
+        Glide.with(context).load(activity.photoRef).into(holder.activityPic);
         holder.activityPic.setImageBitmap(activity.getImage());
         holder.currCard.setOnClickListener(new View.OnClickListener() {
             @Override

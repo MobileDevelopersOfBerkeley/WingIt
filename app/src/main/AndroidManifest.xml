@@ -28,7 +28,7 @@
         <!-- the API Key below is Sharie's; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCSQY63gh8Br0X8ZzasqS67OlQLYO0Yi08"></meta-data>
+            android:value="AIzaSyCVVjztDvgZ6iGwT-2JWp2-5AbfdIs7s7I"></meta-data>
             <!-- android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" /> -->
 
 

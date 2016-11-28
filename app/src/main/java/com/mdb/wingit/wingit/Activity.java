@@ -16,9 +16,10 @@ public class Activity {
 
     public Activity(){}
 
-    public Activity(String name, String time, String pictureURL) {
+    public Activity(String name, String time) {
         this.name = name;
         this.time = time;
+        this.photoRef = "hi";
     }
 
     public String getName() {
@@ -27,11 +28,14 @@ public class Activity {
     public String getTime() {
         return this.time;
     }
+    public String getPhotoRef() {
+        return this.photoRef;
+    }
     public Bitmap getImage(){ return this.image; }
+
 
     public void setName(String name){ this.name = name;}
     public void setPhotoRef(String ref){ this.photoRef = ref;}
     public void setPlaceID(String id){this.placeID = id;}
     public void setRating(String rating){this.rating = rating;}
-    public void setBitmap(Bitmap image){this.image=image;}
 }
