@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (currentLocations.size() ==0) {
-                location.setText("Berkeley, CA");
+                location.setText("Pleasanton");
             }
             else {
                 location.setText("Current location: " + currentLocations.get(indexPlace).getName().toString());

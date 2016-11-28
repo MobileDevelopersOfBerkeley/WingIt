@@ -139,11 +139,13 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             checkedPermission = true;
             return;
         }
+
         //changed from !checkedPermission
-//        if (checkedPermission)  {
-//            getCurrentPlaces();
-//
-//        }
+        Log.i("Does", checkedPermission+"");
+        if (!checkedPermission)  {
+
+            getCurrentPlaces();
+        }
 //        Intent intent = getIntent();
 //        boolean activityType = intent.getBooleanExtra("food", true);
 //        if (activityType) {
@@ -189,7 +191,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         //return sendRequest(searchRequest);
         sendRequestTask(searchRequest);
         Log.i("food log", "food send request done");
+        Log.i("result length", result.size()+"");
         return result;
+
     }
     public ArrayList<ActivityList.Activity> getNearbyActivity(){
         String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
@@ -291,6 +295,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             final String request = params[0];
             HttpURLConnection conn = null;
             StringBuilder jsonResults = new StringBuilder();
+            Log.i("async task","is working?");
             ArrayList<ActivityList.Activity> result = new ArrayList<>();
             try {
                 URL url = new URL(request);
@@ -314,7 +319,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                 // Create a JSON object hierarchy from the results
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
                 JSONArray predsJsonArray = jsonObj.getJSONArray("results");
-
+                Log.i("size of results", predsJsonArray.length()+"");
                 // Extract the Place descriptions from the results
                 result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
                 for (int i = 0; i < predsJsonArray.length(); i++) {
@@ -328,7 +333,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
             } catch (JSONException e) {
                 Log.e("Error", "Error processing JSON results", e);
             }
-
             return result;
         }
     }
