@@ -58,6 +58,8 @@ public class ActivityList {
             return this.time;
         }
         public Bitmap getImage(){ return this.image; }
+        public String getPlaceID() {return this.placeID;}
+        public String getPhotoRef() {return this.photoRef;}
 
         public void setName(String name){ this.name = name;}
         public void setPhotoRef(String ref){ this.photoRef = ref;}

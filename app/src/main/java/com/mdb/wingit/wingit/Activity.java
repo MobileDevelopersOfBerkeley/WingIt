@@ -20,6 +20,7 @@ public class Activity {
         this.name = name;
         this.time = time;
         this.photoRef = "hi";
+
     }
 
     public String getName() {
@@ -32,6 +33,9 @@ public class Activity {
         return this.photoRef;
     }
     public Bitmap getImage(){ return this.image; }
+    public String getPlaceID() {
+        return this.placeID;
+    }
 
 
     public void setName(String name){ this.name = name;}
