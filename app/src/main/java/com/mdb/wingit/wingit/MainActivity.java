@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     static LatLng current; // current location in lat and long
     static int indexPlace = 0;
     static String[] topFive = new String[5];
+    static ArrayList<String> otherFive = new ArrayList<>();
     static ArrayList<Place> currentLocations;
 
 
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(currentLocations.size() != 0) {
                     for (int i = 0; i < 5; i++) {
-                        topFive[i] = currentLocations.get(i).getName().toString();
+                        otherFive.add(currentLocations.get(i).getName().toString());
                     }
                     current = currentLocations.get(indexPlace).getLatLng();
                 }
@@ -242,7 +243,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.change:
                     // 1. Instantiate an AlertDialog.Builder with its constructor
-
+                    for(int i=0; i<otherFive.size(); i++){
+                        topFive[i] = otherFive.get(i);
+                    }
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Pick a better location:")
                             .setItems(topFive, new DialogInterface.OnClickListener() {

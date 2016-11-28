@@ -306,6 +306,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                 char[] buff = new char[1024];
                 while ((read = in.read(buff)) != -1) {
                     jsonResults.append(buff, 0, read);
+                    Log.i("jsonResults length", jsonResults.length()+"");
                 }
             } catch (IOException e) {
                 Log.e("Error", "Error connecting to Places API", e);
