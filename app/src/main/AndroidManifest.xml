@@ -28,7 +28,7 @@
         <!-- the API Key below is Abhi's; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAoGXVG0Setn0ZqQiWeGyHinrspMAA3Kvo" />
+            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" />
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar">

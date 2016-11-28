@@ -106,7 +106,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 //        rv.setAdapter(adapter);
 //        rv.addOnScrollListener(new CenterScrollListener());
 
-
+        Log.i("Layout", "before declaring adapter");
         adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -173,6 +173,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         while(two==three||one==three){
             three = getRandom(listSize);
         }
+        Log.i("Three Acts", list.get(one).getName());
+        Log.i("Three Acts", list.get(two).getName());
+        Log.i("Three Acts", list.get(three).getName());
         three_acts.add(list.get(one));
         three_acts.add(list.get(two));
         three_acts.add(list.get(three));
@@ -394,15 +397,14 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
+                    Log.i("Layout", "before getCurrentPlaces()");
                     getCurrentPlaces();
                 } else {
-
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
                 return;
             }
-
             // other 'case' lines to check for other
             // permissions this app might request
         }

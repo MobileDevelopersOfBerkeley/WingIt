@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("status", likelyPlaces.getStatus().toString());
                 double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.i("place", placeLikelihood.getPlace().getName().toString());
+                    Log.i("Place", placeLikelihood.getPlace().getName().toString());
                     currentLocations.add(placeLikelihood.getPlace());
-                    Log.i("Error", String.format("Place '%s' has likelihood: %g",
+                    Log.i("Likelihood", String.format("Place '%s' has likelihood: %g",
                             placeLikelihood.getPlace().getName(),
                             placeLikelihood.getLikelihood()));
                 }
@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         private AdventureList adventures;
         //DatabaseReference db = database.getReference().child("adventures");
         String adventureKey;
+        private Adventure adventure;
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -194,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
             adventures = new AdventureList();
+            adventure = new Adventure();
+            user = FirebaseAuth.getInstance().getCurrentUser();
 
 
             if (currentLocations.size() ==0) {
@@ -257,12 +260,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // TODO: Put Adventure into DB
         public String createAdventure() {
+            // Create a new adventure and add to db
             DatabaseReference adventuredb = mDatabase.child("Adventures").push();
-            adventuredb.setValue(adventures);
-            DatabaseReference adventurelist = mDatabase.child("Users").child(FirebaseAuth
-                    .getInstance().getCurrentUser().getUid()).child("adventurelist").push();
-            adventurelist.setValue(adventuredb.getKey());
+            adventuredb.setValue(adventure);
+
+            // Add adventure to user's adventurelist
+            // TODO: do we need to get the User object from DB first and then add to its adventureKeyList?
+            DatabaseReference userAdventureList = mDatabase.child("Users").child(user.getUid()).child("adventurelist").push();
+            userAdventureList.setValue(adventuredb.getKey());
+
             return adventuredb.getKey();
         }
 
@@ -274,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return ans;
         }
-
 
     }
 
