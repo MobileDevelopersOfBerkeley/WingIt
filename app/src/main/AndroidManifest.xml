@@ -6,10 +6,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -25,22 +23,24 @@
         android:label="WingIt"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!-- the API Key below is Sharie's; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI"></meta-data>
-            <!-- android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" /> -->
-
-
-
         <activity
-            android:name=".Login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".Splash"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name=".MainActivity"
@@ -50,7 +50,7 @@
         <activity
             android:name=".DetailScreen"
             android:label="@string/title_activity_detail_screen"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_sign_up" />
@@ -62,6 +62,7 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
+
 
     </application>
 
