@@ -1,6 +1,5 @@
 package com.mdb.wingit.wingit;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -56,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private GoogleApiClient client;
     private int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     static LatLng current; // current location in lat and long
+    static String currentName = "";
     static int indexPlace = 0;
     static String[] topFive;
+    private static AdventureAdapter adapter;
+    private static ArrayList<Adventure> adventures = new ArrayList<>();
 
     static ArrayList<String> otherFive = new ArrayList<>();
     static ArrayList<Place> currentLocations;
@@ -145,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
                         otherFive.add(currentLocations.get(i).getName().toString());
                     }
                     current = currentLocations.get(indexPlace).getLatLng();
+                    currentName = currentLocations.get(indexPlace).getName().toString();
+                    StartOptions.updateLocation();
                 }
                 likelyPlaces.release();
             }
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class StartOptions extends Fragment implements View.OnClickListener {
 
-        TextView location;
+        static TextView location;
         // FirebaseDatabase database;
         private DatabaseReference mDatabase;
         private FirebaseUser user;
@@ -200,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
             CardView food = (CardView) v.findViewById(R.id.food);
             CardView activity = (CardView) v.findViewById(R.id.activity);
             location = (TextView) v.findViewById(R.id.location2);
-            TextView change = (TextView) v.findViewById(R.id.change);
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
             // adventures = new AdventureList();
@@ -208,19 +210,16 @@ public class MainActivity extends AppCompatActivity {
             user = FirebaseAuth.getInstance().getCurrentUser();
             date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-
-            if (currentLocations.size() ==0) {
-                location.setText("Pleasanton");
-            }
-            else {
-                location.setText("Current location: " + currentLocations.get(indexPlace).getName().toString());
-            }
+            location.setText("Loading");
 
 
-            change.setOnClickListener(this);
             food.setOnClickListener(this);
             activity.setOnClickListener(this);
             return v;
+        }
+
+        public static void updateLocation() {
+            location.setText(currentName);
         }
 
         //Intent intent = new Intent(getActivity(), Carousel.class);
@@ -250,31 +249,31 @@ public class MainActivity extends AppCompatActivity {
                     activityIntent.putExtra("adventureKey", adventureKey);
                     startActivity(activityIntent);
                     break;
-                case R.id.change:
-                    // 1. Instantiate an AlertDialog.Builder with its constructor
-
-                    if(currentLocations.size()>=5) {
-                        topFive = new String[5];
-                    }
-                    else {
-                        topFive = new String[currentLocations.size()];
-                    }
-                    for (int i = 0; i < currentLocations.size(); i++) {
-                        topFive[i] = currentLocations.get(i).getName().toString();
-                    }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Pick a better location:")
-                            .setItems(topFive, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // The 'which' argument contains the index position
-                                    // of the selected item
-                                    String name = topFive[which];
-                                    current = findObject(name);
-                                    location.setText("Current location: "+name);
-                                }
-                            });
-                    // 2. Get the AlertDialog from create()
-                    AlertDialog dialog = builder.create();
+//                case R.id.change:
+//                    // 1. Instantiate an AlertDialog.Builder with its constructor
+//
+//                    if(currentLocations.size()>=5) {
+//                        topFive = new String[5];
+//                    }
+//                    else {
+//                        topFive = new String[currentLocations.size()];
+//                    }
+//                    for (int i = 0; i < currentLocations.size(); i++) {
+//                        topFive[i] = currentLocations.get(i).getName().toString();
+//                    }
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setTitle("Pick a better location:")
+//                            .setItems(topFive, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // The 'which' argument contains the index position
+//                                    // of the selected item
+//                                    String name = topFive[which];
+//                                    current = findObject(name);
+//                                    location.setText("Current location: "+name);
+//                                }
+//                            });
+//                    // 2. Get the AlertDialog from create()
+//                    AlertDialog dialog = builder.create();
 
             }
         }
@@ -282,19 +281,22 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Put Adventure into DB
         public void createAdventure() {
             // Create a new adventure and add to db
-            adventure.setStartloc(currentLocations.get(indexPlace).getName().toString());
+            adventure.setStartloc(currentName);
             adventure.setDate(date);
             final DatabaseReference adventureDB = mDatabase.child("Adventures").push();
             adventureDB.setValue(adventure);
+            adventures.add(adventure);
+            adapter.notifyDataSetChanged();
 
             // Add adventure to user's adventurelist
-            String uid = user.getUid();
+            final String uid = user.getUid();
             DatabaseReference userAdventureList = mDatabase.child("Users").child(uid);
-            userAdventureList.addValueEventListener(new ValueEventListener() {
+            userAdventureList.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
                     user.addAdventureKey(adventureDB.getKey());
+                    mDatabase.child("Users").child(uid).child("adventureKeysList").setValue(user.getAdventureKeysList());
                 }
 
                 @Override
@@ -318,10 +320,8 @@ public class MainActivity extends AppCompatActivity {
     public static class AdventureLog extends Fragment {
 
         private RecyclerView rv;
-        private AdventureAdapter adapter;
         private DatabaseReference mDatabase;
         private ArrayList<String> adventureKeys = new ArrayList<>();
-        private ArrayList<Adventure> adventures = new ArrayList<>();
         // private AdventureList adventureList;
         // private ArrayList<AdventureList.Adventure> adventures;
 
@@ -338,29 +338,33 @@ public class MainActivity extends AppCompatActivity {
 
             // Get the Adventure keys from the current User
             DatabaseReference adventureKeyDB = mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            adventureKeyDB.addValueEventListener(new ValueEventListener() {
+            adventureKeyDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    adventureKeys = user.getAdventureKeyList();
-                }
+                    adventureKeys = user.getAdventureKeysList();
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    // Get the correct Adventures with the Adventure keys
+                    DatabaseReference adventuresDB = mDatabase.child("Adventures");
+                    adventuresDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                }
-            });
-
-            // Get the correct Adventures with the Adventure keys
-            DatabaseReference adventuresDB = mDatabase.child("Adventures");
-            adventuresDB.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dsp: dataSnapshot.getChildren()) {
-                        if (adventureKeys.contains(dsp)) {
-                            adventures.add((Adventure) dsp.getValue());
+                            for (DataSnapshot dsp: dataSnapshot.getChildren()) {
+                                Log.i("AdventureData", dsp.toString());
+                                if (adventureKeys.contains(dsp.getKey())) {
+                                    Adventure ad = dsp.getValue(Adventure.class);
+                                    adventures.add(ad);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 @Override
