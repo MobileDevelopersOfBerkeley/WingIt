@@ -9,12 +9,16 @@ import java.util.ArrayList;
 public class User {
     String email;
     String name;
-    ArrayList<String> adventureKeyList;
+    ArrayList<String> adventureKeysList;
+
+    public User() {
+        this.adventureKeysList = new ArrayList<>();
+    }
 
     public User(String email, String name) {
         this.email = email;
         this.name = name;
-        this.adventureKeyList = new ArrayList<>();
+        this.adventureKeysList = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -25,11 +29,11 @@ public class User {
         return this.name;
     }
 
-    public ArrayList<String> getAdventureKeyList() {
-        return this.adventureKeyList;
+    public ArrayList<String> getAdventureKeysList() {
+        return this.adventureKeysList;
     }
 
     public void addAdventureKey(String key) {
-        this.adventureKeyList.add(key);
+        this.adventureKeysList.add(key);
     }
 }
