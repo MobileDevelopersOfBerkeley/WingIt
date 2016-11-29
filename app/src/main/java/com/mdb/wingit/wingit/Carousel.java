@@ -184,7 +184,6 @@ public class Carousel extends AppCompatActivity {
             final String request = params[0];
             HttpURLConnection conn = null;
             StringBuilder jsonResults = new StringBuilder();
-            Log.i("async task","is working?");
             ArrayList<ActivityList.Activity> result = new ArrayList<>();
             try {
                 URL url = new URL(request);
@@ -219,10 +218,8 @@ public class Carousel extends AppCompatActivity {
                     JSONObject location = geometry.getJSONObject("location");
 
                     if(predsJsonArray.getJSONObject(i).has("photos")) {
-                        Log.i("getting", "photos");
                         JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
                         if(photos.getJSONObject(0).length()!=0){
-                            Log.i("why","pls");
                             JSONObject photoObject = photos.getJSONObject(0);
                             activity.setPhotoRef(photoObject.getString("photo_reference"));
                         }

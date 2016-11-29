@@ -146,40 +146,6 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
             case R.id.nextActivityButton:
                 //TODO: insert dialog to choose between food and activity
-//                AlertDialog.Builder builder = new AlertDialog.Builder(DetailScreen.this);
-//                builder.setPositiveButton("Activity", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
-//                        t.createAdventure();
-//
-//                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
-//                        activityIntent.putExtra("food", false);
-//                        activityIntent.putExtra("current",current);
-//                        activityIntent.putExtra("adventureKey", t.adventureKey);
-//                        startActivity(activityIntent);
-//                    }
-//                });
-//                builder.setNegativeButton("Food", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
-//                        t.createAdventure();
-//
-//                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
-//                        foodIntent.putExtra("food", true);
-//                        foodIntent.putExtra("current", current);
-//                        foodIntent.putExtra("adventureKey", t.adventureKey);
-//                        startActivity(foodIntent);
-//
-//                    }
-//                });
-//                AlertDialog dialog = builder.create();
-//                Button activity = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-//                Button food = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-//                activity.setBackgroundResource(R.drawable.activity);
-//                food.setBackgroundResource(R.drawable.food);
-//                dialog.show();
-
-
                 Dialog dialog = new Dialog(DetailScreen.this);
                 dialog.setContentView(R.layout.dialog_layout);
                 dialog.setTitle("Continue your adventure");
@@ -193,7 +159,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                         Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
                         activityIntent.putExtra("food", false);
                         activityIntent.putExtra("current",current);
-                        activityIntent.putExtra("adventureKey", t.adventureKey);
+                        activityIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
                         startActivity(activityIntent);
                     }
                 });
@@ -202,13 +168,12 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 food.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MainActivity.StartOptions t = new MainActivity.StartOptions();
-                        t.createAdventure();
+                        MainActivity.StartOptions.createAdventure();
 
                         Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
                         foodIntent.putExtra("food", true);
                         foodIntent.putExtra("current", current);
-                        foodIntent.putExtra("adventureKey", t.adventureKey);
+                        foodIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
                         startActivity(foodIntent);
                     }
                 });
