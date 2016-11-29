@@ -102,6 +102,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                             dialog.cancel();
                         }
                     });
+                    builder.setMessage("Are you sure you want to go to " + activities.get(position).getName() + "?");
 
                     AlertDialog dialog = builder.create();
                     dialog.show();

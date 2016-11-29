@@ -1,5 +1,6 @@
 package com.mdb.wingit.wingit;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -7,10 +8,12 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +31,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import static com.mdb.wingit.wingit.MainActivity.current;
 
 public class DetailScreen extends AppCompatActivity implements View.OnClickListener{
 
@@ -130,6 +135,25 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.nextActivityButton:
                 //TODO: insert dialog to choose between food and activity
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setPositiveButton("Activity", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        
+                    }
+                });
+                builder.setNegativeButton("Food", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                Button activity = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button food = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                activity.setBackgroundResource(R.drawable.activity);
+                food.setBackgroundResource(R.drawable.food);
+                dialog.show();
+
+
                 break;
             case R.id.endTripButton:
                 //TODO: save trip in log
