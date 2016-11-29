@@ -1,5 +1,7 @@
 package com.mdb.wingit.wingit;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -7,13 +9,18 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,6 +35,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.mdb.wingit.wingit.MainActivity.current;
+
 public class DetailScreen extends AppCompatActivity implements View.OnClickListener{
 
     Toolbar toolbar;
@@ -40,6 +49,9 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     TextView r1, r2, r3, r4, r5;
     ArrayList<String> result = new ArrayList<String>();
     ArrayList<String> reviews = new ArrayList<>();
+    ArrayList<TextView> reviewBoxes;
+    Button nextButton;
+    Button endButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,32 +64,41 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
         getReviews();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolbarLayout.setTitle(getIntent().getStringExtra("name"));
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        String photoRef = getIntent().getStringExtra("photoRef");
+        Glide.with(getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&key="+Carousel.API_KEY_NONRESTRICTED).into(imageView);
         r1 = (TextView) findViewById(R.id.r1);
         r2 = (TextView) findViewById(R.id.r2);
         r3 = (TextView) findViewById(R.id.r3);
         r4 = (TextView) findViewById(R.id.r4);
         r5 = (TextView) findViewById(R.id.r5);
-
-
+        reviewBoxes = new ArrayList<TextView>();
+        reviewBoxes.add(r1);
+        reviewBoxes.add(r2);
+        reviewBoxes.add(r3);
+        reviewBoxes.add(r4);
+        reviewBoxes.add(r5);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent activityIntent = getIntent();
-                //TODO: pass coordinate value of destination through intent
-                //String coordinates = activityIntent.getStringExtra("coordinates");
-                String coordinates = "20.5666,45.345";
+                String coordinates = getIntent().getStringExtra("coordinates");
                 Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
             }
         });
 
+        nextButton = (Button) findViewById(R.id.nextActivityButton);
+        endButton = (Button) findViewById(R.id.endTripButton);
+
+        nextButton.setOnClickListener(this);
+        endButton.setOnClickListener(this);
     }
 
     public void getReviews(){
@@ -91,17 +112,24 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPostExecute(ArrayList<String> activityResult) {
                 reviews = activityResult;
+                if(reviews.size()<5){
+                    setFirstReview(5-reviews.size());
+                }
                 setReviews();
             }
         }.execute(searchRequest);
     }
 
+    public void setFirstReview(int num){
+        for(int i=num; i<5; i++){
+            reviewBoxes.get(i).setText("No review yet.");
+        }
+    }
+
     public void setReviews(){
-        r1.setText(reviews.get(0));
-        r2.setText(reviews.get(1));
-        r3.setText(reviews.get(2));
-        r4.setText(reviews.get(3));
-        r5.setText(reviews.get(4));
+        for(int i=0; i<5; i++){
+            reviewBoxes.get(i).setText("\"" + reviews.get(i) + "\"");
+        }
     }
 
     public void onClick(View view) {
@@ -115,11 +143,87 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
                 break;
+
             case R.id.nextActivityButton:
                 //TODO: insert dialog to choose between food and activity
+//                AlertDialog.Builder builder = new AlertDialog.Builder(DetailScreen.this);
+//                builder.setPositiveButton("Activity", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+//                        t.createAdventure();
+//
+//                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
+//                        activityIntent.putExtra("food", false);
+//                        activityIntent.putExtra("current",current);
+//                        activityIntent.putExtra("adventureKey", t.adventureKey);
+//                        startActivity(activityIntent);
+//                    }
+//                });
+//                builder.setNegativeButton("Food", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+//                        t.createAdventure();
+//
+//                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
+//                        foodIntent.putExtra("food", true);
+//                        foodIntent.putExtra("current", current);
+//                        foodIntent.putExtra("adventureKey", t.adventureKey);
+//                        startActivity(foodIntent);
+//
+//                    }
+//                });
+//                AlertDialog dialog = builder.create();
+//                Button activity = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+//                Button food = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+//                activity.setBackgroundResource(R.drawable.activity);
+//                food.setBackgroundResource(R.drawable.food);
+//                dialog.show();
+
+
+                Dialog dialog = new Dialog(DetailScreen.this);
+                dialog.setContentView(R.layout.dialog_layout);
+                CardView activity = (CardView) dialog.findViewById(R.id.activity);
+                activity.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        t.createAdventure();
+
+                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
+                        activityIntent.putExtra("food", false);
+                        activityIntent.putExtra("current",current);
+                        activityIntent.putExtra("adventureKey", t.adventureKey);
+                        startActivity(activityIntent);
+                    }
+                });
+
+                CardView food = (CardView) dialog.findViewById(R.id.food);
+                food.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        t.createAdventure();
+
+                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
+                        foodIntent.putExtra("food", true);
+                        foodIntent.putExtra("current", current);
+                        foodIntent.putExtra("adventureKey", t.adventureKey);
+                        startActivity(foodIntent);
+                    }
+                });
+
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(dialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                dialog.show();
+                dialog.getWindow().setAttributes(lp);
+
                 break;
             case R.id.endTripButton:
                 //TODO: save trip in log
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

@@ -2,10 +2,13 @@ package com.mdb.wingit.wingit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,12 +36,10 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
 
     private Context context;
     private ArrayList<ActivityList.Activity> activities = new ArrayList();
-    private static RecyclerViewClickListener itemListener;
 
-    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities, RecyclerViewClickListener itemListener) {
+    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities) {
         this.context = context;
         this.activities = activities;
-        this.itemListener = itemListener;
     }
 
     @Override
@@ -63,30 +64,49 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
         Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+activity.getPhotoRef()+"&key="+Carousel.API_KEY_NONRESTRICTED).into(holder.activityPic);
-        holder.activityPic.setImageBitmap(activity.getImage());
-        holder.currCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.recyclerViewListClicked(v, position);
-            }
-        });
+
     }
-
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView activityTitle;
         ImageView activityPic;
         CardView currCard;
-
+        int position;
 
         public CustomViewHolder (View view) {
             super(view);
             this.activityTitle = (TextView) view.findViewById(R.id.activityTitle);
             this.activityPic = (ImageView) view.findViewById(R.id.activityPic);
             this.currCard = (CardView) view.findViewById(R.id.card_curr_option);
+            currCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    position = getAdapterPosition();
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent detailIntent = new Intent(context, DetailScreen.class);
+                            detailIntent.putExtra("name", activities.get(position).getName());
+                            detailIntent.putExtra("place_id", activities.get(position).getPlaceID());
+                            detailIntent.putExtra("coordinates", activities.get(position).getLat()+","+activities.get(position).getLon());
+                            detailIntent.putExtra("photoRef", activities.get(position).getPhotoRef());
+                            context.startActivity(detailIntent);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setMessage("Are you sure you want to go to " + activities.get(position).getName() + "?");
 
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
         }
+
+
     }
 
 

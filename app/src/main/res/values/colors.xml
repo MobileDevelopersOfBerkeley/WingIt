@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
     <color name = "fade_gray" type = "color">#CCFFFFFF</color>
     <color name="blueish" type ="color">#25b7d3</color>
 
     <color name="greenish" type ="color">#32bea6</color>
+    <color name="colorAccent">#303F9F</color>
+    <color name="green">#32bea6</color>
+    <color name="blue">#25b7d3</color>
 </resources>
