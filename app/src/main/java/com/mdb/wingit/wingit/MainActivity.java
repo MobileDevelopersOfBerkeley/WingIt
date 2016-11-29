@@ -36,10 +36,15 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("oncreate", "this is stupid");
 
-        // setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -170,13 +176,14 @@ public class MainActivity extends AppCompatActivity {
     public static class StartOptions extends Fragment implements View.OnClickListener {
 
         TextView location;
-        FirebaseDatabase database;
+        // FirebaseDatabase database;
         private DatabaseReference mDatabase;
         private FirebaseUser user;
-        private AdventureList adventures;
+        // private AdventureList adventures;
         //DatabaseReference db = database.getReference().child("adventures");
         String adventureKey;
         private Adventure adventure;
+        private String date;
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -196,9 +203,10 @@ public class MainActivity extends AppCompatActivity {
             TextView change = (TextView) v.findViewById(R.id.change);
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            adventures = new AdventureList();
+            // adventures = new AdventureList();
             adventure = new Adventure();
             user = FirebaseAuth.getInstance().getCurrentUser();
+            date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
 
             if (currentLocations.size() ==0) {
@@ -223,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.food:
                     //String key = db.push().getKey();
                     // TODO: Create adventure and add to database
-                    adventureKey = createAdventure();
+                    createAdventure();
 
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
@@ -234,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.activity:
                     //String key1 = db.push().getKey();
                     // TODO: Create adventure and add to database
-                    adventureKey = createAdventure();
+                    createAdventure();
 
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
@@ -261,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                                     // The 'which' argument contains the index position
                                     // of the selected item
                                     String name = topFive[which];
-                                    current = findFuckinObject(name);
+                                    current = findObject(name);
                                     location.setText("Current location: "+name);
                                 }
                             });
@@ -272,20 +280,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // TODO: Put Adventure into DB
-        public String createAdventure() {
+        public void createAdventure() {
             // Create a new adventure and add to db
-            DatabaseReference adventuredb = mDatabase.child("Adventures").push();
-            adventuredb.setValue(adventure);
+            adventure.setStartloc(currentLocations.get(indexPlace).getName().toString());
+            adventure.setDate(date);
+            final DatabaseReference adventureDB = mDatabase.child("Adventures").push();
+            adventureDB.setValue(adventure);
 
             // Add adventure to user's adventurelist
-            // TODO: do we need to get the User object from DB first and then add to its adventureKeyList?
-            DatabaseReference userAdventureList = mDatabase.child("Users").child(user.getUid()).child("adventurelist").push();
-            userAdventureList.setValue(adventuredb.getKey());
+            String uid = user.getUid();
+            DatabaseReference userAdventureList = mDatabase.child("Users").child(uid);
+            userAdventureList.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    user.addAdventureKey(adventureDB.getKey());
+                }
 
-            return adventuredb.getKey();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
-        public LatLng findFuckinObject(String name){
+        public LatLng findObject(String name){
             LatLng ans = new LatLng(0,0);
             for(Place p : currentLocations){
                 if(p.getName().equals(name))
@@ -300,21 +319,58 @@ public class MainActivity extends AppCompatActivity {
 
         private RecyclerView rv;
         private AdventureAdapter adapter;
-        private AdventureList adventureList;
-        private ArrayList<AdventureList.Adventure> adventures;
+        private DatabaseReference mDatabase;
+        private ArrayList<String> adventureKeys = new ArrayList<>();
+        private ArrayList<Adventure> adventures = new ArrayList<>();
+        // private AdventureList adventureList;
+        // private ArrayList<AdventureList.Adventure> adventures;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            adventureList = new AdventureList();
-            adventures = adventureList.getArrayList();
+            // adventureList = new AdventureList();
+            // adventures = adventureList.getArrayList();
             View view = inflater.inflate(R.layout.activity_adventure_log, container, false);
 
             rv = (RecyclerView) view.findViewById(R.id.adventureLogRv);
             rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            // Get the Adventure keys from the current User
+            DatabaseReference adventureKeyDB = mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            adventureKeyDB.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    adventureKeys = user.getAdventureKeyList();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            // Get the correct Adventures with the Adventure keys
+            DatabaseReference adventuresDB = mDatabase.child("Adventures");
+            adventuresDB.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dsp: dataSnapshot.getChildren()) {
+                        if (adventureKeys.contains(dsp)) {
+                            adventures.add((Adventure) dsp.getValue());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             adapter = new AdventureAdapter(getContext(), adventures);
             rv.setAdapter(adapter);
-
             return view;
         }
     }
