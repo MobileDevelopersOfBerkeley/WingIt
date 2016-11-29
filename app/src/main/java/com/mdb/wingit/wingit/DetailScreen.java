@@ -152,7 +152,10 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
     public void setReviews(int num){
         for(int i=0; i<num; i++){
-            reviewBoxes.get(i).setText("\"" + reviews.get(i) + "\"");
+            if (!reviewBoxes.get(i).equals("")) {
+                reviewBoxes.get(i).setText("\"" + reviews.get(i) + "\"");
+            }
+
         }
     }
 

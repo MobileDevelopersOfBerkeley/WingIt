@@ -60,6 +60,7 @@ public class Carousel extends AppCompatActivity {
     private GoogleApiClient client;
     private final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private boolean checkedPermission = false;
+    private int searchCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,12 +162,16 @@ public class Carousel extends AppCompatActivity {
         new RequestTask() {
             @Override
             protected void onPreExecute() {
-
+                searchCount++;
             }
             @Override
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
                 if(result.size() < 3) {
+                    if (searchCount == 5) {
+                        Toast.makeText(Carousel.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                     getNearbyActivity();
                 }
                 randomThrees(result);
