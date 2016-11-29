@@ -166,7 +166,7 @@ public class Carousel extends AppCompatActivity {
             @Override
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
-                if(result.size() == 0) {
+                if(result.size() < 3) {
                     getNearbyActivity();
                 }
                 randomThrees(result);
