@@ -90,7 +90,7 @@ public class SignUp extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String uid = mAuth.getCurrentUser().getUid();
-                            DatabaseReference userdb = mDatabase.child("Users").child(uid).push();
+                            DatabaseReference userdb = mDatabase.child("Users").child(uid);
                             userdb.setValue(user);
                             startActivity(new Intent(SignUp.this, MainActivity.class));
                         } else if (!(task.isSuccessful())) {
