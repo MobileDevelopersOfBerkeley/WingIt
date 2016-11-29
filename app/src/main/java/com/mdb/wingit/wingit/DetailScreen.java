@@ -1,5 +1,6 @@
 package com.mdb.wingit.wingit;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,9 +11,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,6 +50,8 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     ArrayList<String> result = new ArrayList<String>();
     ArrayList<String> reviews = new ArrayList<>();
     ArrayList<TextView> reviewBoxes;
+    Button nextButton;
+    Button endButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +94,11 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        nextButton = (Button) findViewById(R.id.nextActivityButton);
+        endButton = (Button) findViewById(R.id.endTripButton);
+
+        nextButton.setOnClickListener(this);
+        endButton.setOnClickListener(this);
     }
 
     public void getReviews(){
@@ -135,24 +145,78 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.nextActivityButton:
                 //TODO: insert dialog to choose between food and activity
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setPositiveButton("Activity", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        
-                    }
-                });
-                builder.setNegativeButton("Food", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(DetailScreen.this);
+//                builder.setPositiveButton("Activity", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+//                        t.createAdventure();
+//
+//                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
+//                        activityIntent.putExtra("food", false);
+//                        activityIntent.putExtra("current",current);
+//                        activityIntent.putExtra("adventureKey", t.adventureKey);
+//                        startActivity(activityIntent);
+//                    }
+//                });
+//                builder.setNegativeButton("Food", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+//                        t.createAdventure();
+//
+//                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
+//                        foodIntent.putExtra("food", true);
+//                        foodIntent.putExtra("current", current);
+//                        foodIntent.putExtra("adventureKey", t.adventureKey);
+//                        startActivity(foodIntent);
+//
+//                    }
+//                });
+//                AlertDialog dialog = builder.create();
+//                Button activity = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+//                Button food = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+//                activity.setBackgroundResource(R.drawable.activity);
+//                food.setBackgroundResource(R.drawable.food);
+//                dialog.show();
 
+
+                Dialog dialog = new Dialog(DetailScreen.this);
+                dialog.setContentView(R.layout.dialog_layout);
+                CardView activity = (CardView) dialog.findViewById(R.id.activity);
+                activity.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        t.createAdventure();
+
+                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
+                        activityIntent.putExtra("food", false);
+                        activityIntent.putExtra("current",current);
+                        activityIntent.putExtra("adventureKey", t.adventureKey);
+                        startActivity(activityIntent);
                     }
                 });
-                AlertDialog dialog = builder.create();
-                Button activity = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                Button food = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                activity.setBackgroundResource(R.drawable.activity);
-                food.setBackgroundResource(R.drawable.food);
+
+                CardView food = (CardView) dialog.findViewById(R.id.food);
+                food.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        t.createAdventure();
+
+                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
+                        foodIntent.putExtra("food", true);
+                        foodIntent.putExtra("current", current);
+                        foodIntent.putExtra("adventureKey", t.adventureKey);
+                        startActivity(foodIntent);
+                    }
+                });
+
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(dialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
                 dialog.show();
-
+                dialog.getWindow().setAttributes(lp);
 
                 break;
             case R.id.endTripButton:
