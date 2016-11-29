@@ -42,7 +42,8 @@ public class ActivityList {
         String photoRef;
         String placeID;
         String rating;
-        Bitmap image;
+        String lat;
+        String lon;
 
         public Activity(){}
 
@@ -57,7 +58,8 @@ public class ActivityList {
         public String getTime() {
             return this.time;
         }
-        public Bitmap getImage(){ return this.image; }
+        public String getLat(){return this.lat;}
+        public String getLon(){return this.lon;}
         public String getPlaceID() {return this.placeID;}
         public String getPhotoRef() {return this.photoRef;}
 
@@ -65,6 +67,7 @@ public class ActivityList {
         public void setPhotoRef(String ref){ this.photoRef = ref;}
         public void setPlaceID(String id){this.placeID = id;}
         public void setRating(String rating){this.rating = rating;}
-        public void setBitmap(Bitmap image){this.image=image;}
+        public void setLat(String lat){this.lat = lat;}
+        public void setLon(String lon){this.lon = lon;}
     }
 }

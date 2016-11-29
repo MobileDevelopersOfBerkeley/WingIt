@@ -48,11 +48,10 @@ import java.util.ArrayList;
 import static com.mdb.wingit.wingit.MainActivity.currentLocations;
 import static com.mdb.wingit.wingit.MainActivity.indexPlace;
 
-public class Carousel extends AppCompatActivity implements View.OnClickListener, RecyclerViewClickListener {
+public class Carousel extends AppCompatActivity implements RecyclerViewClickListener {
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
-    private Button go;
     private ArrayList<ActivityList.Activity> result, three_acts;
     private ActivityList.Activity final_pick;
     public static final String API_KEY = "AIzaSyCVVjztDvgZ6iGwT-2JWp2-5AbfdIs7s7I";
@@ -99,8 +98,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
         result = new ArrayList<>();
         final_pick = new ActivityList.Activity();
         three_acts = new ArrayList<>();
-        go = (Button) findViewById(R.id.go);
-        go.setOnClickListener(this);
         rv = (RecyclerView) findViewById(R.id.carouselrv);
         current = (LatLng) getIntent().getExtras().get("current");
 //        rv.setLayoutManager(layoutManager);
@@ -109,7 +106,7 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
 //        rv.addOnScrollListener(new CenterScrollListener());
 
         Log.i("Layout", "before declaring adapter");
-        adapter = new CarouselAdapter(getApplicationContext(), three_acts, itemListener);
+        adapter = new CarouselAdapter(Carousel.this, three_acts, itemListener);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -224,46 +221,6 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.go:
-                Toast.makeText(Carousel.this, "Position" + selectedPos, Toast.LENGTH_SHORT).show();
-                if (true) { // TODO: 11/28/2016 change to isHighlighted
-                    final_pick = three_acts.get(selectedPos); // selected activity
-                    // TODO: create new activity in database
-//                    final DatabaseReference activitydb = dbref.child("Activities").push();
-//                    activitydb.setValue(final_pick);
-//
-//                    // TODO: if adventure is empty, set adventure's first to activity
-//                    DatabaseReference adventuredb = dbref.child("Adventures").child(adventureKey).push();
-//                    dbref.child("Adventures").child(adventureKey).addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            AdventureList.Adventure adventure = (AdventureList.Adventure) dataSnapshot.getValue();
-//                            if (adventure.getActivityKeyList().size() == 0) {
-//                                adventure.setFirst(final_pick.getName());
-//                            }
-//
-//                            // TODO: add activity to adventure's list
-//                            adventure.addActivity(activitydb.getKey());
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-
-
-                }
-                Intent intent = new Intent(Carousel.this, DetailScreen.class);
-                intent.putExtra("place_id", final_pick.getPlaceID());
-                startActivity(intent);
-                break;
-        }
-    }
-
-    @Override
     public void recyclerViewListClicked(View v, int position) {
         this.selectedPos = position;
     }
@@ -310,6 +267,9 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                 result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
                 for (int i = 0; i < predsJsonArray.length(); i++) {
                     ActivityList.Activity activity = new ActivityList.Activity();
+                    JSONObject geometry = predsJsonArray.getJSONObject(i).getJSONObject("geometry");
+                    JSONObject location = geometry.getJSONObject("location");
+
                     if(predsJsonArray.getJSONObject(i).has("photos")) {
                         Log.i("getting", "photos");
                         JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
@@ -322,7 +282,8 @@ public class Carousel extends AppCompatActivity implements View.OnClickListener,
                     }
                     activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
                     activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
-
+                    activity.setLat(location.getString("lat"));
+                    activity.setLon(location.getString("lng"));
                     result.add(activity);
                 }
             } catch (JSONException e) {

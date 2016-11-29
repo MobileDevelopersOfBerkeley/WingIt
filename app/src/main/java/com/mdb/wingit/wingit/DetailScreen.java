@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -56,6 +57,8 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        String photoRef = getIntent().getExtras().getString("photoRef");
+        Glide.with(getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&key="+Carousel.API_KEY_NONRESTRICTED).into(imageView);
         r1 = (TextView) findViewById(R.id.r1);
         r2 = (TextView) findViewById(R.id.r2);
         r3 = (TextView) findViewById(R.id.r3);
@@ -69,9 +72,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 Intent activityIntent = getIntent();
-                //TODO: pass coordinate value of destination through intent
-                //String coordinates = activityIntent.getStringExtra("coordinates");
-                String coordinates = "20.5666,45.345";
+                String coordinates = activityIntent.getStringExtra("coordinates");
                 Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
