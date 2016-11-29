@@ -98,7 +98,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
             protected void onPostExecute(ArrayList<String> activityResult) {
                 reviews = activityResult;
                 if(reviews.size()<5){
-                    setFirstReview(reviews.size());
+                    setFirstReview(5-reviews.size());
                 }
                 setReviews();
             }
@@ -106,7 +106,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setFirstReview(int num){
-        for(int i=0; i<num; i++){
+        for(int i=num; i<5; i++){
             reviewBoxes.get(i).setText("No review yet.");
         }
     }
