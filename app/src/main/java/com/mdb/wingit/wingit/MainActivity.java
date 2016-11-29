@@ -180,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
 
         static TextView location;
         // FirebaseDatabase database;
-        private DatabaseReference mDatabase;
-        private FirebaseUser user;
+        private static DatabaseReference mDatabase;
+        private static FirebaseUser user;
         // private AdventureList adventures;
         //DatabaseReference db = database.getReference().child("adventures");
-        String adventureKey;
-        private Adventure adventure;
-        private String date;
+        static String adventureKey;
+        private static Adventure adventure;
+        private static String date;
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // TODO: Put Adventure into DB
-        public void createAdventure() {
+        public static void createAdventure() {
             // Create a new adventure and add to db
             adventure.setStartloc(currentName);
             adventure.setDate(date);
@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
     public static class AdventureLog extends Fragment {
 
         private RecyclerView rv;
-        private DatabaseReference mDatabase;
+        private static DatabaseReference mDatabase;
         private ArrayList<String> adventureKeys = new ArrayList<>();
         // private AdventureList adventureList;
         // private ArrayList<AdventureList.Adventure> adventures;
