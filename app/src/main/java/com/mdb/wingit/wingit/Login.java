@@ -66,6 +66,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent openRegister = new Intent(getApplicationContext(), SignUp.class);
+                openRegister.putExtra("background", screenNumber);
                 startActivity(openRegister);
             }
         });
