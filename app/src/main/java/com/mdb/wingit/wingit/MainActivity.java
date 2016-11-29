@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public static void updateLocation() {
-            location.setText(currentName);
+            location.setText("Location: " + currentName);
         }
 
         //Intent intent = new Intent(getActivity(), Carousel.class);

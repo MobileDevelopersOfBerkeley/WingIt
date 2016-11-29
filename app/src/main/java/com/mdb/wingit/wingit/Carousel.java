@@ -48,77 +48,36 @@ import java.util.ArrayList;
 import static com.mdb.wingit.wingit.MainActivity.currentLocations;
 import static com.mdb.wingit.wingit.MainActivity.indexPlace;
 
-public class Carousel extends AppCompatActivity implements RecyclerViewClickListener {
+public class Carousel extends AppCompatActivity {
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
     private ArrayList<ActivityList.Activity> result, three_acts;
-    private ActivityList.Activity final_pick;
     public static final String API_KEY = "AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI";
     public static final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
-    final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true);
+    final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
     private LatLng current;
     private GoogleApiClient client;
-    private int selectedPos;
-    private RecyclerViewClickListener itemListener;
     private final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private boolean checkedPermission = false;
-    private boolean isHighlighted = false; // if the current choice is highlighted
-    private ConstraintLayout choice;
-
-    private AdventureList adventures = new AdventureList();
-    private DatabaseReference dbref;
-
-    private String adventureKey;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
-        choice = (ConstraintLayout) findViewById(R.id.choice);
-        dbref = FirebaseDatabase.getInstance().getReference();
-        adventureKey = (String) getIntent().getExtras().get("adventureKey");
-
-        itemListener = new RecyclerViewClickListener() {
-            @Override
-            public void recyclerViewListClicked(View v, int position) {
-                selectedPos = position;
-                if (isHighlighted) {
-                    choice.setBackgroundResource(R.drawable.carouselborderoff);
-                    isHighlighted = false;
-                } else {
-                    choice.setBackgroundResource(R.drawable.carouselborderon);
-                    isHighlighted = true;
-                }
-            }
-        };
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         result = new ArrayList<>();
-        final_pick = new ActivityList.Activity();
         three_acts = new ArrayList<>();
         rv = (RecyclerView) findViewById(R.id.carouselrv);
         current = (LatLng) getIntent().getExtras().get("current");
-//        rv.setLayoutManager(layoutManager);
-//        rv.setHasFixedSize(true);
-//        rv.setAdapter(adapter);
-//        rv.addOnScrollListener(new CenterScrollListener());
 
         Log.i("Layout", "before declaring adapter");
-        adapter = new CarouselAdapter(Carousel.this, three_acts, itemListener);
+        adapter = new CarouselAdapter(Carousel.this, three_acts);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                isHighlighted = false;
-
-            }
-        });
         rv.addOnScrollListener(new CenterScrollListener());
 
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
@@ -143,17 +102,8 @@ public class Carousel extends AppCompatActivity implements RecyclerViewClickList
         //changed from !checkedPermission
         Log.i("Does", checkedPermission+"");
         if (!checkedPermission)  {
-
             getCurrentPlaces();
         }
-//        Intent intent = getIntent();
-//        boolean activityType = intent.getBooleanExtra("food", true);
-//        if (activityType) {
-//            randomThrees(getNearbyFood());
-//            Log.i("random thress", "function called");
-//        } else {
-//            randomThrees(getNearbyActivity());
-//        }
 
     }
 
@@ -223,12 +173,6 @@ public class Carousel extends AppCompatActivity implements RecyclerViewClickList
             }
         }.execute(request);
     }
-
-    @Override
-    public void recyclerViewListClicked(View v, int position) {
-        this.selectedPos = position;
-    }
-
 
     abstract class RequestTask extends AsyncTask<String, Void, ArrayList<ActivityList.Activity>> {
         public RequestTask() {

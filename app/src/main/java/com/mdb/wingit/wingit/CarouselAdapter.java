@@ -36,12 +36,10 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
 
     private Context context;
     private ArrayList<ActivityList.Activity> activities = new ArrayList();
-    private static RecyclerViewClickListener itemListener;
 
-    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities, RecyclerViewClickListener itemListener) {
+    public CarouselAdapter(Context context, ArrayList<ActivityList.Activity> activities) {
         this.context = context;
         this.activities = activities;
-        this.itemListener = itemListener;
     }
 
     @Override
@@ -68,8 +66,6 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
         Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+activity.getPhotoRef()+"&key="+Carousel.API_KEY_NONRESTRICTED).into(holder.activityPic);
 
     }
-
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView activityTitle;
