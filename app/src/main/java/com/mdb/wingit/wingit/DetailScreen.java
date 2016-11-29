@@ -182,6 +182,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
                 Dialog dialog = new Dialog(DetailScreen.this);
                 dialog.setContentView(R.layout.dialog_layout);
+                dialog.setTitle("Continue your adventure");
                 CardView activity = (CardView) dialog.findViewById(R.id.activity);
                 activity.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -214,8 +215,8 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(dialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 dialog.show();
                 dialog.getWindow().setAttributes(lp);
 
