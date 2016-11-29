@@ -115,7 +115,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 if(reviews.size()<5){
                     setFirstReview(5-reviews.size());
                 }
-                setReviews();
+                setReviews(reviews.size());
             }
         }.execute(searchRequest);
     }
@@ -126,8 +126,8 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void setReviews(){
-        for(int i=0; i<5; i++){
+    public void setReviews(int num){
+        for(int i=0; i<num; i++){
             reviewBoxes.get(i).setText("\"" + reviews.get(i) + "\"");
         }
     }
