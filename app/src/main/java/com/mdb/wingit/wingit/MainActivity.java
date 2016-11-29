@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             user = FirebaseAuth.getInstance().getCurrentUser();
             date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-            location.setText("Loading");
+            location.setText("Loading...");
 
 
             food.setOnClickListener(this);
