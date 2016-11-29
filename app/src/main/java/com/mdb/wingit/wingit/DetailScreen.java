@@ -41,6 +41,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     TextView r1, r2, r3, r4, r5;
     ArrayList<String> result = new ArrayList<String>();
     ArrayList<String> reviews = new ArrayList<>();
+    ArrayList<TextView> reviewBoxes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,26 +54,30 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
         getReviews();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolbarLayout.setTitle(getIntent().getStringExtra("name"));
 
         imageView = (ImageView) findViewById(R.id.imageView);
-        String photoRef = getIntent().getExtras().getString("photoRef");
+        String photoRef = getIntent().getStringExtra("photoRef");
         Glide.with(getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&key="+Carousel.API_KEY_NONRESTRICTED).into(imageView);
         r1 = (TextView) findViewById(R.id.r1);
         r2 = (TextView) findViewById(R.id.r2);
         r3 = (TextView) findViewById(R.id.r3);
         r4 = (TextView) findViewById(R.id.r4);
         r5 = (TextView) findViewById(R.id.r5);
-
-
+        reviewBoxes = new ArrayList<TextView>();
+        reviewBoxes.add(r1);
+        reviewBoxes.add(r2);
+        reviewBoxes.add(r3);
+        reviewBoxes.add(r4);
+        reviewBoxes.add(r5);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent activityIntent = getIntent();
-                String coordinates = activityIntent.getStringExtra("coordinates");
+                String coordinates = getIntent().getStringExtra("coordinates");
                 Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
@@ -92,17 +97,24 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPostExecute(ArrayList<String> activityResult) {
                 reviews = activityResult;
+                if(reviews.size()<5){
+                    setFirstReview(reviews.size());
+                }
                 setReviews();
             }
         }.execute(searchRequest);
     }
 
+    public void setFirstReview(int num){
+        for(int i=0; i<num; i++){
+            reviewBoxes.get(i).setText("No review yet.");
+        }
+    }
+
     public void setReviews(){
-        r1.setText(reviews.get(0));
-        r2.setText(reviews.get(1));
-        r3.setText(reviews.get(2));
-        r4.setText(reviews.get(3));
-        r5.setText(reviews.get(4));
+        for(int i=0; i<5; i++){
+            reviewBoxes.get(i).setText(reviews.get(i));
+        }
     }
 
     public void onClick(View view) {

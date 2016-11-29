@@ -188,7 +188,7 @@ public class Carousel extends AppCompatActivity implements RecyclerViewClickList
     public ArrayList<ActivityList.Activity> getNearbyFood(){
         Log.i("food log", "food send request");
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY_NONRESTRICTED;
-        //return sendRequest(searchRequest);
+
         sendRequestTask(searchRequest);
         Log.i("food log", "food send request done");
         Log.i("search", searchRequest);
@@ -199,14 +199,15 @@ public class Carousel extends AppCompatActivity implements RecyclerViewClickList
         String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
         int random = (int)(Math.random()*types.length);
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY_NONRESTRICTED;
-        //return sendRequest(searchRequest);
+        Log.i("activity type", types[random]+"");
+
         sendRequestTask(searchRequest);
         return result;
 
     }
 
 
-    private void sendRequestTask(String request) {
+    private void sendRequestTask(final String request) {
         new RequestTask() {
             @Override
             protected void onPreExecute() {
@@ -215,6 +216,9 @@ public class Carousel extends AppCompatActivity implements RecyclerViewClickList
             @Override
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
+                if(result.size() == 0) {
+                    getNearbyActivity();
+                }
                 randomThrees(result);
             }
         }.execute(request);

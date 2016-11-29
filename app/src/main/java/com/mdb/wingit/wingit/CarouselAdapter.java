@@ -90,6 +90,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                     builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             Intent detailIntent = new Intent(context, DetailScreen.class);
+                            detailIntent.putExtra("name", activities.get(position).getName());
                             detailIntent.putExtra("place_id", activities.get(position).getPlaceID());
                             detailIntent.putExtra("coordinates", activities.get(position).getLat()+","+activities.get(position).getLon());
                             detailIntent.putExtra("photoRef", activities.get(position).getPhotoRef());
