@@ -143,6 +143,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                         Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                 startActivity(mapsIntent);
                 break;
+
             case R.id.nextActivityButton:
                 //TODO: insert dialog to choose between food and activity
                 Dialog dialog = new Dialog(DetailScreen.this);
@@ -186,6 +187,8 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.endTripButton:
                 //TODO: save trip in log
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

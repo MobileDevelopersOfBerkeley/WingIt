@@ -2,6 +2,7 @@ package com.mdb.wingit.wingit;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,11 +17,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Random;
+
 public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
+    private ConstraintLayout bg;
+    private int screenNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,10 @@ public class Login extends AppCompatActivity {
 
         //UI elements
         email = (EditText) findViewById(R.id.email);
+        bg = (ConstraintLayout) findViewById(R.id.screen);
+        screenNumber = choosebgScreen();
         password = (EditText) findViewById(R.id.password);
+
         Button login = (Button) findViewById(R.id.sign_in_button);
         TextView register = (TextView) findViewById(R.id.textView);
 
@@ -98,5 +106,23 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public int choosebgScreen() {
+        Random random = new Random();
+        int n = random.nextInt(3) + 1;
+        switch (n) {
+            case 1: {
+                bg.setBackground(getResources().getDrawable(R.drawable.sfdawnv2));
+            }
+            case 2: {
+                bg.setBackground(getResources().getDrawable(R.drawable.nycnightv3));
+            }
+            case 3: {
+                bg.setBackground(getResources().getDrawable(R.drawable.honoluluv3));
+            }
+
+        }
+        return n;
     }
 }
