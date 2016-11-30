@@ -380,13 +380,11 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    AdventureLog tab2 = new AdventureLog();
-                    //StartOptions tab1 = new StartOptions();
-                    return tab2;
-                case 1:
                     StartOptions tab1 = new StartOptions();
                     return tab1;
-
+                case 1:
+                    AdventureLog tab2 = new AdventureLog();
+                    return tab2;
                 default:
                     return null;
             }
