@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.food:
                     //String key = db.push().getKey();
                     // TODO: Create adventure and add to database
-                    createAdventure();
+                    // createAdventure();
 
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.activity:
                     //String key1 = db.push().getKey();
                     // TODO: Create adventure and add to database
-                    createAdventure();
+                    // createAdventure();
 
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);

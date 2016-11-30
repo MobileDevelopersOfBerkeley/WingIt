@@ -21,7 +21,7 @@
         <!-- the API Key below is Sharie's; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDKhT7p2SiBNXMsFBFyd5SwssiwJSzKt3M"></meta-data>
+            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI"></meta-data>
         <activity
             android:name=".Splash"
             android:theme="@style/SplashTheme">

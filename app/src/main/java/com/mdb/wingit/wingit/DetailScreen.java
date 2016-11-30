@@ -14,16 +14,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +42,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static com.mdb.wingit.wingit.MainActivity.current;
 
@@ -55,6 +65,12 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     ArrayList<CardView> cards;
     Button nextButton;
     Button endButton;
+    private static Adventure adventure;
+    private static String date;
+    private static ArrayList<Adventure> adventures = new ArrayList<>();
+    private static DatabaseReference mDatabase;
+    private static FirebaseUser user;
+    EditText title = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +78,10 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_detail_screen);
 
         dbRef = FirebaseDatabase.getInstance().getReference();
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        adventure = new Adventure();
+        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         place_id = getIntent().getExtras().getString("place_id");
         getReviews();
 
@@ -214,13 +233,64 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.endTripButton:
-                //TODO: save trip in log
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetailScreen.this);
+                builder.setTitle("Enter a title for your adventure");
+                final EditText editText = new EditText(builder.getContext());
+                LinearLayout.LayoutParams endtriplp;
+                endtriplp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                editText.setLayoutParams(endtriplp);
+                builder.setView(editText);
+
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        createAdventure(editText.getText().toString());
+                        startActivity(new Intent(DetailScreen.this, MainActivity.class));
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog2 = builder.create();
+                dialog2.show();
                 break;
             default:
                 break;
         }
+
+    }
+
+    public static void createAdventure(String name) {
+        // Create a new adventure and add to db
+        adventure.setStartloc(name);
+        adventure.setDate(date);
+        final DatabaseReference adventureDB = mDatabase.child("Adventures").push();
+        adventureDB.setValue(adventure);
+        adventures.add(adventure);
+        // adapter.notifyDataSetChanged();
+
+        // Add adventure to user's adventurelist
+        final String uid = user.getUid();
+        DatabaseReference userAdventureList = mDatabase.child("Users").child(uid);
+        userAdventureList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                user.addAdventureKey(adventureDB.getKey());
+                mDatabase.child("Users").child(uid).child("adventureKeysList").setValue(user.getAdventureKeysList());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     abstract class DetailTask extends AsyncTask<String, Void, ArrayList<String>>{
