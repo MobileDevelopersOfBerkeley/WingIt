@@ -53,7 +53,7 @@ public class Carousel extends AppCompatActivity {
     private RecyclerView rv;
     private CarouselAdapter adapter;
     private ArrayList<ActivityList.Activity> result, three_acts;
-    public static final String API_KEY = "AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI";
+    public static final String API_KEY = "AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc";
     public static final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
     private LatLng current;

@@ -18,10 +18,10 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
-        <!-- the API Key below is Sharie's; make sure the API key below is your API key -->
+        <!-- the API Key below is the production key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI"></meta-data>
+            android:value="AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc"></meta-data>
         <activity
             android:name=".Splash"
             android:theme="@style/SplashTheme">
