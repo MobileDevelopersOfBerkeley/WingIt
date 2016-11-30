@@ -60,6 +60,7 @@ public class Carousel extends AppCompatActivity {
     private GoogleApiClient client;
     private final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private boolean checkedPermission = false;
+    private int searchCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,12 +162,16 @@ public class Carousel extends AppCompatActivity {
         new RequestTask() {
             @Override
             protected void onPreExecute() {
-
+                searchCount++;
             }
             @Override
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
-                if(result.size() == 0) {
+                if(result.size() < 3) {
+                    if (searchCount == 2) {
+                        Toast.makeText(Carousel.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                     getNearbyActivity();
                 }
                 randomThrees(result);
@@ -184,7 +189,6 @@ public class Carousel extends AppCompatActivity {
             final String request = params[0];
             HttpURLConnection conn = null;
             StringBuilder jsonResults = new StringBuilder();
-            Log.i("async task","is working?");
             ArrayList<ActivityList.Activity> result = new ArrayList<>();
             try {
                 URL url = new URL(request);
@@ -219,10 +223,8 @@ public class Carousel extends AppCompatActivity {
                     JSONObject location = geometry.getJSONObject("location");
 
                     if(predsJsonArray.getJSONObject(i).has("photos")) {
-                        Log.i("getting", "photos");
                         JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
                         if(photos.getJSONObject(0).length()!=0){
-                            Log.i("why","pls");
                             JSONObject photoObject = photos.getJSONObject(0);
                             activity.setPhotoRef(photoObject.getString("photo_reference"));
                         }

@@ -1,6 +1,7 @@
 package com.mdb.wingit.wingit;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent openRegister = new Intent(getApplicationContext(), SignUp.class);
+                openRegister.putExtra("background", screenNumber);
                 startActivity(openRegister);
             }
         });
@@ -113,13 +115,13 @@ public class Login extends AppCompatActivity {
         int n = random.nextInt(3) + 1;
         switch (n) {
             case 1: {
-                bg.setBackground(getResources().getDrawable(R.drawable.sfdawnv2));
+                bg.setBackgroundResource(R.drawable.sfdawnv2);
             }
             case 2: {
-                bg.setBackground(getResources().getDrawable(R.drawable.nycnightv3));
+                bg.setBackgroundResource(R.drawable.nycnightv3);
             }
             case 3: {
-                bg.setBackground(getResources().getDrawable(R.drawable.honoluluv3));
+                bg.setBackgroundResource(R.drawable.honoluluv3);
             }
 
         }

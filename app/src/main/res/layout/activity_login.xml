@@ -15,7 +15,7 @@
 
 
     <TextView
-        android:text="Don't have an account? Sign up!"
+        android:text="@string/signup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -28,7 +28,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:textColor="@color/cardview_light_background"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.0"/>
+        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginTop="128dp" />
 
     <ImageView
         android:layout_height="149dp"
@@ -107,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Login"
-                android:backgroundTint="@color/greenish"
+                android:backgroundTint="@color/green"
                 android:textColor="@color/cardview_light_background"/>
 
         </LinearLayout>
