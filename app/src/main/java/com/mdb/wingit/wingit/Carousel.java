@@ -168,7 +168,7 @@ public class Carousel extends AppCompatActivity {
             protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
                 result = activityResult;
                 if(result.size() < 3) {
-                    if (searchCount == 5) {
+                    if (searchCount == 2) {
                         Toast.makeText(Carousel.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
                         finish();
                     }

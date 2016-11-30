@@ -43,7 +43,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
     Toolbar toolbar;
     CollapsingToolbarLayout toolbarLayout;
     ImageView imageView;
-    TextView textView;
+    // TextView textView;
     FloatingActionButton fab;
     DatabaseReference dbRef;
     String place_id;
@@ -180,13 +180,13 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 activity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MainActivity.StartOptions t = new MainActivity.StartOptions();
-                        t.createAdventure();
+                        // MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        // t.createAdventure();
 
                         Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
                         activityIntent.putExtra("food", false);
                         activityIntent.putExtra("current",current);
-                        activityIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
+                        // activityIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
                         startActivity(activityIntent);
                     }
                 });
@@ -195,12 +195,12 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 food.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MainActivity.StartOptions.createAdventure();
+                        // MainActivity.StartOptions.createAdventure();
 
                         Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
                         foodIntent.putExtra("food", true);
                         foodIntent.putExtra("current", current);
-                        foodIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
+                        // foodIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
                         startActivity(foodIntent);
                     }
                 });

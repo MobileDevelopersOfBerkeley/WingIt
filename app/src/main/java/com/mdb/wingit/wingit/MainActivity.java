@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         private static FirebaseUser user;
         // private AdventureList adventures;
         //DatabaseReference db = database.getReference().child("adventures");
-        static String adventureKey;
+        // static String adventureKey;
         private static Adventure adventure;
         private static String date;
         private Calendar calendar;
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent foodIntent = new Intent(getActivity(), Carousel.class);
                     foodIntent.putExtra("food", true);
                     foodIntent.putExtra("current", current);
-                    foodIntent.putExtra("adventureKey", adventureKey);
+                    // foodIntent.putExtra("adventureKey", adventureKey);
                     startActivity(foodIntent);
                     break;
                 case R.id.activity:
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent activityIntent = new Intent(getActivity(), Carousel.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);
-                    activityIntent.putExtra("adventureKey", adventureKey);
+                    // activityIntent.putExtra("adventureKey", adventureKey);
                     startActivity(activityIntent);
                     break;
             }
