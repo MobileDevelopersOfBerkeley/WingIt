@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -59,10 +62,8 @@ public class MainActivity extends AppCompatActivity {
     static String[] topFive;
     private static AdventureAdapter adapter;
     private static ArrayList<Adventure> adventures = new ArrayList<>();
-
     static ArrayList<String> otherFive = new ArrayList<>();
     static ArrayList<Place> currentLocations;
-
 
 
     @Override
@@ -187,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
         static String adventureKey;
         private static Adventure adventure;
         private static String date;
+        private Calendar calendar;
+        private ConstraintLayout bg;
 
         public static StartOptions newInstance(int page) {
             Bundle args = new Bundle();
@@ -203,15 +206,20 @@ public class MainActivity extends AppCompatActivity {
             CardView food = (CardView) v.findViewById(R.id.food);
             CardView activity = (CardView) v.findViewById(R.id.activity);
             location = (TextView) v.findViewById(R.id.location2);
+            bg = (ConstraintLayout) v.findViewById(R.id.start_options_constraint);
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            // adventures = new AdventureList();
             adventure = new Adventure();
             user = FirebaseAuth.getInstance().getCurrentUser();
             date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
             location.setText("Loading...");
+            calendar = Calendar.getInstance();
 
+            if (calendar.HOUR_OF_DAY > 6 && calendar.HOUR_OF_DAY < 18) {
+                bg.setBackgroundResource(R.drawable.rochesterdayright);
+            } else {
+                bg.setBackgroundResource(R.drawable.rochesternightright);
+            }
 
             food.setOnClickListener(this);
             activity.setOnClickListener(this);
@@ -249,32 +257,6 @@ public class MainActivity extends AppCompatActivity {
                     activityIntent.putExtra("adventureKey", adventureKey);
                     startActivity(activityIntent);
                     break;
-//                case R.id.change:
-//                    // 1. Instantiate an AlertDialog.Builder with its constructor
-//
-//                    if(currentLocations.size()>=5) {
-//                        topFive = new String[5];
-//                    }
-//                    else {
-//                        topFive = new String[currentLocations.size()];
-//                    }
-//                    for (int i = 0; i < currentLocations.size(); i++) {
-//                        topFive[i] = currentLocations.get(i).getName().toString();
-//                    }
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                    builder.setTitle("Pick a better location:")
-//                            .setItems(topFive, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // The 'which' argument contains the index position
-//                                    // of the selected item
-//                                    String name = topFive[which];
-//                                    current = findObject(name);
-//                                    location.setText("Current location: "+name);
-//                                }
-//                            });
-//                    // 2. Get the AlertDialog from create()
-//                    AlertDialog dialog = builder.create();
-
             }
         }
 
@@ -306,15 +288,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        public LatLng findObject(String name){
-            LatLng ans = new LatLng(0,0);
-            for(Place p : currentLocations){
-                if(p.getName().equals(name))
-                    ans = p.getLatLng();
-            }
-            return ans;
-        }
-
     }
 
     public static class AdventureLog extends Fragment {
@@ -322,8 +295,8 @@ public class MainActivity extends AppCompatActivity {
         private RecyclerView rv;
         private static DatabaseReference mDatabase;
         private ArrayList<String> adventureKeys = new ArrayList<>();
-        // private AdventureList adventureList;
-        // private ArrayList<AdventureList.Adventure> adventures;
+        private CoordinatorLayout bg;
+        private Calendar calendar;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -333,8 +306,15 @@ public class MainActivity extends AppCompatActivity {
 
             rv = (RecyclerView) view.findViewById(R.id.adventureLogRv);
             rv.setLayoutManager(new LinearLayoutManager(getContext()));
-
+            bg = (CoordinatorLayout) view.findViewById(R.id.activity_adventure_log);
+            calendar = Calendar.getInstance();
             mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            if (calendar.HOUR_OF_DAY > 6 && calendar.HOUR_OF_DAY < 18) {
+                bg.setBackgroundResource(R.drawable.rochesterdayleft);
+            } else {
+                bg.setBackgroundResource(R.drawable.rochesternightleft);
+            }
 
             // Get the Adventure keys from the current User
             DatabaseReference adventureKeyDB = mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -46,8 +47,8 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class SignUp extends AppCompatActivity {
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView, name;
+    private TextInputEditText mEmailView;
+    private TextInputEditText mPasswordView, name;
     private Button signUpButton;
     private ConstraintLayout bg;
 
@@ -59,9 +60,9 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
-        name = (EditText) findViewById(R.id.name);
+        mEmailView = (TextInputEditText) findViewById(R.id.email);
+        mPasswordView = (TextInputEditText) findViewById(R.id.password);
+        name = (TextInputEditText) findViewById(R.id.name);
         signUpButton = (Button) findViewById(R.id.email_sign_in_button);
         bg = (ConstraintLayout) findViewById(R.id.screen);
 
