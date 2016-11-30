@@ -43,6 +43,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -297,6 +299,8 @@ public class MainActivity extends AppCompatActivity {
         private ArrayList<String> adventureKeys = new ArrayList<>();
         private CoordinatorLayout bg;
         private Calendar calendar;
+        private CardView noAdventuresCard;
+        private TextView noAdventures;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -308,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
             rv.setLayoutManager(new LinearLayoutManager(getContext()));
             bg = (CoordinatorLayout) view.findViewById(R.id.activity_adventure_log);
             calendar = Calendar.getInstance();
+            noAdventuresCard = (CardView) view.findViewById(R.id.noAdventuresCard);
+            noAdventures = (TextView) view.findViewById(R.id.noAdventures);
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
             if (calendar.HOUR_OF_DAY > 6 && calendar.HOUR_OF_DAY < 18) {
@@ -322,29 +328,33 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    adventureKeys = user.getAdventureKeysList();
+                    if (user.getAdventureKeysList() != null) {
+                        noAdventuresCard.setVisibility(View.GONE);
+                        noAdventures.setVisibility(View.GONE);
+                        adventureKeys = user.getAdventureKeysList();
 
-                    // Get the correct Adventures with the Adventure keys
-                    DatabaseReference adventuresDB = mDatabase.child("Adventures");
-                    adventuresDB.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get the correct Adventures with the Adventure keys
+                        DatabaseReference adventuresDB = mDatabase.child("Adventures");
+                        adventuresDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            for (DataSnapshot dsp: dataSnapshot.getChildren()) {
-                                Log.i("AdventureData", dsp.toString());
-                                if (adventureKeys.contains(dsp.getKey())) {
-                                    Adventure ad = dsp.getValue(Adventure.class);
-                                    adventures.add(ad);
-                                    adapter.notifyDataSetChanged();
+                                for (DataSnapshot dsp: dataSnapshot.getChildren()) {
+                                    Log.i("AdventureData", dsp.toString());
+                                    if (adventureKeys.contains(dsp.getKey())) {
+                                        Adventure ad = dsp.getValue(Adventure.class);
+                                        adventures.add(ad);
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
 
                 @Override
