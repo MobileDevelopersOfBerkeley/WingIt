@@ -218,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
             calendar = Calendar.getInstance();
 
             if (calendar.HOUR_OF_DAY > 6 && calendar.HOUR_OF_DAY < 18) {
-                bg.setBackgroundResource(R.drawable.rochesterdayright);
+                bg.setBackgroundResource(R.drawable.rochesterdayleft);
             } else {
-                bg.setBackgroundResource(R.drawable.rochesternightright);
+                bg.setBackgroundResource(R.drawable.rochesternightleft);
             }
 
             food.setOnClickListener(this);
@@ -317,9 +317,9 @@ public class MainActivity extends AppCompatActivity {
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
             if (calendar.HOUR_OF_DAY > 6 && calendar.HOUR_OF_DAY < 18) {
-                bg.setBackgroundResource(R.drawable.rochesterdayleft);
+                bg.setBackgroundResource(R.drawable.rochesterdayright);
             } else {
-                bg.setBackgroundResource(R.drawable.rochesternightleft);
+                bg.setBackgroundResource(R.drawable.rochesternightright);
             }
 
             // Get the Adventure keys from the current User
