@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     static int indexPlace = 0;
     static String[] topFive;
     private static AdventureAdapter adapter;
-    private static ArrayList<Adventure> adventures = new ArrayList<>();
+    private static ArrayList<Adventure> adventures;
     static ArrayList<String> otherFive = new ArrayList<>();
     static ArrayList<Place> currentLocations;
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        Log.i("oncreate", "this is stupid");
+        adventures = new ArrayList<Adventure>();
 
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -156,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mAuth = FirebaseAuth.getInstance();
+
+
     }
 
 
@@ -225,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
             food.setOnClickListener(this);
             activity.setOnClickListener(this);
+
             return v;
         }
 
@@ -306,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             // adventureList = new AdventureList();
             // adventures = adventureList.getArrayList();
-            View view = inflater.inflate(R.layout.activity_adventure_log, container, false);
 
+            View view = inflater.inflate(R.layout.activity_adventure_log, container, false);
             rv = (RecyclerView) view.findViewById(R.id.adventureLogRv);
             rv.setLayoutManager(new LinearLayoutManager(getContext()));
             bg = (CoordinatorLayout) view.findViewById(R.id.activity_adventure_log);
@@ -324,11 +328,14 @@ public class MainActivity extends AppCompatActivity {
 
             // Get the Adventure keys from the current User
             DatabaseReference adventureKeyDB = mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
             adventureKeyDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    if (user.getAdventureKeysList() != null) {
+
+                    Log.i("USER", user.getName());
+                    if (user.getAdventureKeysList() != null && user.getAdventureKeysList().size() != 0) {
                         noAdventuresCard.setVisibility(View.GONE);
                         noAdventures.setVisibility(View.GONE);
                         adventureKeys = user.getAdventureKeysList();
@@ -347,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
                                         adapter.notifyDataSetChanged();
                                     }
                                 }
+
                             }
 
                             @Override
