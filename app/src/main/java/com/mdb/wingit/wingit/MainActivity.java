@@ -399,9 +399,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "My Past Trips";
-                case 1:
                     return "Begin Adventure";
+                case 1:
+                    return "My Past Trips";
             }
             return null;
         }
