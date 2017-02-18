@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     static LatLng current; // current location in lat and long
     static String currentName = "";
     static int indexPlace = 0;
-    static String[] topFive;
     private static AdventureAdapter adapter;
     private static ArrayList<Adventure> adventures;
     static ArrayList<String> otherFive = new ArrayList<>();
@@ -71,20 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        adventures = new ArrayList<Adventure>();
-
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
+        //Set up tabbed view with fragments
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -107,30 +100,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Connect to Places API
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
-        currentLocations = new ArrayList<>();
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        adventures = new ArrayList<Adventure>();
+        getCurrentLocations();
+
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    /** Get list of likely places for user's current location from Places API */
+    private void getCurrentLocations() {
+        //Check permissions to access user's location
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
-            Log.i("Permissions???", "rip");
-            return;
         }
+
+        currentLocations = new ArrayList<>();
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.i("onresult", "in result");
-                Log.i("status", likelyPlaces.getStatus().toString());
                 double likelihood = 0;
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     Log.i("Place", placeLikelihood.getPlace().getName().toString());
@@ -156,11 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 likelyPlaces.release();
             }
         });
-        mAuth = FirebaseAuth.getInstance();
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -377,15 +367,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Set up tabbed view with StartOptions and AdventureLog
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
                     StartOptions tab1 = new StartOptions();
