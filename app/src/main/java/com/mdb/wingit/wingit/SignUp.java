@@ -46,7 +46,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 
 public class SignUp extends AppCompatActivity {
 
-    // UI references.
+    //UI references
     private TextInputEditText mEmailView;
     private TextInputEditText mPasswordView, name;
     private Button signUpButton;
@@ -60,6 +60,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        //UI elements
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
         name = (TextInputEditText) findViewById(R.id.name);

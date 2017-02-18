@@ -22,6 +22,7 @@ import java.util.Random;
 
 public class Login extends AppCompatActivity {
 
+    //UI references
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
@@ -33,8 +34,6 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-
         //UI elements
         email = (EditText) findViewById(R.id.email);
         bg = (ConstraintLayout) findViewById(R.id.screen);
@@ -44,8 +43,7 @@ public class Login extends AppCompatActivity {
         Button login = (Button) findViewById(R.id.sign_in_button);
         TextView register = (TextView) findViewById(R.id.textView);
 
-
-        //FireBase
+        //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -58,11 +56,11 @@ public class Login extends AppCompatActivity {
 
                 } else {
                     // User is signed out
-
                 }
             }
         };
 
+        //Direct user to SignUp Activity
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,14 +92,12 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /** Sign in user with Firebase */
     public void signIn(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Toast.makeText(Login.this, "Login failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -110,6 +106,7 @@ public class Login extends AppCompatActivity {
                 });
     }
 
+    /** Choose random background screen */
     public int choosebgScreen() {
         Random random = new Random();
         int n = random.nextInt(3) + 1;
