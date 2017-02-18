@@ -75,19 +75,22 @@ public class SignUp extends AppCompatActivity {
                 signup();
             }
         });
-
-
+        choosebgScreen();
     }
 
+    /** Sign up user with Firebase */
     private void signup() {
         final String n = name.getText().toString();
         final String em = mEmailView.getText().toString();
         String pass = mPasswordView.getText().toString();
+
+        //If fields are empty, sign up fails
         if(n.length()==0 || em.length()==0 || pass.length()==0){
             Toast.makeText(SignUp.this, "Sign up failed, please fill in all blanks.",
                     Toast.LENGTH_LONG).show();
             return;
         }
+
         final User user = new User(em, n);
         mAuth.createUserWithEmailAndPassword(em, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -107,7 +110,8 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    public int choosebgScreen() {
+    /** Get background screen from Login Activity */
+    public void choosebgScreen() {
         int n = getIntent().getIntExtra("background", 1);
         switch (n) {
             case 1: {
@@ -119,8 +123,6 @@ public class SignUp extends AppCompatActivity {
             case 3: {
                 bg.setBackground(getResources().getDrawable(R.drawable.honoluluv3));
             }
-
         }
-        return n;
     }
 }
