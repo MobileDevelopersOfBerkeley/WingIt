@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * Created by reddy on 11/11/2016.
  */
 
+/** MIGHT NOT NEED PIN LIST CLASS, DELETE THIS CLASS LATER */
 public class ActivityList {
 
     public ArrayList<Activity> activityArrayList;

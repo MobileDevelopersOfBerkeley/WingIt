@@ -1,7 +1,6 @@
 package com.mdb.wingit.wingit;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Random;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     //UI references
     private FirebaseAuth mAuth;
@@ -51,7 +50,7 @@ public class Login extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Intent openMain = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent openMain = new Intent(getApplicationContext(), CategorySelectorActivity.class);
                     startActivity(openMain);
 
                 } else {
@@ -60,11 +59,11 @@ public class Login extends AppCompatActivity {
             }
         };
 
-        //Direct user to SignUp Activity
+        //Direct user to SignUpActivity Activity
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openRegister = new Intent(getApplicationContext(), SignUp.class);
+                Intent openRegister = new Intent(getApplicationContext(), SignUpActivity.class);
                 openRegister.putExtra("background", screenNumber);
                 startActivity(openRegister);
             }
@@ -99,7 +98,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Login failed.",
+                            Toast.makeText(LoginActivity.this, "LoginActivity failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

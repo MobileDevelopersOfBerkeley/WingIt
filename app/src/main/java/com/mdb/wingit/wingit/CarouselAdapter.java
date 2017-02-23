@@ -1,17 +1,11 @@
 package com.mdb.wingit.wingit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.Places;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -63,7 +51,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         ActivityList.Activity activity = activities.get(position);
         holder.activityTitle.setText(activity.name);
-        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+activity.getPhotoRef()+"&key="+Carousel.API_KEY_NONRESTRICTED).into(holder.activityPic);
+        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+activity.getPhotoRef()+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(holder.activityPic);
 
     }
 

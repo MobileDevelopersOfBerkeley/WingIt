@@ -1,7 +1,5 @@
 package com.mdb.wingit.wingit;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.constraint.ConstraintLayout;
@@ -26,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -44,15 +41,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
-public class MainActivity extends AppCompatActivity {
+public class CategorySelectorActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -166,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             mAuth.signOut();
-            startActivity(new Intent(getApplicationContext(), Login.class));
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -226,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             location.setText("Location: " + currentName);
         }
 
-        //Intent intent = new Intent(getActivity(), Carousel.class);
+        //Intent intent = new Intent(getActivity(), CarouselActivity.class);
 
         @Override
         public void onClick(View v) {
@@ -236,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO: Create adventure and add to database
                     // createAdventure();
 
-                    Intent foodIntent = new Intent(getActivity(), Carousel.class);
+                    Intent foodIntent = new Intent(getActivity(), CarouselActivity.class);
                     foodIntent.putExtra("food", true);
                     foodIntent.putExtra("current", current);
                     // foodIntent.putExtra("adventureKey", adventureKey);
@@ -247,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO: Create adventure and add to database
                     // createAdventure();
 
-                    Intent activityIntent = new Intent(getActivity(), Carousel.class);
+                    Intent activityIntent = new Intent(getActivity(), CarouselActivity.class);
                     activityIntent.putExtra("food", false);
                     activityIntent.putExtra("current",current);
                     // activityIntent.putExtra("adventureKey", adventureKey);

@@ -3,16 +3,12 @@ package com.mdb.wingit.wingit;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
@@ -23,17 +19,8 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +32,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.mdb.wingit.wingit.MainActivity.currentLocations;
-import static com.mdb.wingit.wingit.MainActivity.indexPlace;
+import static com.mdb.wingit.wingit.CategorySelectorActivity.currentLocations;
+import static com.mdb.wingit.wingit.CategorySelectorActivity.indexPlace;
 
-public class Carousel extends AppCompatActivity {
+public class CarouselActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
@@ -74,7 +61,7 @@ public class Carousel extends AppCompatActivity {
         current = (LatLng) getIntent().getExtras().get("current");
 
         Log.i("Layout", "before declaring adapter");
-        adapter = new CarouselAdapter(Carousel.this, three_acts);
+        adapter = new CarouselAdapter(CarouselActivity.this, three_acts);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -169,7 +156,7 @@ public class Carousel extends AppCompatActivity {
                 result = activityResult;
                 if(result.size() < 3) {
                     if (searchCount == 2) {
-                        Toast.makeText(Carousel.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CarouselActivity.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                     getNearbyActivity();

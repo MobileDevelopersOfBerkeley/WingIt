@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * Created by KJ on 11/11/16.
  */
 
+/** FOLLOW THIS ADAPTER FOR PAST ADVENTURES ADAPTER THEN DELETE THIS CLASS*/
 public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.CustomViewHolder> {
 
     private Context context;

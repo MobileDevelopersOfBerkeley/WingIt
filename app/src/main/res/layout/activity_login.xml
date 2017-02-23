@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mdb.wingit.wingit.Login"
+    tools:context="com.mdb.wingit.wingit.LoginActivity"
     android:background="@drawable/honoluluv3"
     android:id="@+id/screen">
 

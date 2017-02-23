@@ -8,13 +8,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,8 +42,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.mdb.wingit.wingit.MainActivity.current;
+import static com.mdb.wingit.wingit.CategorySelectorActivity.current;
 
+
+/** USE THIS ACTIVITY FOR DETAILS IN ADVENTURE TIMELINE THEN DELETE */
 public class DetailScreen extends AppCompatActivity implements View.OnClickListener{
 
     Toolbar toolbar;
@@ -92,7 +90,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
         imageView = (ImageView) findViewById(R.id.imageView);
         String photoRef = getIntent().getStringExtra("photoRef");
-        Glide.with(getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&key="+Carousel.API_KEY_NONRESTRICTED).into(imageView);
+        Glide.with(getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(imageView);
         r1 = (TextView) findViewById(R.id.r1);
         r2 = (TextView) findViewById(R.id.r2);
         r3 = (TextView) findViewById(R.id.r3);
@@ -136,7 +134,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
 
     public void getReviews(){
 
-        String searchRequest = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+place_id+"&key="+Carousel.API_KEY_NONRESTRICTED;
+        String searchRequest = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+place_id+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED;
         new DetailTask() {
             @Override
             protected void onPreExecute() {
@@ -199,13 +197,13 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 activity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // MainActivity.StartOptions t = new MainActivity.StartOptions();
+                        // CategorySelectorActivity.StartOptions t = new CategorySelectorActivity.StartOptions();
                         // t.createAdventure();
 
-                        Intent activityIntent = new Intent(getApplicationContext(), Carousel.class);
+                        Intent activityIntent = new Intent(getApplicationContext(), CarouselActivity.class);
                         activityIntent.putExtra("food", false);
                         activityIntent.putExtra("current",current);
-                        // activityIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
+                        // activityIntent.putExtra("adventureKey", CategorySelectorActivity.StartOptions.adventureKey);
                         startActivity(activityIntent);
                     }
                 });
@@ -214,12 +212,12 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                 food.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // MainActivity.StartOptions.createAdventure();
+                        // CategorySelectorActivity.StartOptions.createAdventure();
 
-                        Intent foodIntent = new Intent(getApplicationContext(), Carousel.class);
+                        Intent foodIntent = new Intent(getApplicationContext(), CarouselActivity.class);
                         foodIntent.putExtra("food", true);
                         foodIntent.putExtra("current", current);
-                        // foodIntent.putExtra("adventureKey", MainActivity.StartOptions.adventureKey);
+                        // foodIntent.putExtra("adventureKey", CategorySelectorActivity.StartOptions.adventureKey);
                         startActivity(foodIntent);
                     }
                 });
@@ -246,7 +244,7 @@ public class DetailScreen extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         createAdventure(editText.getText().toString());
-                        startActivity(new Intent(DetailScreen.this, MainActivity.class));
+                        startActivity(new Intent(DetailScreen.this, CategorySelectorActivity.class));
                     }
                 });
 
