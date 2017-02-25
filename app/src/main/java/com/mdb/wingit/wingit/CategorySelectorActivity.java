@@ -111,7 +111,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
 
@@ -128,13 +128,13 @@ public class CategorySelectorActivity extends AppCompatActivity {
                             placeLikelihood.getPlace().getName(),
                             placeLikelihood.getLikelihood()));
                 }
-                for (PlaceLikelihood placeLikelihood : likelyPlaces){
-                    if(placeLikelihood.getLikelihood()>likelihood){
+                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                    if (placeLikelihood.getLikelihood() > likelihood) {
                         likelihood = placeLikelihood.getLikelihood();
                         indexPlace = currentLocations.indexOf(placeLikelihood.getPlace());
                     }
                 }
-                if(currentLocations.size() != 0) {
+                if (currentLocations.size() != 0) {
                     for (int i = 0; i < currentLocations.size(); i++) {
                         otherFive.add(currentLocations.get(i).getName().toString());
                     }
@@ -225,7 +225,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.food:
                     //String key = db.push().getKey();
                     // TODO: Create adventure and add to database
@@ -244,7 +244,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
                     Intent activityIntent = new Intent(getActivity(), CarouselActivity.class);
                     activityIntent.putExtra("food", false);
-                    activityIntent.putExtra("current",current);
+                    activityIntent.putExtra("current", current);
                     // activityIntent.putExtra("adventureKey", adventureKey);
                     startActivity(activityIntent);
                     break;
@@ -331,7 +331,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                for (DataSnapshot dsp: dataSnapshot.getChildren()) {
+                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                                     Log.i("AdventureData", dsp.toString());
                                     if (adventureKeys.contains(dsp.getKey())) {
                                         Adventure ad = dsp.getValue(Adventure.class);
