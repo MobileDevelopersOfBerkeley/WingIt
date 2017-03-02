@@ -17,7 +17,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="100dp"
+        app:cardElevation="10dp">
 
         <ScrollView
             android:id="@+id/login_form"
@@ -38,6 +39,15 @@
                 android:orientation="vertical"
                 android:layout_marginTop="80dp"
                 android:weightSum="3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WingIt"
+                    android:textStyle="bold"
+                    android:textSize="30dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
