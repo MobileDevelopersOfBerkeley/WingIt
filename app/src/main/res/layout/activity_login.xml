@@ -1,4 +1,6 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,108 +12,98 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mdb.wingit.wingit.LoginActivity"
-    android:background="@drawable/honoluluv3"
-    android:id="@+id/screen">
+    android:weightSum="1">
 
-
-    <TextView
-        android:text="@string/signup"
-        android:layout_width="0dp"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textAlignment="center"
-        app:layout_constraintTop_creator="1"
-        app:layout_constraintTop_toBottomOf="@+id/login_form"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:textColor="@color/cardview_light_background"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginTop="128dp" />
+        android:layout_marginTop="100dp"
+        app:cardElevation="10dp">
 
-    <ImageView
-        android:layout_height="149dp"
-        android:layout_width="250dp"
-        android:src="@drawable/wingitlogov5"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/login_form"
-        android:layout_marginBottom="8dp" />
-
-    <ScrollView
-        android:id="@+id/login_form"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="224dp"
-        app:layout_constraintHorizontal_bias="1.0">
-
-        <LinearLayout
-            android:id="@+id/email_login_form"
+        <ScrollView
+            android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp">
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
+                android:id="@+id/email_login_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittextbg">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="80dp"
+                android:weightSum="3">
 
-                <EditText
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WingIt"
+                    android:textStyle="bold"
+                    android:textSize="30dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:id="@+id/email"
-                    android:layout_weight="1"
-                    android:hint="Email "
-                    android:textColorHint="@color/cardview_light_background"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:background="@drawable/edittextbg"
+                    android:layout_marginTop="10dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edittextbg">
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:layout_weight="1"/>
 
-                <EditText
-                    android:id="@+id/password"
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:background="@drawable/edittextbg"
+                    android:layout_marginTop="10dp">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:imeActionId="@+id/login"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:layout_weight="1"/>
 
-            <Button
-                android:id="@+id/sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Login"
-                android:backgroundTint="@color/green"
-                android:textColor="@color/cardview_light_background"/>
+                </android.support.design.widget.TextInputLayout>
 
-        </LinearLayout>
-    </ScrollView>
+                <Button
+                    android:id="@+id/email_login_button"
+                    style="?android:textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Login"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/orange"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="@color/cardview_light_background"/>
 
-</android.support.constraint.ConstraintLayout>
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
