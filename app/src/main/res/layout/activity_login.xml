@@ -17,7 +17,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/Logo"
+        android:src="@mipmap/logo"
         android:layout_gravity="center"
         android:elevation="10dp"/>
 

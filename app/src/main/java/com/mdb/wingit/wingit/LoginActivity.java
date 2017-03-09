@@ -39,8 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         screenNumber = choosebgScreen();
         password = (EditText) findViewById(R.id.password);
 
-        Button login = (Button) findViewById(R.id.sign_in_button);
-        TextView register = (TextView) findViewById(R.id.textView);
+        // TODO: Check the id passed into this shit
+        Button login = (Button) findViewById(R.id.email_login_button);
+//        TextView register = (TextView) findViewById(R.id.textView);
 
         //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -59,15 +60,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
+        // TODO: Fix and uncomment dis 
         //Direct user to SignUpActivity Activity
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openRegister = new Intent(getApplicationContext(), SignUpActivity.class);
-                openRegister.putExtra("background", screenNumber);
-                startActivity(openRegister);
-            }
-        });
+//        register.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent openRegister = new Intent(getApplicationContext(), SignUpActivity.class);
+//                openRegister.putExtra("background", screenNumber);
+//                startActivity(openRegister);
+//            }
+//        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
