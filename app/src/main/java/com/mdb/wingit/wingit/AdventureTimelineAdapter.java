@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.github.vipulasri.timelineview.TimelineView;
 
 class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAdapter.TimeLineViewHolder> {
@@ -17,7 +16,7 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
 
     @Override
     public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.timeline_card, null);
+        View view = View.inflate(parent.getContext(), R.layout.row_view_timeline, null);
         return new TimeLineViewHolder(view, viewType);
     }
 
