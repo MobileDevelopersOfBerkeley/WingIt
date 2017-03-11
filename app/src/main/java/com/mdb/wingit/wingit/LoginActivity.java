@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Intent openMain = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                    Intent openMain = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(openMain);
 
                 } else {

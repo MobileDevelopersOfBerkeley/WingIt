@@ -12,13 +12,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        tools:replace="android:label"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="WingIt"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
 
         <!-- the API Key below is the production key; make sure the API key below is your API key -->
         <meta-data
@@ -27,14 +27,12 @@
 
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
-
-        </activity>
+            android:theme="@style/SplashTheme"></activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CategorySelectorActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarWithStatus" />
         <activity
@@ -56,17 +54,15 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <activity
-            android:name=".PastAdventuresActivity">
-
+        <activity android:name=".PastAdventuresActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".AdventureTimelineActivity"></activity>
+        <activity android:name=".AdventureTimelineActivity" />
+        <activity android:name=".CategorySelectorActivity"></activity>
     </application>
 
 </manifest>

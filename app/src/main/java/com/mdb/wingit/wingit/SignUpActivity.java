@@ -76,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
                             String uid = mAuth.getCurrentUser().getUid();
                             DatabaseReference userdb = mDatabase.child("Users").child(uid);
                             userdb.setValue(user);
-                            startActivity(new Intent(SignUpActivity.this, CategorySelectorActivity.class));
+                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                         } else if (!(task.isSuccessful())) {
                             Toast.makeText(SignUpActivity.this, "Sign up problem",
                                     Toast.LENGTH_LONG).show();

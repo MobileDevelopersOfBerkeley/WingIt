@@ -32,8 +32,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.mdb.wingit.wingit.CategorySelectorActivity.currentLocations;
-import static com.mdb.wingit.wingit.CategorySelectorActivity.indexPlace;
+import static com.mdb.wingit.wingit.MainActivity.currentLocations;
+import static com.mdb.wingit.wingit.MainActivity.indexPlace;
 
 public class CarouselActivity extends AppCompatActivity {
 
