@@ -43,7 +43,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view_carousel, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.carousel_row_view, parent, false);
         return new CustomViewHolder(view);
     }
 
