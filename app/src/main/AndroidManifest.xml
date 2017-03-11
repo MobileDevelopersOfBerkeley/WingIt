@@ -27,7 +27,7 @@
 
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"></activity>
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -39,12 +39,18 @@
             android:name=".CarouselActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DetailScreen"
-            android:label="@string/title_activity_detail_screen"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PinMapActivity"
+            android:label="@string/title_activity_pin_map"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CategorySelectorActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdventureTimelineActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -61,8 +67,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AdventureTimelineActivity" />
-        <activity android:name=".CategorySelectorActivity"></activity>
     </application>
 
 </manifest>
