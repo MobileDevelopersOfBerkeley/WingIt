@@ -16,7 +16,7 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
 
     @Override
     public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.timeline_row_view, null);
+        View view = View.inflate(parent.getContext(), R.layout.row_view_timeline, null);
         return new TimeLineViewHolder(view, viewType);
     }
 
