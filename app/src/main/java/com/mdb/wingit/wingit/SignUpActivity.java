@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpActivity extends AppCompatActivity {
 
     //UI references
-    private TextInputEditText mEmailView;
-    private TextInputEditText mPasswordView, name;
-    private Button signUpButton;
-    private ConstraintLayout bg;
+    private EditText name, email, password;
+    private Button login, signup;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -36,47 +35,54 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         //UI elements
-        mEmailView = (TextInputEditText) findViewById(R.id.email);
-        mPasswordView = (TextInputEditText) findViewById(R.id.password);
-        name = (TextInputEditText) findViewById(R.id.name);
-        signUpButton = (Button) findViewById(R.id.email_sign_in_button);
-        bg = (ConstraintLayout) findViewById(R.id.screen);
+        name = (EditText) findViewById(R.id.name);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
+        login = (Button) findViewById(R.id.email_login_button);
+        signup = (Button) findViewById(R.id.email_signup_button);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        signUpButton.setOnClickListener(new OnClickListener() {
+        login.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(openLogin);
+            }
+        });
+        signup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 signup();
             }
         });
-        choosebgScreen();
     }
 
     /** Sign up user with Firebase */
     private void signup() {
-        final String n = name.getText().toString();
-        final String em = mEmailView.getText().toString();
-        String pass = mPasswordView.getText().toString();
+        final String nameText = name.getText().toString();
+        final String emailText = email.getText().toString();
+        String pwText = password.getText().toString();
 
         //If fields are empty, sign up fails
-        if(n.length()==0 || em.length()==0 || pass.length()==0){
+        if (nameText.length() == 0 || emailText.length() == 0 || pwText.length() == 0) {
             Toast.makeText(SignUpActivity.this, "Sign up failed, please fill in all blanks.",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        final User user = new User(em, n);
-        mAuth.createUserWithEmailAndPassword(em, pass)
+        final User user = new User(emailText, nameText);
+        mAuth.createUserWithEmailAndPassword(emailText, pwText)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String uid = mAuth.getCurrentUser().getUid();
-                            DatabaseReference userdb = mDatabase.child("Users").child(uid);
-                            userdb.setValue(user);
-                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                            DatabaseReference userRef = mDatabase.child("Users").child(uid);
+                            userRef.setValue(user);
+                            Intent openSelector = new Intent(SignUpActivity.this, CategorySelectorActivity.class);
+                            startActivity(openSelector);
                         } else if (!(task.isSuccessful())) {
                             Toast.makeText(SignUpActivity.this, "Sign up problem",
                                     Toast.LENGTH_LONG).show();
@@ -84,21 +90,5 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    /** Get background screen from LoginActivity Activity */
-    public void choosebgScreen() {
-        int n = getIntent().getIntExtra("background", 1);
-        switch (n) {
-            case 1: {
-                bg.setBackground(getResources().getDrawable(R.drawable.sfdawnv2));
-            }
-            case 2: {
-                bg.setBackground(getResources().getDrawable(R.drawable.nycnightv3));
-            }
-            case 3: {
-                bg.setBackground(getResources().getDrawable(R.drawable.honoluluv3));
-            }
-        }
     }
 }
