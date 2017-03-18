@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mdb.wingit.wingit">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -16,7 +17,8 @@
         android:label="WingIt"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
 
         <!-- the API Key below is the production key; make sure the API key below is your API key -->
         <meta-data
@@ -25,26 +27,30 @@
 
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
-
-        </activity>
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CategorySelectorActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarWithStatus" />
         <activity
             android:name=".CarouselActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DetailScreen"
-            android:label="@string/title_activity_detail_screen"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PinMapActivity"
+            android:label="@string/title_activity_pin_map"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CategorySelectorActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdventureTimelineActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -54,17 +60,13 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <activity
-            android:name=".PastAdventuresActivity">
-
+        <activity android:name=".PastAdventuresActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".AdventureTimelineActivity"></activity>
     </application>
 
 </manifest>

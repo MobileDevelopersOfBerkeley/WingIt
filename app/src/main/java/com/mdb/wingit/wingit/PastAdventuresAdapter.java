@@ -26,7 +26,7 @@ public class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAd
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.past_adventure_row_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view_past_adventure, parent, false);
         return new CustomViewHolder(view);
     }
 

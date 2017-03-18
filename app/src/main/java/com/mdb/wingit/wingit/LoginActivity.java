@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,8 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
-    private ConstraintLayout bg;
-    private int screenNumber;
+    private Button login, signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +33,10 @@ public class LoginActivity extends AppCompatActivity {
 
         //UI elements
         email = (EditText) findViewById(R.id.email);
-        bg = (ConstraintLayout) findViewById(R.id.screen);
-        screenNumber = choosebgScreen();
         password = (EditText) findViewById(R.id.password);
 
-        // TODO: Check the id passed into this shit
-        Button login = (Button) findViewById(R.id.email_login_button);
-//        TextView register = (TextView) findViewById(R.id.textView);
+        login = (Button) findViewById(R.id.email_login_button);
+        signup = (Button) findViewById(R.id.email_signup_button);
 
         //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -51,8 +46,8 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Intent openMain = new Intent(getApplicationContext(), CategorySelectorActivity.class);
-                    startActivity(openMain);
+                    Intent openSelector = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                    startActivity(openSelector);
 
                 } else {
                     // User is signed out
@@ -60,16 +55,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        // TODO: Fix and uncomment dis 
         //Direct user to SignUpActivity Activity
-//        register.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent openRegister = new Intent(getApplicationContext(), SignUpActivity.class);
-//                openRegister.putExtra("background", screenNumber);
-//                startActivity(openRegister);
-//            }
-//        });
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openSignUp = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(openSignUp);
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,24 +98,5 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
-
-    /** Choose random background screen */
-    public int choosebgScreen() {
-        Random random = new Random();
-        int n = random.nextInt(3) + 1;
-        switch (n) {
-            case 1: {
-                bg.setBackgroundResource(R.drawable.sfdawnv2);
-            }
-            case 2: {
-                bg.setBackgroundResource(R.drawable.nycnightv3);
-            }
-            case 3: {
-                bg.setBackgroundResource(R.drawable.honoluluv3);
-            }
-
-        }
-        return n;
     }
 }

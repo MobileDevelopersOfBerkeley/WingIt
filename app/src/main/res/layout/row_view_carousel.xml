@@ -43,8 +43,8 @@
             android:id="@+id/view" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="133dp"
+            android:layout_height="23dp"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/activityTitle"
@@ -55,10 +55,32 @@
             tools:layout_constraintLeft_creator="1"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="16dp"
-            app:layout_constraintRight_toRightOf="@+id/activityPic"
             app:layout_constraintTop_toTopOf="@+id/view"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp" />
+            app:layout_constraintVertical_bias="0.519"
+            app:layout_constraintRight_toLeftOf="@+id/rating"
+            android:layout_marginRight="8dp"
+            app:layout_constraintHorizontal_bias="0.461" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="83dp"
+            android:layout_height="22dp"
+            android:layout_marginRight="86dp"
+            app:layout_constraintRight_toRightOf="@+id/view"
+            tools:layout_editor_absoluteY="152dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/go"
+            android:layout_width="59dp"
+            android:layout_height="53dp"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@mipmap/logo"
+            tools:layout_editor_absoluteY="99dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
