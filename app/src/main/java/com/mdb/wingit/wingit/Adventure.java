@@ -8,31 +8,45 @@ import java.util.ArrayList;
 
 public class Adventure {
 
-    private String startloc;
-    private String date;
+    private String startLoc;
+    private String startDate;
+    private String imageURL;
+    private ArrayList<Pin> pins;
 
     public Adventure() {
 
     }
-    public Adventure(String startloc, String date) {
-        this.startloc = startloc;
-        this.date = date;
+
+    public Adventure(String startLoc, String date, String imageURL, ArrayList<Pin> pins) {
+        this.startLoc = startLoc;
+        this.startDate = date;
+        this.imageURL = imageURL;
+        this.pins = pins;
     }
 
     public String getStartloc() {
-        return this.startloc;
+        return startLoc;
     }
 
     public String getDate() {
-        return this.date;
+        return startDate;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public ArrayList<Pin> getPins() {
+        return pins;
+    }
+
+    // TODO: Are these setter methods really necessary?
     public void setStartloc(String loc) {
-        startloc = loc;
+        startLoc = loc;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.startDate = date;
     }
 
 }
