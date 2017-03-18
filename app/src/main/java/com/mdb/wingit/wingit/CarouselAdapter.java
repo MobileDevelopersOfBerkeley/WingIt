@@ -72,9 +72,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                 public void onClick(View view) {
                     position = getAdapterPosition();
                     String coordinates = pins.get(position).latitude+","+pins.get(position).longitude;
-                    Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                    /*Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
-                    context.startActivity(mapsIntent);
+                    context.startActivity(mapsIntent);*/
+
+                    Intent pinMapIntent = new Intent(context, PinMapActivity.class);
+                    pinMapIntent.putExtra("coordinates", coordinates);
+                    context.startActivity(pinMapIntent);
+
                     /*final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
