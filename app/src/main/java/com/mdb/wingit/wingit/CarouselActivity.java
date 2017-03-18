@@ -39,7 +39,7 @@ public class CarouselActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private CarouselAdapter adapter;
-    private ArrayList<ActivityList.Activity> result, three_acts;
+    private ArrayList<Pin> result, three_acts;
     public static final String API_KEY = "AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc";
     public static final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
@@ -101,7 +101,7 @@ public class CarouselActivity extends AppCompatActivity {
     }
 
     //Adds three activities from list into three_acts.
-    public void randomThrees(ArrayList<ActivityList.Activity> list){
+    public void randomThrees(ArrayList<Pin> list){
         int one, two, three;
         int listSize = list.size();
         one = getRandom(listSize);
@@ -113,9 +113,9 @@ public class CarouselActivity extends AppCompatActivity {
         while(two==three||one==three){
             three = getRandom(listSize);
         }
-        Log.i("Three Acts", list.get(one).getName());
-        Log.i("Three Acts", list.get(two).getName());
-        Log.i("Three Acts", list.get(three).getName());
+        Log.i("Three Acts", list.get(one).name);
+        Log.i("Three Acts", list.get(two).name);
+        Log.i("Three Acts", list.get(three).name);
         three_acts.add(list.get(one));
         three_acts.add(list.get(two));
         three_acts.add(list.get(three));
@@ -123,7 +123,7 @@ public class CarouselActivity extends AppCompatActivity {
     }
 
 
-    public ArrayList<ActivityList.Activity> getNearbyFood(){
+    public ArrayList<Pin> getNearbyFood(){
         Log.i("food log", "food send request");
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=8000&type=restaurant&opennow=true&key="+API_KEY_NONRESTRICTED;
 
@@ -133,7 +133,7 @@ public class CarouselActivity extends AppCompatActivity {
         return result;
 
     }
-    public ArrayList<ActivityList.Activity> getNearbyActivity(){
+    public ArrayList<Pin> getNearbyActivity(){
         String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
         int random = (int)(Math.random()*types.length);
         String searchRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+current.latitude+","+current.longitude+"&radius=50000&type="+types[random]+"&opennow=true&key="+API_KEY_NONRESTRICTED;
@@ -151,8 +151,7 @@ public class CarouselActivity extends AppCompatActivity {
             protected void onPreExecute() {
                 searchCount++;
             }
-            @Override
-            protected void onPostExecute(ArrayList<ActivityList.Activity> activityResult) {
+            protected void onPostExecute(ArrayList<Pin> activityResult) {
                 result = activityResult;
                 if(result.size() < 3) {
                     if (searchCount == 2) {
@@ -166,17 +165,17 @@ public class CarouselActivity extends AppCompatActivity {
         }.execute(request);
     }
 
-    abstract class RequestTask extends AsyncTask<String, Void, ArrayList<ActivityList.Activity>> {
+    abstract class RequestTask extends AsyncTask<String, Void, ArrayList<Pin>> {
         public RequestTask() {
         }
-        protected ArrayList<ActivityList.Activity> doInBackground(String... params) {
+        protected ArrayList<Pin> doInBackground(String... params) {
             if (params.length != 1) {
                 return null;
             }
             final String request = params[0];
             HttpURLConnection conn = null;
             StringBuilder jsonResults = new StringBuilder();
-            ArrayList<ActivityList.Activity> result = new ArrayList<>();
+            ArrayList<Pin> result = new ArrayList<>();
             try {
                 URL url = new URL(request);
                 conn = (HttpURLConnection) url.openConnection();
@@ -203,9 +202,9 @@ public class CarouselActivity extends AppCompatActivity {
                 JSONArray predsJsonArray = jsonObj.getJSONArray("results");
                 Log.i("size of results", predsJsonArray.length()+"");
                 // Extract the Place descriptions from the results
-                result = new ArrayList<ActivityList.Activity>(predsJsonArray.length());
+                result = new ArrayList<Pin>(predsJsonArray.length());
                 for (int i = 0; i < predsJsonArray.length(); i++) {
-                    ActivityList.Activity activity = new ActivityList.Activity();
+                    Pin pin = new Pin();
                     JSONObject geometry = predsJsonArray.getJSONObject(i).getJSONObject("geometry");
                     JSONObject location = geometry.getJSONObject("location");
 
@@ -213,15 +212,15 @@ public class CarouselActivity extends AppCompatActivity {
                         JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
                         if(photos.getJSONObject(0).length()!=0){
                             JSONObject photoObject = photos.getJSONObject(0);
-                            activity.setPhotoRef(photoObject.getString("photo_reference"));
+                            pin.setPhotoRef(photoObject.getString("photo_reference"));
                         }
 
                     }
-                    activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
-                    activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
-                    activity.setLat(location.getString("lat"));
-                    activity.setLon(location.getString("lng"));
-                    result.add(activity);
+                    pin.setName(predsJsonArray.getJSONObject(i).getString("name"));
+                    pin.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
+                    pin.setLat(location.getString("lat"));
+                    pin.setLon(location.getString("lng"));
+                    result.add(pin);
                 }
             } catch (JSONException e) {
                 Log.e("Error", "Error processing JSON results", e);
