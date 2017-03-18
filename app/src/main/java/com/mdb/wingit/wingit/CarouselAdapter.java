@@ -26,7 +26,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     private Context context;
     private ArrayList<Pin> pins = new ArrayList();
 
-    public CarouselAdapter(Context context, ArrayList<Pin> activities) {
+    public CarouselAdapter(Context context, ArrayList<Pin> pins) {
         this.context = context;
         this.pins = pins;
     }
@@ -51,21 +51,21 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         Pin pin = pins.get(position);
-        holder.activityTitle.setText(pin.name);
-        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.photoRef+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(holder.activityPic);
+        holder.pinTitle.setText(pin.name);
+        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.photoRef+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(holder.pinPic);
 
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-        TextView activityTitle;
-        ImageView activityPic;
+        TextView pinTitle;
+        ImageView pinPic;
         CardView currCard;
         int position;
 
         public CustomViewHolder (View view) {
             super(view);
-            this.activityTitle = (TextView) view.findViewById(R.id.activityTitle);
-            this.activityPic = (ImageView) view.findViewById(R.id.activityPic);
+            this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
+            this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
             this.currCard = (CardView) view.findViewById(R.id.card_curr_option);
             currCard.setOnClickListener(new View.OnClickListener() {
                 @Override
