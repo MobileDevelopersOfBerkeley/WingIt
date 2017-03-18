@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    //UI references
     private EditText name, email, password;
-    private Button login, signup;
-
+    private Button signup;
+    private TextView login;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -38,9 +38,8 @@ public class SignUpActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.name);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        login = (Button) findViewById(R.id.email_login_button);
-        signup = (Button) findViewById(R.id.email_signup_button);
-
+        login = (TextView) findViewById(R.id.login);
+        signup = (Button) findViewById(R.id.signup_button);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 

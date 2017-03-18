@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 import java.util.Random;
 
@@ -24,7 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
-    private Button login, signup;
+    private Button login;
+    private TextView signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         //UI elements
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-
-        login = (Button) findViewById(R.id.email_login_button);
-        signup = (Button) findViewById(R.id.email_signup_button);
+        login = (Button) findViewById(R.id.login_button);
+        signup = (TextView) findViewById(R.id.signup);
 
         //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -48,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Intent openSelector = new Intent(getApplicationContext(), CategorySelectorActivity.class);
                     startActivity(openSelector);
-
                 } else {
                     // User is signed out
                 }
