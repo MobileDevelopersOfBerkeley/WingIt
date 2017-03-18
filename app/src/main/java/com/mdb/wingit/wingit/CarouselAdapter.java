@@ -66,7 +66,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
             this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
             this.currCard = (CardView) view.findViewById(R.id.card_curr_option);
-            currCard.setOnClickListener(new View.OnClickListener() {
+            this.currCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     position = getAdapterPosition();
