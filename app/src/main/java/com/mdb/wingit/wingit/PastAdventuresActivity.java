@@ -15,7 +15,6 @@ public class PastAdventuresActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_adventures);
-        getSupportActionBar().hide();
 
         RecyclerView pastAdventureRecyclerView = (RecyclerView) findViewById(R.id.past_adventures_recycler_view);
         pastAdventureRecyclerView.setLayoutManager(new LinearLayoutManager(this));
