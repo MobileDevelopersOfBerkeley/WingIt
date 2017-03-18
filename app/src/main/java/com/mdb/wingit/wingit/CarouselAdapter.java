@@ -52,8 +52,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         Pin pin = pins.get(position);
         holder.pinTitle.setText(pin.name);
-        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.photoRef+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(holder.pinPic);
-
+        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.imageURL+"&key="+ CarouselActivity.API_KEY_NONRESTRICTED).into(holder.pinPic);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {

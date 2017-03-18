@@ -40,5 +40,4 @@ public class Pin {
     public void setStartTime(String time) {
         this.startTime = time;
     }
-
 }
