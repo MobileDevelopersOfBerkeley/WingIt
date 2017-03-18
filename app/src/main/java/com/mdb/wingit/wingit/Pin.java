@@ -6,17 +6,19 @@ package com.mdb.wingit.wingit;
 
 public class Pin {
     String name;
-    String photoRef;
     String placeID;
     String latitude;
     String longitude;
+    String rating;
+    String startTime;
+    String imageURL;
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPhotoRef(String pRef) {
-        this.photoRef = pRef;
+    public void setPhotoRef(String iRef) {
+        this.imageURL = iRef;
     }
 
     public void setPlaceID(String pID) {
@@ -29,5 +31,13 @@ public class Pin {
 
     public void setLon(String lon) {
         this.longitude = lon;
+    }
+
+    public void setRating(String rat) {
+        this.rating = rat;
+    }
+
+    public void setStartTime(String time) {
+        this.startTime = time;
     }
 }
