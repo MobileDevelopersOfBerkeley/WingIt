@@ -52,7 +52,7 @@ public class PastAdventuresActivity extends AppCompatActivity {
 //
 //        ArrayList<Pin> pins = new ArrayList<>();
 //        pins.add(pin);
-//        Adventure adventure = new Adventure("Hello", "This", "Is", pins);
+//        Adventure adventure = new Adventure("Hello", "This", "Is", dbRef.);
 //        String dbKey2 = dbRef.child("Adventure").push().getKey();
 //        dbRef.child("Adventure").child(dbKey2).setValue(adventure);
 

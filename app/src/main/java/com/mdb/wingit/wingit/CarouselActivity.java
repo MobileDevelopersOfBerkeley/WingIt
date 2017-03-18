@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 public class CarouselActivity extends AppCompatActivity {
 
-    public static final String API_KEY = "AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc";
     public static final String API_KEY_NONRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
 
     @Override

@@ -23,7 +23,7 @@
         <!-- the API Key below is the production key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc" />
+            android:value="AIzaSyDxoKLHhcYE3UqJ5Nh8_fH8yEjC55HminI" />
 
         <activity
             android:name=".SplashActivity"
@@ -32,31 +32,25 @@
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBarWithStatus" />
-        <activity
             android:name=".CarouselActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
         </activity>
-
         <activity
             android:name=".PinMapActivity"
             android:label="@string/title_activity_pin_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CategorySelectorActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AdventureTimelineActivity"
             android:theme="@style/AppTheme.NoActionBar" />
