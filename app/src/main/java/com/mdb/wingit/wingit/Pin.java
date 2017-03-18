@@ -13,6 +13,16 @@ public class Pin {
     String startTime;
     String imageURL;
 
+    public Pin(String name, String placeID, String latitude, String longitude, String rating, String startTime, String imageURL) {
+        this.name = name;
+        this.placeID = placeID;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.rating = rating;
+        this.startTime = startTime;
+        this.imageURL = imageURL;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

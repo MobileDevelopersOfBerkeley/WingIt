@@ -4,12 +4,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class PastAdventuresActivity extends AppCompatActivity {
 
     public PastAdventuresAdapter pastAdventuresAdapater;
+    DatabaseReference dbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,21 +29,32 @@ public class PastAdventuresActivity extends AppCompatActivity {
         pastAdventureRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // TODO: Load past activities from Firebase into an ArrayList
-        Adventure temp1 = new Adventure("Montreal", "3/4/17");
-        Adventure temp2 = new Adventure("Los Angeles", "3/5/17");
-        Adventure temp3 = new Adventure("Grand Canyon", "3/6/17");
-        Adventure temp4 = new Adventure("Niagara Falls", "3/7/17");
+        Adventure temp1 = new Adventure("Montreal", "3/4/17", "hi", null);
+        Adventure temp2 = new Adventure("Los Angeles", "3/5/17", "hi", null);
+        Adventure temp3 = new Adventure("Grand Canyon", "3/6/17", "hi", null);
+        Adventure temp4 = new Adventure("Niagara Falls", "3/7/17", "hi", null);
 
         ArrayList<Adventure> tempList = new ArrayList<>();
         tempList.add(temp1);
         tempList.add(temp2);
         tempList.add(temp3);
         tempList.add(temp4);
-        // TODO: Bind this ArrayList to pastAdventuresAdapter
+
         pastAdventuresAdapater = new PastAdventuresAdapter(getApplicationContext(), tempList);
 
-        // TODO: Uncomment this last line to bind pastAdventuresAdapter to the recycler view
          pastAdventureRecyclerView.setAdapter(pastAdventuresAdapater);
+
+        // Firebase nodal setup
+//        Pin pin = new Pin("Yo", "This", "Is", "Another", "Test", "Please", "Work");
+//        dbRef = FirebaseDatabase.getInstance().getReference();
+//        String dbKey = dbRef.child("Pin").push().getKey();
+//        dbRef.child("Pin").child(dbKey).setValue(pin);
+//
+//        ArrayList<Pin> pins = new ArrayList<>();
+//        pins.add(pin);
+//        Adventure adventure = new Adventure("Hello", "This", "Is", pins);
+//        String dbKey2 = dbRef.child("Adventure").push().getKey();
+//        dbRef.child("Adventure").child(dbKey2).setValue(adventure);
 
     }
 }
