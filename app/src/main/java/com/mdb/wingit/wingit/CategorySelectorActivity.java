@@ -20,7 +20,10 @@ public class CategorySelectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_selector);
 
+        String pageTitle = getIntent().getStringExtra("title");
+
         title = (TextView) findViewById(R.id.title);
+        title.setText(pageTitle);
         food = (ImageView) findViewById(R.id.foodImage);
         activity = (ImageView) findViewById(R.id.activityImage);
         arrow = (ImageView) findViewById(R.id.arrow);
