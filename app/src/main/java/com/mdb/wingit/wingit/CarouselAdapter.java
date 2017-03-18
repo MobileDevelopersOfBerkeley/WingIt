@@ -79,27 +79,6 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                     Intent pinMapIntent = new Intent(context, PinMapActivity.class);
                     pinMapIntent.putExtra("coordinates", coordinates);
                     context.startActivity(pinMapIntent);
-
-                    /*final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent detailIntent = new Intent(context, DetailScreen.class);
-                            detailIntent.putExtra("name", activities.get(position).getName());
-                            detailIntent.putExtra("place_id", activities.get(position).getPlaceID());
-                            detailIntent.putExtra("coordinates", activities.get(position).getLat()+","+activities.get(position).getLon());
-                            detailIntent.putExtra("photoRef", activities.get(position).getPhotoRef());
-                            context.startActivity(detailIntent);
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-                    builder.setMessage("Are you sure you want to go to " + activities.get(position).getName() + "?");
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();*/
                 }
             });
         }
