@@ -2,12 +2,9 @@ package com.mdb.wingit.wingit;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,23 +16,16 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseAuth;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 public class CategorySelectorActivity extends AppCompatActivity {
 
     private TextView title;
     private ImageView food, activity, arrow;
-    String category = "";
     private GoogleApiClient client;
     private int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
-    static LatLng current; // current location in lat and long
+    static LatLng currentLocation; // current location in lat and long
     static String currentName = "";
-    private static ArrayList<Adventure> adventures;
-    private FirebaseAuth mAuth;
+    private Intent carousel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,34 +33,25 @@ public class CategorySelectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_selector);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         //Connect to Places API
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
-
-        adventures = new ArrayList<Adventure>();
         getCurrentLocations();
-
-        mAuth = FirebaseAuth.getInstance();
 
         // Set up UI elements
         String pageTitle = getIntent().getStringExtra("title");
-
         title = (TextView) findViewById(R.id.title);
         title.setText(pageTitle);
         food = (ImageView) findViewById(R.id.foodImage);
         activity = (ImageView) findViewById(R.id.activityImage);
         arrow = (ImageView) findViewById(R.id.arrow);
 
-        final Intent carousel = new Intent(getApplicationContext(), CarouselActivity.class);
+        carousel = new Intent(getApplicationContext(), CarouselActivity.class);
 
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                category = "food";
-                carousel.putExtra("category", category);
+                carousel.putExtra("category", "food");
                 startActivity(carousel);
             }
         });
@@ -78,8 +59,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
         activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                category = "activity";
-                carousel.putExtra("category", category);
+                carousel.putExtra("category", "activity");
                 startActivity(carousel);
             }
         });
@@ -121,7 +101,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 }
 
                 if(p != null) {
-                    current = p.getPlace().getLatLng();
+                    currentLocation = p.getPlace().getLatLng();
                     currentName = p.getPlace().getName().toString();
                 }
 
