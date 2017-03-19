@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,17 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class CategorySelectorActivity extends AppCompatActivity {
 
     private TextView title;
@@ -26,6 +38,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
     static LatLng currentLocation; // current location in lat and long
     static String currentName = "";
     private Intent carousel;
+    TextView tempView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +49,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
         //Connect to Places API
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
-        getCurrentLocations();
 
         // Set up UI elements
         String pageTitle = getIntent().getStringExtra("title");
@@ -71,6 +83,9 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 startActivity(pastAdventures);
             }
         });
+
+        tempView = (TextView) findViewById(R.id.temp_location);
+        getCurrentLocations();
     }
 
     /** Get list of likely places for user's current location from Places API */
@@ -103,10 +118,12 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 if(p != null) {
                     currentLocation = p.getPlace().getLatLng();
                     currentName = p.getPlace().getName().toString();
+                    tempView.setText("Location: " + currentName);
                 }
 
                 likelyPlaces.release();
             }
         });
     }
+
 }
