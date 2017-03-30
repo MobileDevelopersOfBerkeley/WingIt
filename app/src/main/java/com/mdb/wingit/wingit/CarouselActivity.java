@@ -24,8 +24,7 @@ public class CarouselActivity extends AppCompatActivity {
     public static final String API_KEY_UNRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
 
-    private String category;
-    private LatLng location;
+    private LatLng currentLocation;
     private ArrayList<Pin> pinList = new ArrayList<>();
 
     @Override
@@ -45,7 +44,7 @@ public class CarouselActivity extends AppCompatActivity {
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
 
-        //Set up Recycler View
+        //Set up Carousel Recycler View
         rv = (RecyclerView) findViewById(R.id.carouselrv);
         adapter = new CarouselAdapter(CarouselActivity.this, pinList);
         CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
@@ -57,7 +56,24 @@ public class CarouselActivity extends AppCompatActivity {
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
-        category = intentExtras.getString("category");
-        location = (LatLng) intentExtras.get("location");
+        boolean isFoodCategory = intentExtras.getBoolean("isFood");
+        currentLocation = (LatLng) intentExtras.get("location");
+
+        //Call methods based on category that user selected
+        if (isFoodCategory) {
+            getNearbyFood();
+        } else {
+            getNearbyActivities();
+        }
+    }
+
+    /** Populate carousel with locations of food nearby */
+    private void getNearbyFood() {
+
+    }
+
+    /** Populate carousel with locations of activities nearby */
+    private void getNearbyActivities() {
+
     }
 }

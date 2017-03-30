@@ -54,7 +54,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carousel.putExtra("category", "food");
+                carousel.putExtra("isFood", true);
                 carousel.putExtra("location", currentLocation);
                 startActivity(carousel);
             }
@@ -63,7 +63,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
         activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carousel.putExtra("category", "activity");
+                carousel.putExtra("isFood", false);
                 carousel.putExtra("location", currentLocation);
                 startActivity(carousel);
             }
