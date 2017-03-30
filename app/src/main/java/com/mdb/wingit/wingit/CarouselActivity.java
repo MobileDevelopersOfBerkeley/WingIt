@@ -59,21 +59,36 @@ public class CarouselActivity extends AppCompatActivity {
         boolean isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
 
-        //Call methods based on category that user selected
-        if (isFoodCategory) {
-            getNearbyFood();
+        //Compose and send searchRequest based on category user selected
+        String searchRequest = createRequestURL(isFoodCategory);
+        sendRequestTask(searchRequest);
+    }
+
+    /** Create request URL based on search radius and type associated with selected category */
+    private String createRequestURL(boolean isFood) {
+        String initMapsURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+        String locationURL = "location=" + currentLocation.latitude + "," + currentLocation.longitude;
+        String endMapsURL = "&opennow=true&key=" + API_KEY_UNRESTRICTED;
+
+        int radius;
+        String type;
+        if (isFood) {
+            radius = 8000;
+            type = "restaurant";
         } else {
-            getNearbyActivities();
+            radius = 50000;
+            String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
+            int random = (int)(Math.random()*types.length);
+            type = types[random];
         }
+
+        String radiusURL = "&radius=" + radius;
+        String typesURL = "&type=" + type;
+
+        return initMapsURL + locationURL + radiusURL + typesURL + endMapsURL;
     }
 
-    /** Populate carousel with locations of food nearby */
-    private void getNearbyFood() {
+    private void sendRequestTask(String request) {
 
-    }
-
-    /** Populate carousel with locations of activities nearby */
-    private void getNearbyActivities() {
-        
     }
 }
