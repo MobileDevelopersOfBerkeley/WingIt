@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,23 +17,12 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class CategorySelectorActivity extends AppCompatActivity {
 
     private TextView title;
     private ImageView food, activity, arrow;
     private GoogleApiClient client;
-    private int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     static LatLng currentLocation; // current location in lat and long
     static String currentName = "";
     private Intent carousel;
@@ -58,12 +46,16 @@ public class CategorySelectorActivity extends AppCompatActivity {
         activity = (ImageView) findViewById(R.id.activityImage);
         arrow = (ImageView) findViewById(R.id.arrow);
 
+        tempView = (TextView) findViewById(R.id.temp_location);
+        getCurrentLocations();
+
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
 
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 carousel.putExtra("category", "food");
+                carousel.putExtra("location", currentLocation);
                 startActivity(carousel);
             }
         });
@@ -72,6 +64,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 carousel.putExtra("category", "activity");
+                carousel.putExtra("location", currentLocation);
                 startActivity(carousel);
             }
         });
@@ -83,9 +76,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 startActivity(pastAdventures);
             }
         });
-
-        tempView = (TextView) findViewById(R.id.temp_location);
-        getCurrentLocations();
     }
 
     /** Get list of likely places for user's current location from Places API */
@@ -115,7 +105,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                     }
                 }
 
-                if(p != null) {
+                if (p != null) {
                     currentLocation = p.getPlace().getLatLng();
                     currentName = p.getPlace().getName().toString();
                     tempView.setText("Location: " + currentName);
