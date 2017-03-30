@@ -74,6 +74,6 @@ public class CarouselActivity extends AppCompatActivity {
 
     /** Populate carousel with locations of activities nearby */
     private void getNearbyActivities() {
-
+        
     }
 }
