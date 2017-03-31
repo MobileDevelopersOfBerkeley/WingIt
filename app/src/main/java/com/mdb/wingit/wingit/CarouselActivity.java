@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CarouselActivity extends AppCompatActivity {
 
@@ -72,6 +74,7 @@ public class CarouselActivity extends AppCompatActivity {
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);
         new RequestTask().execute(searchRequest);
+        adapter.notifyDataSetChanged();
     }
 
     /** Create request URL based on search radius and type associated with selected category */
@@ -87,15 +90,27 @@ public class CarouselActivity extends AppCompatActivity {
             type = "restaurant";
         } else {
             radius = 50000;
-            String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley", "clothing_store", "department_store", "zoo", "shopping_mall", "park", "museum", "movie_theater"};
-            int random = (int)(Math.random()*types.length);
-            type = types[random];
+            String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley",
+                    "clothing_store", "department_store", "zoo", "shopping_mall", "park",
+                    "museum", "movie_theater"};
+            type = getRandom(types);
         }
 
         String radiusURL = "&radius=" + radius;
         String typesURL = "&type=" + type;
 
         return initMapsURL + locationURL + radiusURL + typesURL + endMapsURL;
+    }
+
+    /** Get random element from an array */
+    private String getRandom(String[] array) {
+        int random = (int)(Math.random()*array.length);
+        return array[random];
+    }
+
+    private ArrayList<Pin> pick3Random(ArrayList<Pin> list) {
+        Collections.shuffle(list);
+        return new ArrayList<>(list.subList(0, 3));
     }
 
     //TODO: Clean up this code
@@ -117,55 +132,55 @@ public class CarouselActivity extends AppCompatActivity {
                     //Log.i("jsonResults length", jsonResults.length()+"");
                 }
                 in.close();
-            } catch (IOException e) {
-                //Log.e("Error", "Error connecting to Places API", e);
-                return result;
-            } finally {
-                if (conn != null) conn.disconnect();
-            }
-            try {
+
                 // Create a JSON object hierarchy from the results
                 //Log.wtf("length of jsonresults", jsonResults.toString());
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
-                JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+                JSONArray jsonArray = jsonObj.getJSONArray("results");
                 //Log.i("size of results", predsJsonArray.length()+"");
-                // Extract the Place descriptions from the results
-                result = new ArrayList<Pin>(predsJsonArray.length());
-                for (int i = 0; i < predsJsonArray.length(); i++) {
-                    //TODO: Need to construct Pin object properly
-                    Pin activity = new Pin();
-                    JSONObject geometry = predsJsonArray.getJSONObject(i).getJSONObject("geometry");
-                    JSONObject location = geometry.getJSONObject("location");
+                //Extract the Place descriptions from the results
+                //TODO: Get current time
+                String time = "12:00";
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    //TODO: Need to account for fields not existing for JSONObject
+                    JSONObject currObj = jsonArray.getJSONObject(i);
 
-                    if(predsJsonArray.getJSONObject(i).has("photos")) {
-                        JSONArray photos = predsJsonArray.getJSONObject(i).getJSONArray("photos");
+                    String imgURL = "";
+                    if(currObj.has("photos")) {
+                        JSONArray photos = currObj.getJSONArray("photos");
                         if(photos.getJSONObject(0).length()!=0){
                             JSONObject photoObject = photos.getJSONObject(0);
-                            activity.setPhotoRef(photoObject.getString("photo_reference"));
+                            imgURL = photoObject.getString("photo_reference");
                         }
-
                     }
-                    activity.setName(predsJsonArray.getJSONObject(i).getString("name"));
-                    activity.setPlaceID(predsJsonArray.getJSONObject(i).getString("place_id"));
-                    activity.setLat(location.getString("lat"));
-                    activity.setLon(location.getString("lng"));
-                    result.add(activity);
+                    String name = currObj.getString("name");
+                    String placeID = currObj.getString("place_id");
+                    String rating = currObj.getString("rating");
+
+                    JSONObject location = currObj.getJSONObject("geometry").getJSONObject("location");
+                    String latitude = location.getString("lat");
+                    String longitude = location.getString("lng");
+
+                    Pin pin = new Pin(name, placeID, latitude, longitude, rating, time, imgURL);
+                    result.add(pin);
                 }
+            } catch (IOException e) {
+                Log.e("Error", "Error connecting to Places API", e);
             } catch (JSONException e) {
-                //Log.e("Error", "Error processing JSON results", e);
+                Log.e("Error", "Error processing JSON results", e);
+            } finally {
+                if (conn != null) conn.disconnect();
             }
             //Log.wtf("wtf", result.size() + "");
             return result;
         }
 
-        protected void onPostExecute(ArrayList<Pin> activityResult) {
-            //TODO: Need to do something with the results returned by searchRequest
-            //result = activityResult;
-            //if(result.size() < 3) {
+        protected void onPostExecute(ArrayList<Pin> taskResult) {
+            if(taskResult.size() < 3) {
                 Toast.makeText(CarouselActivity.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
                 finish();
-            //}
-            //randomThrees(result);
+            }
+            pinList = pick3Random(taskResult);
         }
     }
 }

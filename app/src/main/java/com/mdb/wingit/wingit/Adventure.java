@@ -24,7 +24,7 @@ public class Adventure {
         this.pins = pins;
     }
 
-    public String getStartloc() {
+    public String getStartLoc() {
         return startLoc;
     }
 
@@ -41,7 +41,7 @@ public class Adventure {
     }
 
     // TODO: Are these setter methods really necessary?
-    public void setStartloc(String loc) {
+    public void setStartLoc(String loc) {
         startLoc = loc;
     }
 
