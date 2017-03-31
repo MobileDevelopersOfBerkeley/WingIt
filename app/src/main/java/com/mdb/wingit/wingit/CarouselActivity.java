@@ -24,8 +24,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 public class CarouselActivity extends AppCompatActivity {
 
@@ -108,60 +112,44 @@ public class CarouselActivity extends AppCompatActivity {
         return array[random];
     }
 
+    /** Pick 3 random pins to populate carousel from results of search request */
     private ArrayList<Pin> pick3Random(ArrayList<Pin> list) {
         Collections.shuffle(list);
         return new ArrayList<>(list.subList(0, 3));
     }
 
-    //TODO: Clean up this code
+    //TODO: Make more efficient by creating Pin objects after picking random elements from jsonArray
+    /** AsyncTask that processes search request based on category and creates ArrayList of Pins */
     private class RequestTask extends AsyncTask<String, Void, ArrayList<Pin>> {
+        @Override
         protected ArrayList<Pin> doInBackground(String... params) {
-            final String request = params[0];
             HttpURLConnection conn = null;
-            StringBuilder jsonResults = new StringBuilder();
             ArrayList<Pin> result = new ArrayList<>();
             try {
-                URL url = new URL(request);
+                URL url = new URL(params[0]);
                 conn = (HttpURLConnection) url.openConnection();
                 InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
                 int read;
                 char[] buff = new char[1024];
+                StringBuilder jsonResults = new StringBuilder();
                 while ((read = in.read(buff)) != -1) {
                     jsonResults.append(buff, 0, read);
-                    //Log.i("jsonResults length", jsonResults.length()+"");
+//                    Log.i("jsonResults length", jsonResults.length()+"");
                 }
                 in.close();
 
-                // Create a JSON object hierarchy from the results
-                //Log.wtf("length of jsonresults", jsonResults.toString());
+                //Create a JSON object hierarchy from the results of the search request
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
                 JSONArray jsonArray = jsonObj.getJSONArray("results");
-                //Log.i("size of results", predsJsonArray.length()+"");
-                //Extract the Place descriptions from the results
-                //TODO: Get current time
-                String time = "12:00";
+//                Log.wtf("length of jsonresults", jsonResults.toString());
+//                Log.i("size of results", predsJsonArray.length()+"");
+
+                //Create an array of Pin objects from the JSON array
+                String time = getCurrentTime();
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    //TODO: Need to account for fields not existing for JSONObject
                     JSONObject currObj = jsonArray.getJSONObject(i);
-
-                    String imgURL = "";
-                    if(currObj.has("photos")) {
-                        JSONArray photos = currObj.getJSONArray("photos");
-                        if(photos.getJSONObject(0).length()!=0){
-                            JSONObject photoObject = photos.getJSONObject(0);
-                            imgURL = photoObject.getString("photo_reference");
-                        }
-                    }
-                    String name = currObj.getString("name");
-                    String placeID = currObj.getString("place_id");
-                    String rating = currObj.getString("rating");
-
-                    JSONObject location = currObj.getJSONObject("geometry").getJSONObject("location");
-                    String latitude = location.getString("lat");
-                    String longitude = location.getString("lng");
-
-                    Pin pin = new Pin(name, placeID, latitude, longitude, rating, time, imgURL);
+                    Pin pin = composePin(currObj, time);
                     result.add(pin);
                 }
             } catch (IOException e) {
@@ -171,10 +159,11 @@ public class CarouselActivity extends AppCompatActivity {
             } finally {
                 if (conn != null) conn.disconnect();
             }
-            //Log.wtf("wtf", result.size() + "");
+//            Log.wtf("wtf", result.size() + "");
             return result;
         }
 
+        @Override
         protected void onPostExecute(ArrayList<Pin> taskResult) {
             if(taskResult.size() < 3) {
                 Toast.makeText(CarouselActivity.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
@@ -182,5 +171,46 @@ public class CarouselActivity extends AppCompatActivity {
             }
             pinList = pick3Random(taskResult);
         }
+    }
+
+    /** Create Pin object based on JSON Object that is currently being processed */
+    private Pin composePin(JSONObject jsonObj, String time) throws JSONException {
+        //Name, Place ID, and Rating
+        String[] pinFields = new String[]{"name", "place_ID", "rating"};
+        String[] pinDetails = new String[3];
+        for (int i = 0; i < 3; i++) {
+            if (jsonObj.has(pinFields[i])) {
+                pinDetails[i] = jsonObj.getString(pinFields[i]);
+            } else {
+                pinDetails[i] = "";
+            }
+        }
+
+        //Latitude and Longitude
+        JSONObject location = jsonObj.getJSONObject("geometry").getJSONObject("location");
+        String latitude = location.getString("lat");
+        String longitude = location.getString("lng");
+
+        //Image URL
+        String imgURL = "";
+        if (jsonObj.has("photos")) {
+            JSONArray photos = jsonObj.getJSONArray("photos");
+            if (photos.getJSONObject(0).length() != 0) {
+                JSONObject photoObject = photos.getJSONObject(0);
+                imgURL = photoObject.getString("photo_reference");
+            }
+        }
+
+        //Create Pin object
+        return new Pin(pinDetails[0], pinDetails[1], latitude, longitude, pinDetails[2], time, imgURL);
+    }
+
+    /** Get current time which stays constant for all Pin objects created */
+    private String getCurrentTime() {
+        Calendar cal = Calendar.getInstance();
+        Date currentLocalTime = cal.getTime();
+        DateFormat date = new SimpleDateFormat("HH:mm a");
+        date.setTimeZone(cal.getTimeZone());
+        return date.format(currentLocalTime);
     }
 }
