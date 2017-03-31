@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +16,7 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.mdb.wingit.wingit.R;
 
 public class CategorySelectorActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
 
 import java.util.ArrayList;
 
@@ -35,7 +38,7 @@ public class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAd
 
         Adventure currAdventure = pastAdventures.get(position);
 
-        holder.locationName.setText(currAdventure.getStartloc());
+        holder.locationName.setText(currAdventure.getStartLoc());
         // TODO: Load image into holder.locationImage
 
     }

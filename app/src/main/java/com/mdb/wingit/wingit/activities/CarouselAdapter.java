@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Pin;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
 
     @Override
     public int getItemCount() {
-        if (pins == null){
+        if (pins == null) {
             return 0;
         }
         else {
@@ -48,8 +50,8 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         Pin pin = pins.get(position);
-        holder.pinTitle.setText(pin.name);
-        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.imageURL+"&key="+ CarouselActivity.API_KEY_UNRESTRICTED).into(holder.pinPic);
+        holder.pinTitle.setText(pin.getName());
+        Glide.with(context).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+pin.getImageURL()+"&key="+ CarouselActivity.API_KEY_UNRESTRICTED).into(holder.pinPic);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -67,7 +69,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                 @Override
                 public void onClick(View view) {
                     position = getAdapterPosition();
-                    String coordinates = pins.get(position).latitude+","+pins.get(position).longitude;
+                    String coordinates = pins.get(position).getLatitude()+","+pins.get(position).getLongitude();
                     /*Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
                     context.startActivity(mapsIntent);*/
@@ -78,10 +80,5 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Custom
                 }
             });
         }
-
-
     }
-
-
-
 }

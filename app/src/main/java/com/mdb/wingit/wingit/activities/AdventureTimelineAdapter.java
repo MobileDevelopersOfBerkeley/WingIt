@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.vipulasri.timelineview.TimelineView;
+import com.mdb.wingit.wingit.R;
 
 class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAdapter.TimeLineViewHolder> {
 

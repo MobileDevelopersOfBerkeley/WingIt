@@ -1,10 +1,12 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
+import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
 
 import java.util.ArrayList;
 

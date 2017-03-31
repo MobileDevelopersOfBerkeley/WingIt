@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.modelClasses;
 
 import java.util.ArrayList;
 

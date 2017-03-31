@@ -1,4 +1,4 @@
-package com.mdb.wingit.wingit;
+package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
