@@ -11,13 +11,13 @@ public class Adventure {
     private String startLoc;
     private String startDate;
     private String imageURL;
-    private ArrayList<Pin> pins;
+    private ArrayList<String> pinKeysList;
 
-    public Adventure(String startLoc, String date, String imageURL, ArrayList<Pin> pins) {
+    public Adventure(String startLoc, String date, String imageURL) {
         this.startLoc = startLoc;
         this.startDate = date;
         this.imageURL = imageURL;
-        this.pins = pins;
+        this.pinKeysList = new ArrayList<>();
     }
 
     public String getStartLoc() {
@@ -32,8 +32,11 @@ public class Adventure {
         return imageURL;
     }
 
-    public ArrayList<Pin> getPins() {
-        return pins;
+    public ArrayList<String> getPinKeysList() {
+        return pinKeysList;
     }
 
+    public void addPinKey(String key) {
+        this.pinKeysList.add(key);
+    }
 }
