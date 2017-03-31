@@ -17,12 +17,12 @@ import java.util.ArrayList;
  * Created by Kedar Thakkar on 2/25/17.
  */
 
-public class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.CustomViewHolder> {
+class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.CustomViewHolder> {
 
     private Context context;
     private ArrayList<Adventure> pastAdventures;
 
-    public PastAdventuresAdapter(Context context, ArrayList<Adventure> pastAdventures) {
+    PastAdventuresAdapter(Context context, ArrayList<Adventure> pastAdventures) {
         this.context = context;
         this.pastAdventures = pastAdventures;
     }

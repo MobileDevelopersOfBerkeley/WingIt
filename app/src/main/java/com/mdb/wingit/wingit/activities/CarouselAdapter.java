@@ -20,12 +20,12 @@ import java.util.ArrayList;
  * Created by KJ on 11/11/16.
  */
 
-public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
+class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Pin> pins = new ArrayList();
+    private ArrayList<Pin> pins = new ArrayList<>();
 
-    public CarouselAdapter(Context context, ArrayList<Pin> pins) {
+    CarouselAdapter(Context context, ArrayList<Pin> pins) {
         this.context = context;
         this.pins = pins;
     }
