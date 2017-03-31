@@ -95,6 +95,7 @@ public class CarouselActivity extends AppCompatActivity {
             radius = 8000;
             type = "restaurant";
         } else {
+            //TODO: Make search request for activities with 3 different types
             radius = 50000;
             String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley",
                     "clothing_store", "department_store", "zoo", "shopping_mall", "park",
