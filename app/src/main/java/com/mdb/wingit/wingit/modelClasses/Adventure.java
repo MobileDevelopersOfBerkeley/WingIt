@@ -13,10 +13,6 @@ public class Adventure {
     private String imageURL;
     private ArrayList<Pin> pins;
 
-    public Adventure() {
-
-    }
-
     public Adventure(String startLoc, String date, String imageURL, ArrayList<Pin> pins) {
         this.startLoc = startLoc;
         this.startDate = date;
@@ -38,15 +34,6 @@ public class Adventure {
 
     public ArrayList<Pin> getPins() {
         return pins;
-    }
-
-    // TODO: Are these setter methods really necessary?
-    public void setStartLoc(String loc) {
-        startLoc = loc;
-    }
-
-    public void setDate(String date) {
-        this.startDate = date;
     }
 
 }
