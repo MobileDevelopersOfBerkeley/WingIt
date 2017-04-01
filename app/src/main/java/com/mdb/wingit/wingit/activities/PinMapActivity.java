@@ -32,11 +32,6 @@ public class PinMapActivity extends AppCompatActivity {
         name.setText(intentExtras.getString("name"));
         String coordinates = intentExtras.getString("coordinates");
 
-        //Navigate user to destination using Google Maps
-        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
-                Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
-        startActivity(mapsIntent);
-
         continueAdventure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,5 +45,10 @@ public class PinMapActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), AdventureTimelineActivity.class));
             }
         });
+
+        //Navigate user to destination using Google Maps
+        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
+        startActivity(mapsIntent);
     }
 }
