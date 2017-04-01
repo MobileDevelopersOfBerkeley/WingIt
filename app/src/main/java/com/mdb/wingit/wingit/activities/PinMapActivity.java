@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mdb.wingit.wingit.R;
 
@@ -15,16 +16,16 @@ import com.mdb.wingit.wingit.R;
 
 public class PinMapActivity extends AppCompatActivity {
 
-    private FloatingActionButton continueAdventure;
-    private ImageView upArrow;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin_map);
 
-        continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
-        upArrow = (ImageView) findViewById(R.id.uparrow);
+        FloatingActionButton continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
+        ImageView arrow = (ImageView) findViewById(R.id.uparrow);
+        TextView name = (TextView) findViewById(R.id.pinName);
+
+
 
         continueAdventure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,7 +34,7 @@ public class PinMapActivity extends AppCompatActivity {
             }
         });
 
-        upArrow.setOnClickListener(new View.OnClickListener() {
+        arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), AdventureTimelineActivity.class));
