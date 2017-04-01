@@ -25,8 +25,8 @@
             android:layout_marginTop="40dp"
             android:text="Start Your Adventure"
             android:textAlignment="center"
-            android:textColor="#FD8329"
-            android:textSize="20dp" />
+            android:textColor="@color/orange"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:text="Logout"
             android:id="@+id/temp_logout"
             android:layout_marginTop="285dp"
-            android:layout_marginLeft="230dp"/>
+            android:layout_marginStart="230dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                 <TextView
                     android:id="@+id/foodText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:ems="10"

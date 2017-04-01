@@ -2,9 +2,8 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.mdb.wingit.wingit.modelClasses.Pin;
 import java.util.ArrayList;
 
 /**
- * Created by KJ on 11/11/16.
+ * Recycler View of pins that populate Carousel Activity
  */
 
 class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
@@ -36,8 +35,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         if (pins == null) {
             return 0;
         }
-        Log.i("size of pins", pins.size()+"");
-        Log.i("adapter pinList", pins.toString());
         return pins.size();
     }
 
@@ -61,7 +58,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         TextView pinTitle;
         TextView pinRating;
         ImageView pinPic;
-        CardView currCard;
+        FloatingActionButton pinSelect;
         int position;
 
         public CustomViewHolder (View view) {
@@ -69,8 +66,8 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
             this.pinRating = (TextView) view.findViewById(R.id.pinRating);
             this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
-            this.currCard = (CardView) view.findViewById(R.id.card_curr_option);
-            this.currCard.setOnClickListener(new View.OnClickListener() {
+            this.pinSelect = (FloatingActionButton) view.findViewById(R.id.go);
+            this.pinSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     position = getAdapterPosition();

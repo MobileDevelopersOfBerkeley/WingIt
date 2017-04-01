@@ -6,11 +6,11 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -21,6 +21,11 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mdb.wingit.wingit.R;
+
+/**
+ * Retrieves user's current location
+ * Allows user to choose between Food and Activities as their category
+ */
 
 public class CategorySelectorActivity extends AppCompatActivity {
 
@@ -44,10 +49,14 @@ public class CategorySelectorActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
 
+        tempView = (TextView) findViewById(R.id.temp_location);
+        getCurrentLocations();
+
         // Set up UI elements
-        String pageTitle = getIntent().getStringExtra("title");
         title = (TextView) findViewById(R.id.title);
-        title.setText(pageTitle);
+        //TODO: Change between Start Your Adventure and Continue Your Adventure through intent extra
+        //String pageTitle = getIntent().getStringExtra("title");
+        //title.setText(pageTitle);
         food = (ImageView) findViewById(R.id.foodImage);
         activity = (ImageView) findViewById(R.id.activityImage);
         arrow = (ImageView) findViewById(R.id.arrow);
@@ -61,26 +70,32 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 startActivity(logoutIntent);
             }
         });
-        tempView = (TextView) findViewById(R.id.temp_location);
-        getCurrentLocations();
 
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
 
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carousel.putExtra("isFood", true);
-                carousel.putExtra("location", currentLocation);
-                startActivity(carousel);
+                if (currentLocation == null) {
+                    notifyNoLocation();
+                } else {
+                    carousel.putExtra("isFood", true);
+                    carousel.putExtra("location", currentLocation);
+                    startActivity(carousel);
+                }
             }
         });
 
         activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carousel.putExtra("isFood", false);
-                carousel.putExtra("location", currentLocation);
-                startActivity(carousel);
+                if (currentLocation == null) {
+                    notifyNoLocation();
+                } else {
+                    carousel.putExtra("isFood", false);
+                    carousel.putExtra("location", currentLocation);
+                    startActivity(carousel);
+                }
             }
         });
 
@@ -123,6 +138,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
                     currentLocation = p.getPlace().getLatLng();
                     currentName = p.getPlace().getName().toString();
                     tempView.setText("Location: " + currentName);
+                } else {
+                    tempView.setText("Could not get location");
                 }
 
                 likelyPlaces.release();
@@ -130,4 +147,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
         });
     }
 
+    /** Notify user that app is unable to get their current location */
+    private void notifyNoLocation() {
+        Toast.makeText(this, "Unable to get your current location", Toast.LENGTH_SHORT).show();
+    }
 }

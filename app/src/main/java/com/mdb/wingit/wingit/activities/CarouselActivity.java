@@ -1,6 +1,5 @@
 package com.mdb.wingit.wingit.activities;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
@@ -14,10 +13,6 @@ import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.mdb.wingit.wingit.R;
@@ -38,12 +33,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
+/**
+ * Displays 3 choices of pins nearby the user according to the previously specified category
+ */
+
 public class CarouselActivity extends AppCompatActivity {
 
-    private RecyclerView rv;
     private CarouselAdapter adapter;
 
-    private GoogleApiClient client;
     public static final String API_KEY_UNRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
 
@@ -56,10 +53,9 @@ public class CarouselActivity extends AppCompatActivity {
         setContentView(R.layout.activity_carousel);
 
         //Connect to Places API
-        client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
+        GoogleApiClient client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
-
-        Log.i("checkpoint", "Connected to API client");
 
         //Check permissions to access user's location
         if (ActivityCompat.checkSelfPermission(this,
@@ -69,10 +65,8 @@ public class CarouselActivity extends AppCompatActivity {
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
 
-        Log.i("checkpoint", "Checked permissions");
-
         //Set up Carousel Recycler View
-        rv = (RecyclerView) findViewById(R.id.carouselrv);
+        RecyclerView rv = (RecyclerView) findViewById(R.id.carouselrv);
         adapter = new CarouselAdapter(CarouselActivity.this, pinList);
         final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
@@ -85,7 +79,6 @@ public class CarouselActivity extends AppCompatActivity {
         Bundle intentExtras = getIntent().getExtras();
         boolean isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
-        Log.i("current location", currentLocation.toString());
 
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);
@@ -127,9 +120,9 @@ public class CarouselActivity extends AppCompatActivity {
     /** Pick 3 random pins to populate carousel from results of search request */
     private void pick3Random(ArrayList<Pin> list) {
         Collections.shuffle(list);
-        pinList = new ArrayList<>(list.subList(0, 3));
-        Log.i("pinList", pinList.toString());
-        adapter.notifyDataSetChanged();
+        for (int i = 0; i < 3; i++) {
+            pinList.add(list.get(i));
+        }
     }
 
     //TODO: Make more efficient by creating Pin objects after picking random elements from jsonArray
@@ -175,15 +168,12 @@ public class CarouselActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Pin> taskResult) {
-            Log.i("resultList", taskResult.toString());
-            if(taskResult.size() < 3) {
-                Toast.makeText(CarouselActivity.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
-                finish();
+            if (taskResult.size() >= 3) {
+                pick3Random(taskResult);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(CarouselActivity.this, "Could not find any results at this time", Toast.LENGTH_SHORT).show();
             }
-            pick3Random(taskResult);
-            //pinList = pick3Random(taskResult);
-            //Log.i("pinList", pinList.toString());
-            //adapter.notifyDataSetChanged();
         }
     }
 
