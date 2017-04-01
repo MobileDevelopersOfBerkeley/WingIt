@@ -1,5 +1,6 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,10 @@ import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.mdb.wingit.wingit.R;
@@ -54,6 +59,8 @@ public class CarouselActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
 
+        Log.i("checkpoint", "Connected to API client");
+
         //Check permissions to access user's location
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -62,10 +69,12 @@ public class CarouselActivity extends AppCompatActivity {
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
 
+        Log.i("checkpoint", "Checked permissions");
+
         //Set up Carousel Recycler View
         rv = (RecyclerView) findViewById(R.id.carouselrv);
         adapter = new CarouselAdapter(CarouselActivity.this, pinList);
-        CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
+        final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -76,11 +85,11 @@ public class CarouselActivity extends AppCompatActivity {
         Bundle intentExtras = getIntent().getExtras();
         boolean isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
+        Log.i("current location", currentLocation.toString());
 
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);
         new RequestTask().execute(searchRequest);
-        adapter.notifyDataSetChanged();
     }
 
     /** Create request URL based on search radius and type associated with selected category */
@@ -116,9 +125,11 @@ public class CarouselActivity extends AppCompatActivity {
     }
 
     /** Pick 3 random pins to populate carousel from results of search request */
-    private ArrayList<Pin> pick3Random(ArrayList<Pin> list) {
+    private void pick3Random(ArrayList<Pin> list) {
         Collections.shuffle(list);
-        return new ArrayList<>(list.subList(0, 3));
+        pinList = new ArrayList<>(list.subList(0, 3));
+        Log.i("pinList", pinList.toString());
+        adapter.notifyDataSetChanged();
     }
 
     //TODO: Make more efficient by creating Pin objects after picking random elements from jsonArray
@@ -138,15 +149,12 @@ public class CarouselActivity extends AppCompatActivity {
                 StringBuilder jsonResults = new StringBuilder();
                 while ((read = in.read(buff)) != -1) {
                     jsonResults.append(buff, 0, read);
-//                    Log.i("jsonResults length", jsonResults.length()+"");
                 }
                 in.close();
 
                 //Create a JSON object hierarchy from the results of the search request
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
                 JSONArray jsonArray = jsonObj.getJSONArray("results");
-//                Log.wtf("length of jsonresults", jsonResults.toString());
-//                Log.i("size of results", predsJsonArray.length()+"");
 
                 //Create an array of Pin objects from the JSON array
                 String time = getCurrentTime();
@@ -162,17 +170,20 @@ public class CarouselActivity extends AppCompatActivity {
             } finally {
                 if (conn != null) conn.disconnect();
             }
-//            Log.wtf("wtf", result.size() + "");
             return result;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Pin> taskResult) {
+            Log.i("resultList", taskResult.toString());
             if(taskResult.size() < 3) {
                 Toast.makeText(CarouselActivity.this, "Could not find any activities at this time", Toast.LENGTH_SHORT).show();
                 finish();
             }
-            pinList = pick3Random(taskResult);
+            pick3Random(taskResult);
+            //pinList = pick3Random(taskResult);
+            //Log.i("pinList", pinList.toString());
+            //adapter.notifyDataSetChanged();
         }
     }
 

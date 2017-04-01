@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +33,11 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
     @Override
     public int getItemCount() {
-        if (pins == null || pins.size() == 0) {
+        if (pins == null) {
             return 0;
         }
+        Log.i("size of pins", pins.size()+"");
+        Log.i("adapter pinList", pins.toString());
         return pins.size();
     }
 

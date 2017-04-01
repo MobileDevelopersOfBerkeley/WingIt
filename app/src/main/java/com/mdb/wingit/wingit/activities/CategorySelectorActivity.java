@@ -1,10 +1,12 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -93,7 +95,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
     /** Get list of likely places for user's current location from Places API */
     private void getCurrentLocations() {
-
         //Check permissions to access user's location
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -50,4 +50,9 @@ public class Pin {
     public String getImageURL() {
         return imageURL;
     }
+
+    @Override
+    public String toString() {
+        return name + " " + placeID + " " + latitude + " " + longitude + " " + rating + " " + startTime;
+    }
 }
