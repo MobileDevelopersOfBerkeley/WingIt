@@ -9,18 +9,19 @@ import android.widget.ImageView;
 
 import com.mdb.wingit.wingit.R;
 
-public class AdventureTimelineActivity extends AppCompatActivity {
+/**
+ * Displays timeline with all the pins of the user's current adventure
+ */
 
-    private ImageView close;
-    private Button endTrip;
+public class AdventureTimelineActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adventure_timeline);
 
-        close = (ImageView) findViewById(R.id.closeButton);
-        endTrip = (Button) findViewById(R.id.endtrip);
+        ImageView close = (ImageView) findViewById(R.id.closeButton);
+        Button endTrip = (Button) findViewById(R.id.endtrip);
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,10 @@ import android.widget.ImageView;
 
 import com.mdb.wingit.wingit.R;
 
+/**
+ * Displays pins of locations user has visited on his/her current adventure
+ */
+
 public class PinMapActivity extends AppCompatActivity {
 
     private FloatingActionButton continueAdventure;

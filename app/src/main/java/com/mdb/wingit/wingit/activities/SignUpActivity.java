@@ -21,11 +21,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.User;
 
+/**
+ * Sign up using name, email, and password
+ */
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText name, email, password;
-    private Button signup;
-    private TextView login;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -38,8 +40,8 @@ public class SignUpActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.name);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        login = (TextView) findViewById(R.id.login);
-        signup = (Button) findViewById(R.id.signup_button);
+        TextView login = (TextView) findViewById(R.id.login);
+        Button signUp = (Button) findViewById(R.id.signup_button);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -50,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(openLogin);
             }
         });
-        signup.setOnClickListener(new OnClickListener() {
+        signUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 signup();
@@ -82,8 +84,8 @@ public class SignUpActivity extends AppCompatActivity {
                             userRef.setValue(user);
                             Intent openSelector = new Intent(SignUpActivity.this, CategorySelectorActivity.class);
                             startActivity(openSelector);
-                        } else if (!(task.isSuccessful())) {
-                            Toast.makeText(SignUpActivity.this, "Sign up problem",
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "Sign up failed",
                                     Toast.LENGTH_LONG).show();
                         }
                     }

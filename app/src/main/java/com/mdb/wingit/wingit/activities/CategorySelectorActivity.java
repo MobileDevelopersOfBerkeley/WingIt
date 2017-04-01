@@ -1,6 +1,5 @@
 package com.mdb.wingit.wingit.activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -29,13 +28,10 @@ import com.mdb.wingit.wingit.R;
 
 public class CategorySelectorActivity extends AppCompatActivity {
 
-    private TextView title;
-    private ImageView food, activity, arrow;
-    private Button logout;
     private GoogleApiClient client;
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
-    static LatLng currentLocation; // current location in lat and long
-    static String currentName = "";
+    private LatLng currentLocation;
+    private String currentName = "";
     private Intent carousel;
     TextView tempView;
 
@@ -53,15 +49,15 @@ public class CategorySelectorActivity extends AppCompatActivity {
         getCurrentLocations();
 
         // Set up UI elements
-        title = (TextView) findViewById(R.id.title);
+        TextView title = (TextView) findViewById(R.id.title);
         //TODO: Change between Start Your Adventure and Continue Your Adventure through intent extra
         //String pageTitle = getIntent().getStringExtra("title");
         //title.setText(pageTitle);
-        food = (ImageView) findViewById(R.id.foodImage);
-        activity = (ImageView) findViewById(R.id.activityImage);
-        arrow = (ImageView) findViewById(R.id.arrow);
+        ImageView food = (ImageView) findViewById(R.id.foodImage);
+        ImageView activity = (ImageView) findViewById(R.id.activityImage);
+        ImageView arrow = (ImageView) findViewById(R.id.arrow);
 
-        logout = (Button) findViewById(R.id.temp_logout);
+        Button logout = (Button) findViewById(R.id.temp_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +68,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
         });
 
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
-
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +80,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 }
             }
         });
-
         activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

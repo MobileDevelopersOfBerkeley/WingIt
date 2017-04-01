@@ -1,7 +1,7 @@
 package com.mdb.wingit.wingit.modelClasses;
 
 /**
- * Created by KJ on 2/22/17.
+ * Location for a single food or activity within an adventure
  */
 
 public class Pin {

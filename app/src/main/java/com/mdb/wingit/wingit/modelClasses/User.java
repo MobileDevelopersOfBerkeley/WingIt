@@ -3,17 +3,13 @@ package com.mdb.wingit.wingit.modelClasses;
 import java.util.ArrayList;
 
 /**
- * Created by reddy on 11/11/2016.
+ * User's name, email, and their past adventures
  */
 
 public class User {
-    String email;
-    String name;
-    ArrayList<String> adventureKeysList;
-
-    public User() {
-        this.adventureKeysList = new ArrayList<>();
-    }
+    private String email;
+    private String name;
+    private ArrayList<String> adventureKeysList;
 
     public User(String email, String name) {
         this.email = email;

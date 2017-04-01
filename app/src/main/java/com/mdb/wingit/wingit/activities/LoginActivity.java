@@ -17,14 +17,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mdb.wingit.wingit.R;
 
+/**
+ * Login using email and password
+ */
+
 public class LoginActivity extends AppCompatActivity {
 
     //UI references
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
-    private Button login;
-    private TextView signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         //UI elements
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        login = (Button) findViewById(R.id.login_button);
-        signup = (TextView) findViewById(R.id.signup);
+        Button login = (Button) findViewById(R.id.login_button);
+        TextView signUp = (TextView) findViewById(R.id.signup);
 
         //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -47,14 +49,12 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Intent openSelector = new Intent(getApplicationContext(), CategorySelectorActivity.class);
                     startActivity(openSelector);
-                } else {
-                    // User is signed out
                 }
             }
         };
 
         //Direct user to SignUpActivity Activity
-        signup.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent openSignUp = new Intent(getApplicationContext(), SignUpActivity.class);
@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "LoginActivity failed.",
+                            Toast.makeText(LoginActivity.this, "Login failed",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

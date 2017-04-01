@@ -10,6 +10,10 @@ import com.mdb.wingit.wingit.modelClasses.Adventure;
 
 import java.util.ArrayList;
 
+/**
+ * Displays user's past adventures
+ */
+
 public class PastAdventuresActivity extends AppCompatActivity {
 
     public PastAdventuresAdapter pastAdventuresAdapater;

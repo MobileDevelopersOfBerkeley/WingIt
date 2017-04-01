@@ -3,11 +3,10 @@ package com.mdb.wingit.wingit.modelClasses;
 import java.util.ArrayList;
 
 /**
- * Created by KJ on 11/27/16.
+ * Collection of pins centered around a general location
  */
 
 public class Adventure {
-
     private String startLoc;
     private String startDate;
     private String imageURL;

@@ -14,7 +14,7 @@ import com.mdb.wingit.wingit.modelClasses.Adventure;
 import java.util.ArrayList;
 
 /**
- * Created by Kedar Thakkar on 2/25/17.
+ * Recycler View of adventures that populate Past Adventures Activity
  */
 
 class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.CustomViewHolder> {

@@ -8,6 +8,10 @@ import android.widget.TextView;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.mdb.wingit.wingit.R;
 
+/**
+ * Recycler View of pins that populate Adventure Timeline Activity
+ */
+
 class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAdapter.TimeLineViewHolder> {
 
     @Override
