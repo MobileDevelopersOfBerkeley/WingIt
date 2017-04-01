@@ -1,6 +1,8 @@
 package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 
@@ -44,26 +47,30 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         Adventure adventure = adventures.get(position);
-
         holder.locationName.setText(adventure.getStartLoc());
-        // TODO: Load image into holder.locationImage
-
+        //TODO: Verify that getImageURL() returns a valid URL
+        Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         ImageView locationImage;
         TextView locationName;
+        CardView locationCard;
 
         CustomViewHolder(View view) {
             super(view);
-            this.locationImage = (ImageView) view.findViewById(R.id.past_adventure_row_view_image);
-            this.locationName = (TextView) view.findViewById(R.id.past_adventure_row_view_text);
-
-            //TODO: Set up response to rows being clicked
-            view.setOnClickListener(new View.OnClickListener() {
+            locationImage = (ImageView) view.findViewById(R.id.locationImage);
+            locationName = (TextView) view.findViewById(R.id.locationText);
+            locationCard = (CardView) view.findViewById(R.id.adventureCard);
+            locationCard.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Adventure adventure = adventures.get(position);
+                    ArrayList<String> pinKeys = adventure.getPinKeysList();
+                    Intent timelineIntent = new Intent(context, AdventureTimelineActivity.class);
+                    timelineIntent.putExtra("pinKeys", pinKeys);
+                    context.startActivity(timelineIntent);
                 }
             });
         }

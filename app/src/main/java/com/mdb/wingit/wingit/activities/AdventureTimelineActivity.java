@@ -43,6 +43,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
 
         //Read data from Firebase
         //TODO: Get current adventure key from intent extra
+        //TODO: Consider getting pin keys list from intent extra instead
         String adventureKey = "";
         dbRef = FirebaseDatabase.getInstance().getReference();
         getFirebaseData(adventureKey);
