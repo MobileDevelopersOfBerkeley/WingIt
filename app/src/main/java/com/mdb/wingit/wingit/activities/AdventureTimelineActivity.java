@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Pin;
 
@@ -32,6 +35,8 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AdventureTimelineAdapter(this, pinList);
 
+        getFirebaseData();
+
         ImageView close = (ImageView) findViewById(R.id.closeButton);
         Button endTrip = (Button) findViewById(R.id.endtrip);
 
@@ -48,5 +53,12 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
             }
         });
+    }
+
+    private void getFirebaseData() {
+        //TODO: Get current adventure key from intent extra
+        String adventureKey = "";
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
     }
 }
