@@ -24,10 +24,10 @@ public class PastAdventuresActivity extends AppCompatActivity {
         pastAdventureRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // TODO: Load past activities from Firebase into an ArrayList
-        Adventure temp1 = new Adventure("Montreal", "3/4/17", "hi", null);
-        Adventure temp2 = new Adventure("Los Angeles", "3/5/17", "hi", null);
-        Adventure temp3 = new Adventure("Grand Canyon", "3/6/17", "hi", null);
-        Adventure temp4 = new Adventure("Niagara Falls", "3/7/17", "hi", null);
+        Adventure temp1 = new Adventure("Montreal", "3/4/17", "hi");
+        Adventure temp2 = new Adventure("Los Angeles", "3/5/17", "hi");
+        Adventure temp3 = new Adventure("Grand Canyon", "3/6/17", "hi");
+        Adventure temp4 = new Adventure("Niagara Falls", "3/7/17", "hi");
 
         ArrayList<Adventure> tempList = new ArrayList<>();
         tempList.add(temp1);

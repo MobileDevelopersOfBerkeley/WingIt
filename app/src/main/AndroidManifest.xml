@@ -13,17 +13,17 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="WingIt"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label">
 
-        <!-- the API Key below is the production key; make sure the API key below is your API key -->
+        <!-- the API Key below is Shreya's key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDxoKLHhcYE3UqJ5Nh8_fH8yEjC55HminI" />
+            android:value="AIzaSyApXRaVlj7yEYNaBo8NKJ-3vuW8prmDWVg" />
 
         <activity
             android:name=".activities.SplashActivity"
@@ -31,8 +31,10 @@
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -48,15 +50,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.CategorySelectorActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.AdventureTimelineActivity"
             android:theme="@style/AppTheme.NoActionBar" />

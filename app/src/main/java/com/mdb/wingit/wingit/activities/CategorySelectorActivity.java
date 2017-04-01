@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +17,14 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.mdb.wingit.wingit.R;
 
 public class CategorySelectorActivity extends AppCompatActivity {
 
     private TextView title;
     private ImageView food, activity, arrow;
+    private Button logout;
     private GoogleApiClient client;
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     static LatLng currentLocation; // current location in lat and long
@@ -47,6 +50,15 @@ public class CategorySelectorActivity extends AppCompatActivity {
         activity = (ImageView) findViewById(R.id.activityImage);
         arrow = (ImageView) findViewById(R.id.arrow);
 
+        logout = (Button) findViewById(R.id.temp_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(logoutIntent);
+            }
+        });
         tempView = (TextView) findViewById(R.id.temp_location);
         getCurrentLocations();
 
