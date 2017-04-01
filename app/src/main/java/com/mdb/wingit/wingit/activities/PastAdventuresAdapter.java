@@ -20,11 +20,19 @@ import java.util.ArrayList;
 class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Adventure> pastAdventures;
+    private ArrayList<Adventure> adventures;
 
-    PastAdventuresAdapter(Context context, ArrayList<Adventure> pastAdventures) {
+    PastAdventuresAdapter(Context context, ArrayList<Adventure> adventures) {
         this.context = context;
-        this.pastAdventures = pastAdventures;
+        this.adventures = adventures;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (adventures == null) {
+            return 0;
+        }
+        return adventures.size();
     }
 
     @Override
@@ -35,31 +43,23 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
 
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
+        Adventure adventure = adventures.get(position);
 
-        Adventure currAdventure = pastAdventures.get(position);
-
-        holder.locationName.setText(currAdventure.getStartLoc());
+        holder.locationName.setText(adventure.getStartLoc());
         // TODO: Load image into holder.locationImage
 
     }
 
-    @Override
-    public int getItemCount() {
-        return pastAdventures.size();
-    }
-
     class CustomViewHolder extends RecyclerView.ViewHolder {
-
         ImageView locationImage;
         TextView locationName;
 
-        public CustomViewHolder(View view) {
+        CustomViewHolder(View view) {
             super(view);
-
             this.locationImage = (ImageView) view.findViewById(R.id.past_adventure_row_view_image);
             this.locationName = (TextView) view.findViewById(R.id.past_adventure_row_view_text);
 
-            // TODO: Set up response to rows being clicked
+            //TODO: Set up response to rows being clicked
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

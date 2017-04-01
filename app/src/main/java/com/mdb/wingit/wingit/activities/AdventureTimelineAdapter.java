@@ -21,7 +21,7 @@ import java.util.ArrayList;
 class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAdapter.TimeLineViewHolder> {
 
     private Context context;
-    private ArrayList<Pin> pins = new ArrayList<>();
+    private ArrayList<Pin> pins;
 
     AdventureTimelineAdapter(Context context, ArrayList<Pin> pins) {
         this.context = context;

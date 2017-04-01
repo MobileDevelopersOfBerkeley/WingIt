@@ -23,7 +23,7 @@ import java.util.ArrayList;
 class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Pin> pins = new ArrayList<>();
+    private ArrayList<Pin> pins;
 
     CarouselAdapter(Context context, ArrayList<Pin> pins) {
         this.context = context;
