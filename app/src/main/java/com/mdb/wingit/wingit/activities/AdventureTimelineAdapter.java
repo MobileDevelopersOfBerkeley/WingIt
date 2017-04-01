@@ -1,12 +1,18 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Pin;
+
+import java.util.ArrayList;
 
 /**
  * Recycler View of pins that populate Adventure Timeline Activity
@@ -14,9 +20,20 @@ import com.mdb.wingit.wingit.R;
 
 class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAdapter.TimeLineViewHolder> {
 
+    private Context context;
+    private ArrayList<Pin> pins = new ArrayList<>();
+
+    AdventureTimelineAdapter(Context context, ArrayList<Pin> pins) {
+        this.context = context;
+        this.pins = pins;
+    }
+
     @Override
-    public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position, getItemCount());
+    public int getItemCount() {
+        if (pins == null) {
+            return 0;
+        }
+        return pins.size();
     }
 
     @Override
@@ -26,19 +43,25 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
     }
 
     @Override
-    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
-
+    public int getItemViewType(int position) {
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
     @Override
-    public int getItemCount() {
-        return 0;
+    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
+        Pin pin = pins.get(position);
+        holder.pinName.setText(pin.getName());
+        holder.pinTime.setText(pin.getStartTime());
+        String pinImageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+        Glide.with(context).load(pinImageURL).into(holder.pinImage);
     }
 
     class TimeLineViewHolder extends RecyclerView.ViewHolder {
         TimelineView mTimeLineView;
         ImageView pinImage;
         TextView pinName;
+        TextView pinTime;
 
         TimeLineViewHolder(View view, int viewType) {
             super(view);
@@ -47,6 +70,7 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
 
             pinImage = (ImageView) view.findViewById(R.id.pinImage);
             pinName = (TextView) view.findViewById(R.id.pinName);
+            pinTime = (TextView) view.findViewById(R.id.time);
         }
     }
 }
