@@ -55,10 +55,6 @@ public class AdventureTimelineActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                /*Intent pinMap = new Intent(getApplicationContext(), PinMapActivity.class);
-                //TODO: Find a way to retain name in PinMapActivity from previous use
-                pinMap.putExtra("name", "Soda Hall");
-                startActivity(pinMap);*/
             }
         });
         endTrip.setOnClickListener(new View.OnClickListener() {
