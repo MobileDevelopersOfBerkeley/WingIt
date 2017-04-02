@@ -1,12 +1,23 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
+import com.mdb.wingit.wingit.modelClasses.User;
 
 import java.util.ArrayList;
 
@@ -16,7 +27,8 @@ import java.util.ArrayList;
 
 public class PastAdventuresActivity extends AppCompatActivity {
 
-    public PastAdventuresAdapter pastAdventuresAdapater;
+    private PastAdventuresAdapter adapter;
+    private ArrayList<Adventure> adventureList = new ArrayList<>();
     DatabaseReference dbRef;
 
     @Override
@@ -24,24 +36,25 @@ public class PastAdventuresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_adventures);
 
-        RecyclerView pastAdventureRecyclerView = (RecyclerView) findViewById(R.id.past_adventures_recycler_view);
-        pastAdventureRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Set up Past Adventures Recycler View
+        RecyclerView rv = (RecyclerView) findViewById(R.id.past_adventures_recycler_view);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new PastAdventuresAdapter(this, adventureList);
 
-        // TODO: Load past activities from Firebase into an ArrayList
-        Adventure temp1 = new Adventure("Montreal", "3/4/17", "hi");
-        Adventure temp2 = new Adventure("Los Angeles", "3/5/17", "hi");
-        Adventure temp3 = new Adventure("Grand Canyon", "3/6/17", "hi");
-        Adventure temp4 = new Adventure("Niagara Falls", "3/7/17", "hi");
+        //Read data from Firebase
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        getFirebaseData();
 
-        ArrayList<Adventure> tempList = new ArrayList<>();
-        tempList.add(temp1);
-        tempList.add(temp2);
-        tempList.add(temp3);
-        tempList.add(temp4);
-
-        pastAdventuresAdapater = new PastAdventuresAdapter(getApplicationContext(), tempList);
-
-         pastAdventureRecyclerView.setAdapter(pastAdventuresAdapater);
+        //UI Elements
+        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                //TODO: May need to put extra
+                startActivity(selectorIntent);
+            }
+        });
 
         // Firebase nodal setup
 //        Pin pin = new Pin("Yo", "This", "Is", "Another", "Test", "Please", "Work");
@@ -55,5 +68,46 @@ public class PastAdventuresActivity extends AppCompatActivity {
 //        String dbKey2 = dbRef.child("Adventure").push().getKey();
 //        dbRef.child("Adventure").child(dbKey2).setValue(adventure);
 
+    }
+
+    /** Retrieve list of past adventures from Firebase for current user */
+    private void getFirebaseData() {
+        DatabaseReference userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currUser = dataSnapshot.getValue(User.class);
+                ArrayList<String> adventureKeys = currUser.getAdventureKeysList();
+                getAdventureList(adventureKeys);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+            }
+        });
+    }
+
+    /** Update recycler view of adventures according to list stored in Firebase */
+    private void getAdventureList(final ArrayList<String> adventureKeys) {
+        DatabaseReference adventureRef = dbRef.child("Adventures");
+        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (adventureKeys.contains(ds.getKey())) {
+                        Adventure adventure = ds.getValue(Adventure.class);
+                        //TODO: Order adventures by startDate
+                        adventureList.add(adventure);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+            }
+        });
+        adapter.notifyDataSetChanged();
     }
 }
