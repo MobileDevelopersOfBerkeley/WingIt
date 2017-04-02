@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.User;
 
 /**
@@ -48,8 +49,8 @@ public class SignUpActivity extends AppCompatActivity {
         login.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openLogin = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(openLogin);
+                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(loginIntent);
             }
         });
         signUp.setOnClickListener(new OnClickListener() {
@@ -73,23 +74,22 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        final User user = new User(emailText, nameText);
         mAuth.createUserWithEmailAndPassword(emailText, pwText)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            User user = new User(emailText, nameText);
                             String uid = mAuth.getCurrentUser().getUid();
                             DatabaseReference userRef = mDatabase.child("Users").child(uid);
                             userRef.setValue(user);
-                            Intent openSelector = new Intent(SignUpActivity.this, CategorySelectorActivity.class);
-                            startActivity(openSelector);
+                            Intent selectorIntent = new Intent(SignUpActivity.this, CategorySelectorActivity.class);
+                            startActivity(selectorIntent);
                         } else {
                             Toast.makeText(SignUpActivity.this, "Sign up failed",
                                     Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
     }
 }

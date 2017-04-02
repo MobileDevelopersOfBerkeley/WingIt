@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +20,16 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
+import com.mdb.wingit.wingit.modelClasses.User;
+
+import java.util.ArrayList;
 
 /**
  * Retrieves user's current location
@@ -34,6 +44,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
     private String currentName = "";
     private Intent carousel;
     TextView tempView;
+    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    User currUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +57,12 @@ public class CategorySelectorActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).addApi(Places.PLACE_DETECTION_API).build();
         client.connect();
 
+        //Get user's current location
         tempView = (TextView) findViewById(R.id.temp_location);
         getCurrentLocations();
 
         // Set up UI elements
         TextView title = (TextView) findViewById(R.id.title);
-        //TODO: Change between Start Your Adventure and Continue Your Adventure through intent extra
-        //String pageTitle = getIntent().getStringExtra("title");
-        //title.setText(pageTitle);
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
@@ -67,7 +77,19 @@ public class CategorySelectorActivity extends AppCompatActivity {
             }
         });
 
+        //Get information from intent
+        Bundle intentExtras = getIntent().getExtras();
+        String adventureKey = intentExtras.getString("adventureKey", "");
+        if (adventureKey.equals("")) {
+            title.setText("Start Your Adventure");
+            adventureKey = startNewAdventure();
+        } else {
+            title.setText("Continue Your Adventure");
+        }
+
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
+        carousel.putExtra("location", currentLocation);
+        carousel.putExtra("adventureKey", adventureKey);
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +97,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
                     notifyNoLocation();
                 } else {
                     carousel.putExtra("isFood", true);
-                    carousel.putExtra("location", currentLocation);
                     startActivity(carousel);
                 }
             }
@@ -87,7 +108,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
                     notifyNoLocation();
                 } else {
                     carousel.putExtra("isFood", false);
-                    carousel.putExtra("location", currentLocation);
                     startActivity(carousel);
                 }
             }
@@ -144,5 +164,47 @@ public class CategorySelectorActivity extends AppCompatActivity {
     /** Notify user that app is unable to get their current location */
     private void notifyNoLocation() {
         Toast.makeText(this, "Unable to get your current location", Toast.LENGTH_SHORT).show();
+    }
+
+    /** Generate adventure key in database for user's first adventure */
+    private String startNewAdventure() {
+        Adventure adventure = new Adventure(currentName, getDate(), getImage());
+        DatabaseReference adventureRef = dbRef.child("Adventures");
+        String adventureKey = adventureRef.push().getKey();
+        adventureRef.child(adventureKey).setValue(adventure);
+        updateCurrUser(adventureKey);
+        return adventureKey;
+    }
+
+    /** Add adventure key to Users node in database */
+    private void updateCurrUser(String adventureKey) {
+        DatabaseReference userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+                Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+            }
+        });
+        if (currUser != null) {
+            currUser.addAdventureKey(adventureKey);
+            userRef.setValue(currUser);
+        }
+    }
+
+    //TODO: Retrieve date and image for new adventure
+    /** Get current date when creating new Adventure */
+    private String getDate() {
+        return "";
+    }
+
+    /** Get image for new Adventure */
+    private String getImage() {
+        return "";
     }
 }
