@@ -54,7 +54,11 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), PinMapActivity.class));
+                finish();
+                /*Intent pinMap = new Intent(getApplicationContext(), PinMapActivity.class);
+                //TODO: Find a way to retain name in PinMapActivity from previous use
+                pinMap.putExtra("name", "Soda Hall");
+                startActivity(pinMap);*/
             }
         });
         endTrip.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +76,10 @@ public class AdventureTimelineActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Adventure currAdventure = dataSnapshot.getValue(Adventure.class);
-                ArrayList<String> pinKeys = currAdventure.getPinKeysList();
-                getPinList(pinKeys);
+                if (currAdventure != null) {
+                    ArrayList<String> pinKeys = currAdventure.getPinKeysList();
+                    getPinList(pinKeys);
+                }
             }
 
             @Override
