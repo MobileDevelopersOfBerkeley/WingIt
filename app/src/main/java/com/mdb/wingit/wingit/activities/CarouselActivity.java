@@ -79,6 +79,7 @@ public class CarouselActivity extends AppCompatActivity {
         Bundle intentExtras = getIntent().getExtras();
         boolean isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
+        String adventureKey = intentExtras.getString("adventureKey");
 
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);
@@ -212,9 +213,9 @@ public class CarouselActivity extends AppCompatActivity {
     /** Get current time which stays constant for all Pin objects created */
     private String getCurrentTime() {
         Calendar cal = Calendar.getInstance();
-        Date currentLocalTime = cal.getTime();
-        DateFormat date = new SimpleDateFormat("HH:mm a");
-        date.setTimeZone(cal.getTimeZone());
-        return date.format(currentLocalTime);
+        Date currentTime = cal.getTime();
+        DateFormat formatter = new SimpleDateFormat("HH:mm a");
+        formatter.setTimeZone(cal.getTimeZone());
+        return formatter.format(currentTime);
     }
 }

@@ -29,7 +29,10 @@ import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.User;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Retrieves user's current location
@@ -197,12 +200,16 @@ public class CategorySelectorActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: Retrieve date and image for new adventure
     /** Get current date when creating new Adventure */
     private String getDate() {
-        return "";
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        DateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
+        formatter.setTimeZone(cal.getTimeZone());
+        return formatter.format(currentDate);
     }
 
+    //TODO: Retrieve image for new adventure
     /** Get image for new Adventure */
     private String getImage() {
         return "";
