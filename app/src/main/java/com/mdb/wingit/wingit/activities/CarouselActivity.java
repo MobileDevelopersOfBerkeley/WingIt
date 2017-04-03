@@ -65,21 +65,21 @@ public class CarouselActivity extends AppCompatActivity {
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
 
+        //Get information from intent
+        Bundle intentExtras = getIntent().getExtras();
+        boolean isFoodCategory = intentExtras.getBoolean("isFood");
+        currentLocation = (LatLng) intentExtras.get("location");
+        String adventureKey = intentExtras.getString("adventureKey");
+
         //Set up Carousel Recycler View
         RecyclerView rv = (RecyclerView) findViewById(R.id.carouselrv);
-        adapter = new CarouselAdapter(CarouselActivity.this, pinList);
+        adapter = new CarouselAdapter(CarouselActivity.this, pinList, adventureKey);
         final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
         rv.addOnScrollListener(new CenterScrollListener());
-
-        //Get information from intent
-        Bundle intentExtras = getIntent().getExtras();
-        boolean isFoodCategory = intentExtras.getBoolean("isFood");
-        currentLocation = (LatLng) intentExtras.get("location");
-        String adventureKey = intentExtras.getString("adventureKey");
 
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);

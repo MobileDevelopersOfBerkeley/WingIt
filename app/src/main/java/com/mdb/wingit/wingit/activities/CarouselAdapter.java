@@ -4,15 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.Pin;
+import com.mdb.wingit.wingit.modelClasses.User;
 
 import java.util.ArrayList;
 
@@ -24,10 +34,14 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
     private Context context;
     private ArrayList<Pin> pins;
+    private String adventureKey;
+    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    private Adventure currAdventure;
 
-    CarouselAdapter(Context context, ArrayList<Pin> pins) {
+    CarouselAdapter(Context context, ArrayList<Pin> pins, String key) {
         this.context = context;
         this.pins = pins;
+        this.adventureKey = key;
     }
 
     @Override
@@ -71,13 +85,47 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 @Override
                 public void onClick(View view) {
                     position = getAdapterPosition();
-                    String coordinates = pins.get(position).getLatitude()+","+pins.get(position).getLongitude();
+                    Pin pin = pins.get(position);
+                    String pinKey = startNewPin(pin);
+                    //TODO: Pass pin key as intent extra instead of what's below
+                    String coordinates = pin.getLatitude() + "," + pin.getLongitude();
                     Intent pinMapIntent = new Intent(context, PinMapActivity.class);
                     pinMapIntent.putExtra("coordinates", coordinates);
                     pinMapIntent.putExtra("name", pins.get(position).getName());
+                    pinMapIntent.putExtra("pinKey", pinKey);
                     context.startActivity(pinMapIntent);
                 }
             });
+        }
+    }
+
+    /** Generate pin key in database for user's selected pin */
+    private String startNewPin(Pin pin) {
+        DatabaseReference pinRef = dbRef.child("Pins");
+        String pinKey = pinRef.push().getKey();
+        pinRef.child(pinKey).setValue(pin);
+        updateCurrAdventure(pinKey);
+        return pinKey;
+    }
+
+    /** Add pin key to Adventures node in database */
+    private void updateCurrAdventure(String pinKey) {
+        DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
+        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currAdventure = dataSnapshot.getValue(Adventure.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+                Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
+            }
+        });
+        if (currAdventure != null) {
+            currAdventure.addPinKey(pinKey);
+            adventureRef.setValue(currAdventure);
         }
     }
 }
