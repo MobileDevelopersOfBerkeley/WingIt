@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.Pin;
-import com.mdb.wingit.wingit.modelClasses.User;
 
 import java.util.ArrayList;
 
@@ -86,13 +84,16 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 public void onClick(View view) {
                     position = getAdapterPosition();
                     Pin pin = pins.get(position);
-                    String pinKey = startNewPin(pin);
-                    //TODO: Pass pin key as intent extra instead of what's below
                     String coordinates = pin.getLatitude() + "," + pin.getLongitude();
+                    String pinKey = startNewPin(pin);
+
+                    //Open PinMapActivity
                     Intent pinMapIntent = new Intent(context, PinMapActivity.class);
                     pinMapIntent.putExtra("coordinates", coordinates);
-                    pinMapIntent.putExtra("name", pins.get(position).getName());
+                    pinMapIntent.putExtra("name", pin.getName());
+                    //TODO: Consider whether pinKey is necessary information
                     pinMapIntent.putExtra("pinKey", pinKey);
+                    pinMapIntent.putExtra("adventureKey", adventureKey);
                     context.startActivity(pinMapIntent);
                 }
             });

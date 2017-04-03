@@ -1,6 +1,5 @@
 package com.mdb.wingit.wingit.activities;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +28,7 @@ public class PastAdventuresActivity extends AppCompatActivity {
 
     private PastAdventuresAdapter adapter;
     private ArrayList<Adventure> adventureList = new ArrayList<>();
-    DatabaseReference dbRef;
+    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class PastAdventuresActivity extends AppCompatActivity {
         adapter = new PastAdventuresAdapter(this, adventureList);
 
         //Read data from Firebase
-        dbRef = FirebaseDatabase.getInstance().getReference();
         getFirebaseData();
 
         //UI Elements
@@ -50,24 +48,9 @@ public class PastAdventuresActivity extends AppCompatActivity {
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
-                //TODO: May need to put extra
-                startActivity(selectorIntent);
+                finish();
             }
         });
-
-        // Firebase nodal setup
-//        Pin pin = new Pin("Yo", "This", "Is", "Another", "Test", "Please", "Work");
-//        dbRef = FirebaseDatabase.getInstance().getReference();
-//        String dbKey = dbRef.child("Pin").push().getKey();
-//        dbRef.child("Pin").child(dbKey).setValue(pin);
-//
-//        ArrayList<Pin> pins = new ArrayList<>();
-//        pins.add(pin);
-//        Adventure adventure = new Adventure("Hello", "This", "Is", dbRef.);
-//        String dbKey2 = dbRef.child("Adventure").push().getKey();
-//        dbRef.child("Adventure").child(dbKey2).setValue(adventure);
-
     }
 
     /** Retrieve list of past adventures from Firebase for current user */

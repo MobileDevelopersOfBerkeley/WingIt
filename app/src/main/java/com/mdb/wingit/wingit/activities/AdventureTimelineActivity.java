@@ -29,7 +29,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
 
     private AdventureTimelineAdapter adapter;
     private ArrayList<Pin> pinList = new ArrayList<>();
-    private DatabaseReference dbRef;
+    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +41,17 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AdventureTimelineAdapter(this, pinList);
 
+        //Get information from intent
+        Bundle intentExtras = getIntent().getExtras();
+        String adventureKey = intentExtras.getString("adventureKey", "");
+
         //Read data from Firebase
-        //TODO: Get current adventure key from intent extra
-        //TODO: Consider getting pin keys list from intent extra instead
-        String adventureKey = "";
-        dbRef = FirebaseDatabase.getInstance().getReference();
-        getFirebaseData(adventureKey);
+        if (adventureKey.equals("")) {
+            ArrayList<String> pinKeys = intentExtras.getStringArrayList("pinKeys");
+            getPinList(pinKeys);
+        } else {
+            getFirebaseData(adventureKey);
+        }
 
         //UI Elements
         ImageView close = (ImageView) findViewById(R.id.closeButton);

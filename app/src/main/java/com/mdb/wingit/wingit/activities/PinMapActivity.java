@@ -17,6 +17,9 @@ import com.mdb.wingit.wingit.R;
 
 public class PinMapActivity extends AppCompatActivity {
 
+    private String adventureKey;
+    private String pinKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,18 +34,25 @@ public class PinMapActivity extends AppCompatActivity {
         Bundle intentExtras = getIntent().getExtras();
         name.setText(intentExtras.getString("name"));
         String coordinates = intentExtras.getString("coordinates");
+        adventureKey = intentExtras.getString("adventureKey");
+        //TODO: Consider whether this is necessary information
+        pinKey = intentExtras.getString("pinKey");
 
         continueAdventure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
+                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                selectorIntent.putExtra("adventureKey", adventureKey);
+                startActivity(selectorIntent);
             }
         });
 
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AdventureTimelineActivity.class));
+                Intent timelineIntent = new Intent(getApplicationContext(), AdventureTimelineActivity.class);
+                timelineIntent.putExtra("adventureKey", adventureKey);
+                startActivity(timelineIntent);
             }
         });
 
