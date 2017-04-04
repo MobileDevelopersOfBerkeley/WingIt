@@ -14,7 +14,7 @@
 
     <com.github.vipulasri.timelineview.TimelineView
         android:id="@+id/time_marker"
-        app:marker="@mipmap/orange"
+        app:marker="@drawable/orange"
         app:line="@color/orange"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />

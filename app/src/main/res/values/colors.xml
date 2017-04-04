@@ -2,14 +2,8 @@
 <resources>
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#303F9F</color>
-
-    <color name = "fade_gray" type = "color">#CCFFFFFF</color>
-    <color name="blueish" type ="color">#25b7d3</color>
-
-    <color name="greenish" type ="color">#32bea6</color>
+    <color name="fade_gray" type ="color">#CCFFFFFF</color>
     <color name="colorAccent">#303F9F</color>
-    <color name="green">#32bea6</color>
-    <color name="blue">#25b7d3</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="orange">#ff8533</color>
