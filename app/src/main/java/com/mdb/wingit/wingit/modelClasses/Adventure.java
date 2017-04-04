@@ -12,6 +12,10 @@ public class Adventure {
     private String imageURL;
     private ArrayList<String> pinKeysList;
 
+    public Adventure() {
+
+    }
+
     public Adventure(String startLoc, String date, String imageURL) {
         this.startLoc = startLoc;
         this.startDate = date;

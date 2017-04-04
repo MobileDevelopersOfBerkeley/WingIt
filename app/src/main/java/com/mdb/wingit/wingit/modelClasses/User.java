@@ -11,6 +11,10 @@ public class User {
     private String name;
     private ArrayList<String> adventureKeysList;
 
+    public User() {
+
+    }
+
     public User(String email, String name) {
         this.email = email;
         this.name = name;

@@ -92,7 +92,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
         }
 
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
-        carousel.putExtra("location", currentLocation);
         carousel.putExtra("adventureKey", adventureKey);
         food.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +99,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 if (currentLocation == null) {
                     notifyNoLocation();
                 } else {
+                    carousel.putExtra("location", currentLocation);
                     carousel.putExtra("isFood", true);
                     startActivity(carousel);
                 }
@@ -111,6 +111,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 if (currentLocation == null) {
                     notifyNoLocation();
                 } else {
+                    carousel.putExtra("location", currentLocation);
                     carousel.putExtra("isFood", false);
                     startActivity(carousel);
                 }
@@ -134,6 +135,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
+
+            Log.i("permissions", "checking permissions");
         }
 
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);

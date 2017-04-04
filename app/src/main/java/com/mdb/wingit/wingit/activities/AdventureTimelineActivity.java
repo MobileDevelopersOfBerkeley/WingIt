@@ -79,7 +79,9 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                 Adventure currAdventure = dataSnapshot.getValue(Adventure.class);
                 if (currAdventure != null) {
                     ArrayList<String> pinKeys = currAdventure.getPinKeysList();
-                    getPinList(pinKeys);
+                    if (pinKeys != null) {
+                        getPinList(pinKeys);
+                    }
                 }
             }
 
