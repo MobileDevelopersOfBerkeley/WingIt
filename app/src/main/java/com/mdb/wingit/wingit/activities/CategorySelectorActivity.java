@@ -82,12 +82,13 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
-        String adventureKey = intentExtras.getString("adventureKey", "");
-        if (adventureKey.equals("")) {
-            title.setText("Start Your Adventure");
-            adventureKey = startNewAdventure();
-        } else {
+        String adventureKey;
+        if (intentExtras != null) {
+            adventureKey = intentExtras.getString("adventureKey", "");
             title.setText("Continue Your Adventure");
+        } else {
+            adventureKey = startNewAdventure();
+            title.setText("Start Your Adventure");
         }
 
         carousel = new Intent(getApplicationContext(), CarouselActivity.class);
