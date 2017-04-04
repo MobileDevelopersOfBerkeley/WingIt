@@ -45,7 +45,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private LatLng currentLocation;
     private String currentName = "";
-    private Intent carousel;
+    private String adventureKey = "";
     TextView tempView;
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     User currUser;
@@ -82,39 +82,23 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
-        String adventureKey;
         if (intentExtras != null) {
             adventureKey = intentExtras.getString("adventureKey", "");
             title.setText("Continue Your Adventure");
         } else {
-            adventureKey = startNewAdventure();
             title.setText("Start Your Adventure");
         }
 
-        carousel = new Intent(getApplicationContext(), CarouselActivity.class);
-        carousel.putExtra("adventureKey", adventureKey);
         food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentLocation == null) {
-                    notifyNoLocation();
-                } else {
-                    carousel.putExtra("location", currentLocation);
-                    carousel.putExtra("isFood", true);
-                    startActivity(carousel);
-                }
+                startCarouselActivity(true);
             }
         });
         activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentLocation == null) {
-                    notifyNoLocation();
-                } else {
-                    carousel.putExtra("location", currentLocation);
-                    carousel.putExtra("isFood", false);
-                    startActivity(carousel);
-                }
+                startCarouselActivity(false);
             }
         });
 
@@ -135,7 +119,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
-
             Log.i("permissions", "checking permissions");
         }
 
@@ -143,12 +126,10 @@ public class CategorySelectorActivity extends AppCompatActivity {
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-
                 double likelihood = 0;
                 PlaceLikelihood p = null;
 
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-
                     if (placeLikelihood.getLikelihood() > likelihood) {
                         likelihood = placeLikelihood.getLikelihood();
                         p = placeLikelihood;
@@ -166,6 +147,22 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 likelyPlaces.release();
             }
         });
+    }
+
+    /** Open Carousel Activity with choices based on category user selected */
+    private void startCarouselActivity(boolean isFood) {
+        Intent carousel = new Intent(getApplicationContext(), CarouselActivity.class);
+        if (currentLocation == null) {
+            notifyNoLocation();
+        } else {
+            carousel.putExtra("isFood", isFood);
+            carousel.putExtra("location", currentLocation);
+            if (adventureKey.equals("")) {
+                adventureKey = startNewAdventure();
+            }
+            carousel.putExtra("adventureKey", adventureKey);
+            startActivity(carousel);
+        }
     }
 
     /** Notify user that app is unable to get their current location */

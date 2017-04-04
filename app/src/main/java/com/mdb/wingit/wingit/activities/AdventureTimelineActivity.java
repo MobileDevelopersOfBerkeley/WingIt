@@ -102,7 +102,9 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                     if (pinKeys.contains(ds.getKey())) {
                         Pin pin = ds.getValue(Pin.class);
                         //TODO: Order pins by startTime
-                        pinList.add(pin);
+                        if (pin != null) {
+                            pinList.add(pin);
+                        }
                     }
                 }
             }

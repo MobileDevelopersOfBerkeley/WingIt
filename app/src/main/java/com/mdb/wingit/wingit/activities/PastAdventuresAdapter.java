@@ -49,7 +49,7 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
         Adventure adventure = adventures.get(position);
         holder.locationName.setText(adventure.getStartLoc());
         //TODO: Verify that getImageURL() returns a valid URL
-        Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
+        //Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {

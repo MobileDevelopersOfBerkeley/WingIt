@@ -83,7 +83,9 @@ public class PastAdventuresActivity extends AppCompatActivity {
                     if (adventureKeys.contains(ds.getKey())) {
                         Adventure adventure = ds.getValue(Adventure.class);
                         //TODO: Order adventures by startDate
-                        adventureList.add(adventure);
+                        if (adventure != null) {
+                            adventureList.add(adventure);
+                        }
                     }
                 }
             }
