@@ -20,10 +20,21 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
 
-        <!-- the API Key below is Shreya's key; make sure the API key below is your API key -->
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.version"-->
+            <!--android:value="9.8.0" />-->
+        <!-- the API Key below is Katharine's key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyApXRaVlj7yEYNaBo8NKJ-3vuW8prmDWVg" />
+            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" />
 
         <activity
             android:name=".activities.SplashActivity"
@@ -54,14 +65,6 @@
         <activity
             android:name=".activities.AdventureTimelineActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
         <activity android:name=".activities.PastAdventuresActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
