@@ -55,6 +55,18 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_pin_map);
+
+        //Get information from intent
+        Bundle intentExtras = getIntent().getExtras();
+        pinLocName = intentExtras.getString("name");
+        String coordinates = intentExtras.getString("coordinates");
+        pinLat = intentExtras.getDouble("pinLat");
+        pinLong = intentExtras.getDouble("pinLong");
+        adventureKey = intentExtras.getString("adventureKey");
+        //TODO: Consider whether this is necessary information
+        pinKey = intentExtras.getString("pinKey");
+        getFirebaseData(adventureKey, pinList);
+
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -65,34 +77,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
         arrow = (ImageView) findViewById(R.id.uparrow);
         name = (TextView) findViewById(R.id.pinName);
-
-        //Get information from intent
-        Bundle intentExtras = getIntent().getExtras();
         name.setText(intentExtras.getString("name"));
-        pinLocName = intentExtras.getString("name");
-        String coordinates = intentExtras.getString("coordinates");
-        pinLat = intentExtras.getDouble("pinLat");
-        pinLong = intentExtras.getDouble("pinLong");
-        adventureKey = intentExtras.getString("adventureKey");
-        //TODO: Consider whether this is necessary information
-        pinKey = intentExtras.getString("pinKey");
 
-        // Get list of pins from database
-//        adventureRef = dbRef.child("Adventures").child(adventureKey);
-//        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                currAdventure = dataSnapshot.getValue(Adventure.class);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.e("Database Error", databaseError.toString());
-//                //Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        pinKeys = currAdventure.getPinKeysList();
-        getFirebaseData(adventureKey, pinList);
         //getPinList(pinKeys);
 
         // on clicks

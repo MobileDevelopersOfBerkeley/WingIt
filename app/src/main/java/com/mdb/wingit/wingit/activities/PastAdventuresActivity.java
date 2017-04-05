@@ -86,6 +86,7 @@ public class PastAdventuresActivity extends AppCompatActivity {
                         //TODO: Order adventures by startDate
                         if (adventure != null) {
                             adventureList.add(adventure);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 }
@@ -96,6 +97,5 @@ public class PastAdventuresActivity extends AppCompatActivity {
                 Log.e("Database Error", databaseError.toString());
             }
         });
-        adapter.notifyDataSetChanged();
     }
 }

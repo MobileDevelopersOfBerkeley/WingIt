@@ -105,6 +105,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                         //TODO: Order pins by startTime
                         if (pin != null) {
                             pinList.add(pin);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 }
@@ -115,6 +116,5 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                 Log.e("Database Error", databaseError.toString());
             }
         });
-        adapter.notifyDataSetChanged();
     }
 }
