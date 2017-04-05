@@ -39,6 +39,7 @@ public class PastAdventuresActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.past_adventures_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PastAdventuresAdapter(this, adventureList);
+        rv.setAdapter(adapter);
 
         //Read data from Firebase
         getFirebaseData();

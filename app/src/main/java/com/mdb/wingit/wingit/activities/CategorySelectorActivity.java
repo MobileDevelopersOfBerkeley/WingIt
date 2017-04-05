@@ -196,7 +196,9 @@ public class CategorySelectorActivity extends AppCompatActivity {
             }
         });
         if (currUser != null) {
+            Log.i("before adding", currUser.getAdventureKeysList().toString());
             currUser.addAdventureKey(adventureKey);
+            Log.i("after adding", currUser.getAdventureKeysList().toString());
             userRef.setValue(currUser);
         }
     }

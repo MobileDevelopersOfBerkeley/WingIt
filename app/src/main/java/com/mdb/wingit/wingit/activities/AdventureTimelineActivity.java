@@ -40,6 +40,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.timeline_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AdventureTimelineAdapter(this, pinList);
+        rv.setAdapter(adapter);
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
