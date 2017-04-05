@@ -36,6 +36,9 @@ public class Adventure {
     }
 
     public ArrayList<String> getPinKeysList() {
+        if (pinKeysList == null) {
+            return new ArrayList<>();
+        }
         return pinKeysList;
     }
 

@@ -5,23 +5,36 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mdb.wingit.wingit.R;
+import com.mdb.wingit.wingit.modelClasses.Adventure;
+import com.mdb.wingit.wingit.modelClasses.Pin;
+
+import java.util.ArrayList;
 
 /**
  * Displays pins of locations user has visited on his/her current adventure
  */
 
-public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private String adventureKey;
     private String pinKey;
@@ -31,6 +44,11 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ImageView arrow;
     private TextView name;
     private String pinLocName;
+    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference adventureRef;
+    private Adventure currAdventure;
+    private ArrayList<String> pinKeys;
+    private ArrayList<Pin> pinList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +77,25 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         //TODO: Consider whether this is necessary information
         pinKey = intentExtras.getString("pinKey");
 
+        // Get list of pins from database
+//        adventureRef = dbRef.child("Adventures").child(adventureKey);
+//        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                currAdventure = dataSnapshot.getValue(Adventure.class);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("Database Error", databaseError.toString());
+//                //Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        pinKeys = currAdventure.getPinKeysList();
+        getFirebaseData(adventureKey, pinList);
+        //getPinList(pinKeys);
+
+        // on clicks
         continueAdventure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,19 +114,100 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
+
         //Navigate user to destination using Google Maps
         Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
         startActivity(mapsIntent);
     }
 
+    /** Retrieve list of pins from Firebase for specified adventure */
+    private void getFirebaseData(String adventureKey, final ArrayList<Pin> pinList) {
+        DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
+        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Adventure currAdventure = dataSnapshot.getValue(Adventure.class);
+                if (currAdventure != null) {
+                    ArrayList<String> pinKeys = currAdventure.getPinKeysList();
+                    if (pinKeys != null) {
+                        getPinList(pinKeys, pinList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+            }
+        });
+    }
+
+    private void getPinList(final ArrayList<String> pinKeys, final ArrayList<Pin> pinList) {
+        DatabaseReference pinRef = dbRef.child("Pins");
+        pinRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (pinKeys.contains(ds.getKey())) {
+                        Pin pin = ds.getValue(Pin.class);
+                        //TODO: Order pins by startTime
+                        if (pin != null) {
+                            pinList.add(pin);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
+        Log.e("Pin", "TEST");
+        for (Pin pin : this.pinList) {
+            Log.e("Pin", "ADDING PIN");
+            double lat = Double.parseDouble(pin.getLatitude());
+            double lon = Double.parseDouble(pin.getLongitude());
+            LatLng loc = new LatLng(lat, lon);
+            googleMap.addMarker(new MarkerOptions().position(loc).title(pin.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(199)));
+        }
         LatLng pinLoc = new LatLng(this.pinLat, this.pinLong);
         googleMap.addMarker(new MarkerOptions().position(pinLoc)
-                .title(this.pinLocName));
+                .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(pinLoc));
+
+        // Set a listener for marker click.
+        googleMap.setOnMarkerClickListener(this);
+    }
+
+    /** Called when the user clicks a marker. */
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Retrieve the data from the marker.
+        Integer clickCount = (Integer) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        if (clickCount != null) {
+            clickCount = clickCount + 1;
+            marker.setTag(clickCount);
+            Toast.makeText(this,
+                    marker.getTitle() +
+                            " has been clicked " + clickCount + " times.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 }
