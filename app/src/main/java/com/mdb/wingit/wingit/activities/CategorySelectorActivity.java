@@ -49,6 +49,7 @@ public class CategorySelectorActivity extends AppCompatActivity {
     TextView tempView;
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     User currUser;
+    DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,12 +182,19 @@ public class CategorySelectorActivity extends AppCompatActivity {
     }
 
     /** Add adventure key to Users node in database */
-    private void updateCurrUser(String adventureKey) {
-        DatabaseReference userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    private void updateCurrUser(final String adventureKey) {
+        userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currUser = dataSnapshot.getValue(User.class);
+
+                if (currUser != null) {
+                    currUser.addAdventureKey(adventureKey);
+                    userRef.setValue(currUser);
+                }
             }
 
             @Override
@@ -195,12 +203,8 @@ public class CategorySelectorActivity extends AppCompatActivity {
                 Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
             }
         });
-        if (currUser != null) {
-            Log.i("before adding", currUser.getAdventureKeysList().toString());
-            currUser.addAdventureKey(adventureKey);
-            Log.i("after adding", currUser.getAdventureKeysList().toString());
-            userRef.setValue(currUser);
-        }
+
+
     }
 
     /** Get current date when creating new Adventure */

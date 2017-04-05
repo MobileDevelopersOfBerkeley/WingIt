@@ -20,10 +20,10 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
 
-        <!-- the API Key below is Shreya's key; make sure the API key below is your API key -->
+        <!-- the API Key below is Kedar's key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyApXRaVlj7yEYNaBo8NKJ-3vuW8prmDWVg" />
+            android:value="AIzaSyDxoKLHhcYE3UqJ5Nh8_fH8yEjC55HminI" />
 
         <activity
             android:name=".activities.SplashActivity"

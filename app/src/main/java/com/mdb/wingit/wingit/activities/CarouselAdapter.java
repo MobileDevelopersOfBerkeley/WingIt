@@ -35,6 +35,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     private String adventureKey;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private Adventure currAdventure;
+    DatabaseReference adventureRef;
 
     CarouselAdapter(Context context, ArrayList<Pin> pins, String key) {
         this.context = context;
@@ -110,12 +111,18 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     }
 
     /** Add pin key to Adventures node in database */
-    private void updateCurrAdventure(String pinKey) {
-        DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
+    private void updateCurrAdventure(final String pinKey) {
+        adventureRef = dbRef.child("Adventures").child(adventureKey);
         adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currAdventure = dataSnapshot.getValue(Adventure.class);
+
+                if (currAdventure != null) {
+                    currAdventure.addPinKey(pinKey);
+                    adventureRef.setValue(currAdventure);
+                    Log.v("cocks", currAdventure.getPinKeysList().toString());
+                }
             }
 
             @Override
@@ -124,9 +131,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
             }
         });
-        if (currAdventure != null) {
-            currAdventure.addPinKey(pinKey);
-            adventureRef.setValue(currAdventure);
-        }
+
     }
 }

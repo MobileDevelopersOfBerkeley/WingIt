@@ -34,6 +34,19 @@ public class User {
     }
 
     public void addAdventureKey(String key) {
-        this.adventureKeysList.add(key);
+        if (adventureKeysList == null) {
+            adventureKeysList = new ArrayList<>();
+        }
+        adventureKeysList.add(key);
+    }
+
+    @Override
+    public String toString() {
+        if (adventureKeysList != null) {
+            return email + " " + name + " " + adventureKeysList.toString();
+        }
+
+        return email + " " + name;
+
     }
 }

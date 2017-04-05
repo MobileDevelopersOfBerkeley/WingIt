@@ -40,6 +40,19 @@ public class Adventure {
     }
 
     public void addPinKey(String key) {
+        if(pinKeysList == null) {
+            pinKeysList = new ArrayList<>();
+        }
         this.pinKeysList.add(key);
+    }
+
+    @Override
+    public String toString() {
+        if (pinKeysList != null) {
+            return startLoc + " " + startDate + " " + imageURL + " " + pinKeysList.toString();
+        }
+
+        return startLoc + " " + startDate + " " + imageURL;
+
     }
 }
