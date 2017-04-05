@@ -84,12 +84,16 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 public void onClick(View view) {
                     position = getAdapterPosition();
                     Pin pin = pins.get(position);
+                    double pinLat = Double.parseDouble(pin.getLatitude());
+                    double pinLong = Double.parseDouble(pin.getLongitude());
                     String coordinates = pin.getLatitude() + "," + pin.getLongitude();
                     String pinKey = startNewPin(pin);
 
                     //Open PinMapActivity
                     Intent pinMapIntent = new Intent(context, PinMapActivity.class);
                     pinMapIntent.putExtra("coordinates", coordinates);
+                    pinMapIntent.putExtra("pinLat", pinLat);
+                    pinMapIntent.putExtra("pinLong", pinLong);
                     pinMapIntent.putExtra("name", pin.getName());
                     //TODO: Consider whether pinKey is necessary information
                     pinMapIntent.putExtra("pinKey", pinKey);
