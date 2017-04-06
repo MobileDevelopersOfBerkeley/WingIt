@@ -95,9 +95,9 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
         //Navigate user to destination using Google Maps
-        /*Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
-        startActivity(mapsIntent);*/
+        startActivity(mapsIntent);
     }
 
     /** Retrieve list of pins from Firebase for specified adventure */
