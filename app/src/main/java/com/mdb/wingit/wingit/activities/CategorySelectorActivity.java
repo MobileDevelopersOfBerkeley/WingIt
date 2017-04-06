@@ -39,7 +39,7 @@ import java.util.Date;
  * Allows user to choose between Food and Activities as their category
  */
 
-public class CategorySelectorActivity extends AppCompatActivity {
+public class CategorySelectorActivity extends AppCompatActivity implements View.OnClickListener {
 
     private GoogleApiClient client;
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
@@ -53,7 +53,6 @@ public class CategorySelectorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_selector);
 
@@ -70,16 +69,12 @@ public class CategorySelectorActivity extends AppCompatActivity {
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
-
         Button logout = (Button) findViewById(R.id.temp_logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(logoutIntent);
-            }
-        });
+
+        logout.setOnClickListener(this);
+        food.setOnClickListener(this);
+        activity.setOnClickListener(this);
+        arrow.setOnClickListener(this);
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
@@ -89,27 +84,27 @@ public class CategorySelectorActivity extends AppCompatActivity {
         } else {
             title.setText("Start Your Adventure");
         }
+    }
 
-        food.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.temp_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(logoutIntent);
+                break;
+            case R.id.foodImage:
                 startCarouselActivity(true);
-            }
-        });
-        activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.activityImage:
                 startCarouselActivity(false);
-            }
-        });
-
-        arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.arrow:
                 Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
                 startActivity(pastAdventures);
-            }
-        });
+                break;
+        }
     }
 
     /** Get list of likely places for user's current location from Places API */

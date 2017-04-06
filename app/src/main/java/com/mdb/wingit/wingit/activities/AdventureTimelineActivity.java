@@ -30,6 +30,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
     private AdventureTimelineAdapter adapter;
     private ArrayList<Pin> pinList = new ArrayList<>();
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    private boolean fromPastAdventure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
         String adventureKey = intentExtras.getString("adventureKey", "");
+        fromPastAdventure = intentExtras.getBoolean("fromPastAdventure");
 
         //Read data from Firebase
         if (adventureKey.equals("")) {
@@ -69,6 +71,9 @@ public class AdventureTimelineActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
             }
         });
+        if (fromPastAdventure) {
+            endTrip.setVisibility(View.GONE);
+        }
     }
 
     /** Retrieve list of pins from Firebase for specified adventure */

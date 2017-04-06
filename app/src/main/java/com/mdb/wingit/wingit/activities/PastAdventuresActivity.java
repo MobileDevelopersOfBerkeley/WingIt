@@ -61,9 +61,11 @@ public class PastAdventuresActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User currUser = dataSnapshot.getValue(User.class);
-                ArrayList<String> adventureKeys = currUser.getAdventureKeysList();
-                if (adventureKeys != null) {
-                    getAdventureList(adventureKeys);
+                if (currUser != null) {
+                    ArrayList<String> adventureKeys = currUser.getAdventureKeysList();
+                    if (adventureKeys != null) {
+                        getAdventureList(adventureKeys);
+                    }
                 }
             }
 

@@ -70,6 +70,7 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
                     ArrayList<String> pinKeys = adventure.getPinKeysList();
                     Intent timelineIntent = new Intent(context, AdventureTimelineActivity.class);
                     timelineIntent.putExtra("pinKeys", pinKeys);
+                    timelineIntent.putExtra("fromPastAdventure", true);
                     context.startActivity(timelineIntent);
                 }
             });
