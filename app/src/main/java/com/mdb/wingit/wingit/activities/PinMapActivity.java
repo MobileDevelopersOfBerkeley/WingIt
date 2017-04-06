@@ -45,15 +45,11 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private TextView name;
     private String pinLocName;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference adventureRef;
-    private Adventure currAdventure;
-    private ArrayList<String> pinKeys;
     private ArrayList<Pin> pinList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_pin_map);
 
         //Get information from intent
@@ -65,7 +61,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         adventureKey = intentExtras.getString("adventureKey");
         //TODO: Consider whether this is necessary information
         pinKey = intentExtras.getString("pinKey");
-        getFirebaseData(adventureKey, pinList);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -78,8 +73,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         arrow = (ImageView) findViewById(R.id.uparrow);
         name = (TextView) findViewById(R.id.pinName);
         name.setText(intentExtras.getString("name"));
-
-        //getPinList(pinKeys);
 
         // on clicks
         continueAdventure.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +95,13 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
         //Navigate user to destination using Google Maps
-        Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+        /*Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
-        startActivity(mapsIntent);
+        startActivity(mapsIntent);*/
     }
 
     /** Retrieve list of pins from Firebase for specified adventure */
-    private void getFirebaseData(String adventureKey, final ArrayList<Pin> pinList) {
+    private void getFirebaseData(String adventureKey) {
         DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
         adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -117,7 +110,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (currAdventure != null) {
                     ArrayList<String> pinKeys = currAdventure.getPinKeysList();
                     if (pinKeys != null) {
-                        getPinList(pinKeys, pinList);
+                        getPinList(pinKeys);
                     }
                 }
             }
@@ -129,7 +122,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-    private void getPinList(final ArrayList<String> pinKeys, final ArrayList<Pin> pinList) {
+    /** Update recycler view of pins according to list stored in Firebase */
+    private void getPinList(final ArrayList<String> pinKeys) {
         DatabaseReference pinRef = dbRef.child("Pins");
         pinRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -157,6 +151,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
         Log.e("Pin", "TEST");
+        getFirebaseData(adventureKey);
+        Log.i("pinList", pinList.toString());
         for (Pin pin : this.pinList) {
             Log.e("Pin", "ADDING PIN");
             double lat = Double.parseDouble(pin.getLatitude());
@@ -168,7 +164,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         LatLng pinLoc = new LatLng(this.pinLat, this.pinLong);
         googleMap.addMarker(new MarkerOptions().position(pinLoc)
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(pinLoc));
+        float zoomLevel = 16;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pinLoc, zoomLevel));
 
         // Set a listener for marker click.
         googleMap.setOnMarkerClickListener(this);
