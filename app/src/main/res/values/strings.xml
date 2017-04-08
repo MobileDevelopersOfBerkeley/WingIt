@@ -110,4 +110,6 @@
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_pin_map">PinMapActivity</string>
+    <string name="login_text"><u>Don\'t have an account? Sign up now!</u></string>
+    <string name="sign_up_text"><u>Already have an account? Log in!</u></string>
 </resources>
