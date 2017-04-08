@@ -61,9 +61,11 @@ public class PastAdventuresActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User currUser = dataSnapshot.getValue(User.class);
-                ArrayList<String> adventureKeys = currUser.getAdventureKeysList();
-                if (adventureKeys != null) {
-                    getAdventureList(adventureKeys);
+                if (currUser != null) {
+                    ArrayList<String> adventureKeys = currUser.getAdventureKeysList();
+                    if (adventureKeys != null) {
+                        getAdventureList(adventureKeys);
+                    }
                 }
             }
 
@@ -86,6 +88,7 @@ public class PastAdventuresActivity extends AppCompatActivity {
                         //TODO: Order adventures by startDate
                         if (adventure != null) {
                             adventureList.add(adventure);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 }
@@ -96,6 +99,5 @@ public class PastAdventuresActivity extends AppCompatActivity {
                 Log.e("Database Error", databaseError.toString());
             }
         });
-        adapter.notifyDataSetChanged();
     }
 }
