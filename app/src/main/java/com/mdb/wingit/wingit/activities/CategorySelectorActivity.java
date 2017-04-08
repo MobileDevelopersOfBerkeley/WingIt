@@ -62,7 +62,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
 
         //Get user's current location
         tempView = (TextView) findViewById(R.id.temp_location);
-        getCurrentLocations();
+        getPermissions();
 
         // Set up UI elements
         TextView title = (TextView) findViewById(R.id.title);
@@ -108,41 +108,56 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
     }
 
     /** Get list of likely places for user's current location from Places API */
-    private void getCurrentLocations() {
+    private void getPermissions() {
         //Check permissions to access user's location
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
-            Log.i("permissions", "checking permissions");
+
         }
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                double likelihood = 0;
-                PlaceLikelihood p = null;
+    }
 
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    if (placeLikelihood.getLikelihood() > likelihood) {
-                        likelihood = placeLikelihood.getLikelihood();
-                        p = placeLikelihood;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch(requestCode) {
+            case MY_PERMISSION_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);
+                        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                            @Override
+                            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                                double likelihood = 0;
+                                PlaceLikelihood p = null;
+
+                                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                                    if (placeLikelihood.getLikelihood() > likelihood) {
+                                        likelihood = placeLikelihood.getLikelihood();
+                                        p = placeLikelihood;
+                                    }
+                                }
+
+                                if (p != null) {
+                                    currentLocation = p.getPlace().getLatLng();
+                                    currentName = p.getPlace().getName().toString();
+                                    tempView.setText("Location: " + currentName);
+                                } else {
+                                    tempView.setText("Could not get location");
+                                }
+
+                                likelyPlaces.release();
+                            }
+                        });
+                    } catch (SecurityException e) {
+                        System.out.println(e.getMessage());
                     }
                 }
-
-                if (p != null) {
-                    currentLocation = p.getPlace().getLatLng();
-                    currentName = p.getPlace().getName().toString();
-                    tempView.setText("Location: " + currentName);
-                } else {
-                    tempView.setText("Could not get location");
-                }
-
-                likelyPlaces.release();
-            }
-        });
+        }
     }
 
     /** Open Carousel Activity with choices based on category user selected */
