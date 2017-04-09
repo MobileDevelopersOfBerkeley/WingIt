@@ -14,7 +14,12 @@ import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
 import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Pin;
 
@@ -37,7 +42,7 @@ import java.util.Date;
  * Displays 3 choices of pins nearby the user according to the previously specified category
  */
 
-public class CarouselActivity extends AppCompatActivity {
+public class CarouselActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private CarouselAdapter adapter;
 
@@ -217,5 +222,13 @@ public class CarouselActivity extends AppCompatActivity {
         DateFormat formatter = new SimpleDateFormat("HH:mm a");
         formatter.setTimeZone(cal.getTimeZone());
         return formatter.format(currentTime);
+    }
+
+    /** Center background map on current location */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //TODO: Update map once current location is not null
+        float zoomLevel = 16;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
     }
 }

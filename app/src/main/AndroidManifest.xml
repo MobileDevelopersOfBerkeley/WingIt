@@ -29,10 +29,10 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
 
-        <!-- the API Key below is Katharine's key; make sure the API key below is your API key -->
+        <!-- the API Key below is Shreya's key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" />
+            android:value="AIzaSyApXRaVlj7yEYNaBo8NKJ-3vuW8prmDWVg" />
 
         <activity
             android:name=".activities.SplashActivity"

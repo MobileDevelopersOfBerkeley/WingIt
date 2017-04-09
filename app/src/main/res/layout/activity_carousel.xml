@@ -5,7 +5,7 @@
     android:id="@+id/activity_carousel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mdb.wingit.wingit.agit ctivities.CarouselActivity">
+    tools:context="com.mdb.wingit.wingit.activities.CarouselActivity">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
