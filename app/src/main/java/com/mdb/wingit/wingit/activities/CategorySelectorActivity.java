@@ -116,8 +116,37 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_FINE_LOCATION);
 
-        }
+        } else {
+            try {
+                PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(client, null);
+                result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                    @Override
+                    public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                        double likelihood = 0;
+                        PlaceLikelihood p = null;
 
+                        for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                            if (placeLikelihood.getLikelihood() > likelihood) {
+                                likelihood = placeLikelihood.getLikelihood();
+                                p = placeLikelihood;
+                            }
+                        }
+
+                        if (p != null) {
+                            currentLocation = p.getPlace().getLatLng();
+                            currentName = p.getPlace().getName().toString();
+                            tempView.setText("Location: " + currentName);
+                        } else {
+                            tempView.setText("Could not get location");
+                        }
+
+                        likelyPlaces.release();
+                    }
+                });
+            } catch (SecurityException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     @Override

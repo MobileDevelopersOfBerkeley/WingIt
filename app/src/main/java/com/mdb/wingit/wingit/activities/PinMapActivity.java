@@ -94,6 +94,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         });
 
 
+        Log.v("cocks", "starting maps");
         //Navigate user to destination using Google Maps
         Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
