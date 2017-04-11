@@ -56,18 +56,18 @@ public class SignUpActivity extends AppCompatActivity {
         signUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                signUp();
             }
         });
     }
 
     /** Sign up user with Firebase */
-    private void signup() {
+    private void signUp() {
         final String nameText = name.getText().toString();
         final String emailText = email.getText().toString();
         String pwText = password.getText().toString();
 
-        //If fields are empty, sign up fails
+        //Check if name, email, and password fields are empty
         if (nameText.length() == 0 || emailText.length() == 0 || pwText.length() == 0) {
             Toast.makeText(SignUpActivity.this, "Sign up failed, please fill in all blanks.",
                     Toast.LENGTH_LONG).show();

@@ -66,6 +66,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        getFirebaseData(adventureKey);
         mapFragment.getMapAsync(this);
 
         //UI elements
@@ -149,10 +150,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
         Log.e("Pin", "TEST");
-        getFirebaseData(adventureKey);
+        //getFirebaseData(adventureKey);
         Log.i("pinList", pinList.toString());
         for (Pin pin : this.pinList) {
             Log.e("Pin", "ADDING PIN");

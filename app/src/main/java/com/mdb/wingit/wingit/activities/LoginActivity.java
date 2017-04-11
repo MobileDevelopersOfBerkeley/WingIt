@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signIn(email.getText().toString(), password.getText().toString());
+                signIn();
             }
         });
     }
@@ -85,13 +85,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /** Sign in user with Firebase */
-    public void signIn(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
+    private void signIn(){
+        String emailText = email.getText().toString();
+        String passwordText = password.getText().toString();
+
+        //Check if email and password fields are empty
+        if(emailText.length() == 0 || passwordText.length() == 0) {
+            Toast.makeText(LoginActivity.this, "Please enter an email and password",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Login failed",
+                            Toast.makeText(LoginActivity.this, "Email or password is incorrect",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
