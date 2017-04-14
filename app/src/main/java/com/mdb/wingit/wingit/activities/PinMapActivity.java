@@ -2,7 +2,6 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -70,20 +71,25 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
 
         //UI elements
-        continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
+//        continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
         arrow = (ImageView) findViewById(R.id.uparrow);
         name = (TextView) findViewById(R.id.pinName);
         name.setText(intentExtras.getString("name"));
 
+        FloatingActionButton continueFab = (FloatingActionButton) findViewById(R.id.continueFab);
+        continueFab.setIconDrawable(getResources().getDrawable(R.drawable.ic_arrow_forward_black_24dp));
+
+        FloatingActionButton endAdventureFab = (FloatingActionButton) findViewById(R.id.endAdventureFab);
+        endAdventureFab.setIconDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
         // on clicks
-        continueAdventure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
-                selectorIntent.putExtra("adventureKey", adventureKey);
-                startActivity(selectorIntent);
-            }
-        });
+//        continueAdventure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+//                selectorIntent.putExtra("adventureKey", adventureKey);
+//                startActivity(selectorIntent);
+//            }
+//        });
 
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override

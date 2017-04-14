@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Adventure {
+
     private String startLoc;
     private String startDate;
     private String imageURL;

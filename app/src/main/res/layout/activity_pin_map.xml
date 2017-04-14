@@ -25,18 +25,54 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/continueAdventure"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:backgroundTint="@color/orange"
-        android:src="@drawable/ic_arrow_forward_black_24dp"
-        android:layout_marginEnd="16dp"
+    <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/continueAdventure"-->
+        <!--android:layout_width="56dp"-->
+        <!--android:layout_height="56dp"-->
+        <!--android:clickable="true"-->
+        <!--app:fabSize="mini"-->
+        <!--app:backgroundTint="@color/orange"-->
+        <!--android:src="@drawable/ic_arrow_forward_black_24dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--android:layout_marginBottom="16dp" />-->
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/right_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:fab_addButtonColorNormal="@color/orange"
+        app:fab_addButtonPlusIconColor="@color/white"
+        app:fab_addButtonColorPressed="@color/orange"
+        app:fab_addButtonSize="normal"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_labelsPosition="left"
+        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="8dp">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/endAdventureFab"
+            app:fab_colorNormal="@color/orange"
+            app:fab_size="mini"
+            app:fab_title="End Adventure"
+            app:fab_colorPressed="@color/white_pressed" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/continueFab"
+            app:fab_colorNormal="@color/orange"
+            app:fab_size="mini"
+            app:fab_title="Continue"
+            app:fab_colorPressed="@color/white_pressed"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     <ImageView
         android:id="@+id/uparrow"
