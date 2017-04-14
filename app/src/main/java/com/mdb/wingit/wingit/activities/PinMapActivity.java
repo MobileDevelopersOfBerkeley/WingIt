@@ -82,14 +82,21 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         FloatingActionButton endAdventureFab = (FloatingActionButton) findViewById(R.id.endAdventureFab);
         endAdventureFab.setIconDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
         // on clicks
-//        continueAdventure.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
-//                selectorIntent.putExtra("adventureKey", adventureKey);
-//                startActivity(selectorIntent);
-//            }
-//        });
+        continueFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                selectorIntent.putExtra("adventureKey", adventureKey);
+                startActivity(selectorIntent);
+            }
+        });
+
+        endAdventureFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
+            }
+        });
 
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
