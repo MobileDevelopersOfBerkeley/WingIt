@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         Adventure adventure = adventures.get(position);
         holder.locationName.setText(adventure.getStartLoc());
+        holder.locationDate.setText(adventure.getDate());
         //TODO: Verify that getImageURL() returns a valid URL
         //Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
     }
@@ -55,12 +57,14 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
     class CustomViewHolder extends RecyclerView.ViewHolder {
         ImageView locationImage;
         TextView locationName;
+        TextView locationDate;
         CardView locationCard;
 
         CustomViewHolder(View view) {
             super(view);
             locationImage = (ImageView) view.findViewById(R.id.locationImage);
             locationName = (TextView) view.findViewById(R.id.locationText);
+            locationDate = (TextView) view.findViewById(R.id.locationDate);
             locationCard = (CardView) view.findViewById(R.id.adventureCard);
             locationCard.setOnClickListener(new View.OnClickListener() {
                 @Override

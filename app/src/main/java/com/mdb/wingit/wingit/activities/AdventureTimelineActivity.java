@@ -58,22 +58,12 @@ public class AdventureTimelineActivity extends AppCompatActivity {
 
         //UI Elements
         ImageView close = (ImageView) findViewById(R.id.closeButton);
-        Button endTrip = (Button) findViewById(R.id.endtrip);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        endTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
-            }
-        });
-        if (fromPastAdventure) {
-            endTrip.setVisibility(View.GONE);
-        }
     }
 
     /** Retrieve list of pins from Firebase for specified adventure */
