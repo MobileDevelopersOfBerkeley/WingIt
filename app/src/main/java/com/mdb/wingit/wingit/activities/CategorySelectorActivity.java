@@ -18,6 +18,10 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,17 +43,18 @@ import java.util.Date;
  * Allows user to choose between Food and Activities as their category
  */
 
-public class CategorySelectorActivity extends AppCompatActivity implements View.OnClickListener {
+public class CategorySelectorActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private GoogleApiClient client;
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private LatLng currentLocation;
     private String currentName = "";
     private String adventureKey = "";
-    TextView tempView;
-    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    User currUser;
-    DatabaseReference userRef;
+    SupportMapFragment mapFragment;
+    private TextView tempView;
+    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    private User currUser;
+    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
         Button logout = (Button) findViewById(R.id.temp_logout);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         logout.setOnClickListener(this);
         food.setOnClickListener(this);
@@ -136,6 +142,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
                             currentLocation = p.getPlace().getLatLng();
                             currentName = p.getPlace().getName().toString();
                             tempView.setText("Location: " + currentName);
+                            mapFragment.getMapAsync(CategorySelectorActivity.this);
                         } else {
                             tempView.setText("Could not get location");
                         }
@@ -175,6 +182,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
                                     currentLocation = p.getPlace().getLatLng();
                                     currentName = p.getPlace().getName().toString();
                                     tempView.setText("Location: " + currentName);
+                                    mapFragment.getMapAsync(CategorySelectorActivity.this);
                                 } else {
                                     tempView.setText("Could not get location");
                                 }
@@ -260,5 +268,14 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
     /** Get image for new Adventure */
     private String getImage() {
         return "";
+    }
+
+    /** Center background map on current location */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        float zoomLevel = 16;
+        if (currentLocation != null) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+        }
     }
 }

@@ -17,6 +17,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -75,6 +76,10 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         boolean isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
         String adventureKey = intentExtras.getString("adventureKey");
+
+        //Set up map background
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         //Set up Carousel Recycler View
         RecyclerView rv = (RecyclerView) findViewById(R.id.carouselrv);
@@ -227,8 +232,9 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     /** Center background map on current location */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //TODO: Update map once current location is not null
         float zoomLevel = 16;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+        if (currentLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+        }
     }
 }
