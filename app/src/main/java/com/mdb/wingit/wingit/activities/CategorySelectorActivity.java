@@ -213,6 +213,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements View.
     /** Generate adventure key in database for user's first adventure */
     private String startNewAdventure() {
         Adventure adventure = new Adventure(currentName, getDate(), getImage());
+        Log.v("cocks", adventure.getDate());
         DatabaseReference adventureRef = dbRef.child("Adventures");
         String adventureKey = adventureRef.push().getKey();
         adventureRef.child(adventureKey).setValue(adventure);

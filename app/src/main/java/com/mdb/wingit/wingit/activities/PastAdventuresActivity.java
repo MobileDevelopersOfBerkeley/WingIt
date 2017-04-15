@@ -1,10 +1,12 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -35,6 +37,8 @@ public class PastAdventuresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_adventures);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //Set up Past Adventures Recycler View
         RecyclerView rv = (RecyclerView) findViewById(R.id.past_adventures_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -43,15 +47,15 @@ public class PastAdventuresActivity extends AppCompatActivity {
 
         //Read data from Firebase
         getFirebaseData();
-
-        //UI Elements
-        ImageView arrow = (ImageView) findViewById(R.id.arrow);
-        arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//
+//        //UI Elements
+//        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+//        arrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 
     /** Retrieve list of past adventures from Firebase for current user */
@@ -99,5 +103,16 @@ public class PastAdventuresActivity extends AppCompatActivity {
                 Log.e("Database Error", databaseError.toString());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

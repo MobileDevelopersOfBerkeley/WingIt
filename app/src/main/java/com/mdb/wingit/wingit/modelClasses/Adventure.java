@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Adventure {
 
     private String startLoc;
-    private String startDate;
+    private String date;
     private String imageURL;
     private ArrayList<String> pinKeysList;
 
@@ -19,7 +19,7 @@ public class Adventure {
 
     public Adventure(String startLoc, String date, String imageURL) {
         this.startLoc = startLoc;
-        this.startDate = date;
+        this.date = date;
         this.imageURL = imageURL;
         this.pinKeysList = new ArrayList<>();
     }
@@ -29,7 +29,7 @@ public class Adventure {
     }
 
     public String getDate() {
-        return startDate;
+        return date;
     }
 
     public String getImageURL() {
@@ -53,10 +53,10 @@ public class Adventure {
     @Override
     public String toString() {
         if (pinKeysList != null) {
-            return startLoc + " " + startDate + " " + imageURL + " " + pinKeysList.toString();
+            return startLoc + " " + date + " " + imageURL + " " + pinKeysList.toString();
         }
 
-        return startLoc + " " + startDate + " " + imageURL;
+        return startLoc + " " + date + " " + imageURL;
 
     }
 }

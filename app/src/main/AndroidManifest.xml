@@ -72,7 +72,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.PastAdventuresActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="Past Adventures"
+            android:parentActivityName=".activities.CategorySelectorActivity"
+            android:theme="@style/AppTheme">
         </activity>
 
     </application>
