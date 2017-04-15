@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context="com.mdb.wingit.wingit.activities.CarouselActivity">
 
+
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
@@ -24,6 +26,22 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <View
+        android:id="@+id/backgroundtint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/carouselrv"
+        app:layout_constraintRight_toRightOf="@+id/map"
+        app:layout_constraintTop_toTopOf="parent"
+        android:alpha="0.7"
+        android:visibility="visible"/>
 
     <ImageView
         android:layout_width="wrap_content"
