@@ -167,7 +167,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
 
         LatLngBounds bounds = builder.build();
-        int padding = 5;
+        int padding = 35;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.moveCamera(cu);
     }
