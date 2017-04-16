@@ -2,13 +2,18 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,42 +68,81 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view_carousel, parent, false);
-        return new CustomViewHolder(view);
+        View fragmentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_dialog, parent, false);
+        return new CustomViewHolder(view, fragmentView);
     }
 
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, final int position) {
         Pin pin = pins.get(position);
+        // regular
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
+        String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+        Glide.with(context).load(pinPicURL).into(holder.pinPic);
+
+        // expanded
+        holder.expandTitle.setText(pin.getName());
+        holder.expandRating.setText(pin.getRating());
+        holder.expandAddress.setText(pin.getAddress());
+        holder.expandPhone.setText(pin.getPhone());
         String pinLat = pin.getLatitude();
         String pinLong = pin.getLongitude();
         double currLat = currLoc.latitude;
         double currLong = currLoc.longitude;
         String pinMapURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:red%7C"
                 + pinLat + "," + pinLong + "%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
-        String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
-                + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
-        Glide.with(context).load(pinPicURL).into(holder.pinPic);
-
-
+        Glide.with(context).load(pinMapURL).into(holder.pinMap);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
+        // Regular Card
         TextView pinTitle;
         TextView pinRating;
         ImageView pinPic;
-        FloatingActionButton pinSelect;
+        //FloatingActionButton pinSelect;
         int position;
+        CardView card;
+        ConstraintLayout regularCard;
+        View tint;
 
+        // Expanded Card
+        TextView expandTitle;
+        TextView expandRating;
+        ImageView pinMap;
+        FloatingActionButton go2;
+        TextView expandAddress;
+        TextView expandPhone;
+        ConstraintLayout expandedCard;
 
-        public CustomViewHolder (View view) {
+        public CustomViewHolder (View view, View fragmentView) {
             super(view);
+            this.regularCard = (ConstraintLayout) view.findViewById(R.id.choice);
+            this.expandedCard = (ConstraintLayout) view.findViewById(R.id.expanded_choice);
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
             this.pinRating = (TextView) view.findViewById(R.id.pinRating);
             this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
-            this.pinSelect = (FloatingActionButton) view.findViewById(R.id.go);
-            this.pinSelect.setOnClickListener(new View.OnClickListener() {
+            this.tint = view.findViewById(R.id.choicetint);
+            this.card = (CardView) view.findViewById(R.id.card_curr_option);
+            this.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    regularCard.setVisibility(View.GONE);
+                    tint.setVisibility(View.VISIBLE);
+                    expandedCard.setVisibility(View.VISIBLE);
+                    CarouselActivity.backgroundtint.setVisibility(View.VISIBLE);
+
+                }
+            });
+
+            this.expandTitle = (TextView) view.findViewById(R.id.expanded_title);
+            this.expandRating = (TextView) view.findViewById(R.id.expanded_rating);
+            this.expandAddress = (TextView) view.findViewById(R.id.expanded_address);
+            this.expandPhone = (TextView) view.findViewById(R.id.expanded_phone);
+            this.pinMap = (ImageView) view.findViewById(R.id.pinMap);
+            this.go2 = (FloatingActionButton) view.findViewById(R.id.go2);
+            this.go2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     position = getAdapterPosition();
@@ -152,6 +196,13 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             }
         });
 
+    }
+
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
 }

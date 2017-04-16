@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
@@ -46,6 +47,7 @@ import java.util.Date;
 public class CarouselActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private CarouselAdapter adapter;
+    public static View backgroundtint;
 
     public static final String API_KEY_UNRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
@@ -93,6 +95,8 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         //Compose and send searchRequest based on category user selected
         String searchRequest = createRequestURL(isFoodCategory);
         new RequestTask().execute(searchRequest);
+
+        this.backgroundtint = findViewById(R.id.backgroundtint);
     }
 
     /** Create request URL based on search radius and type associated with selected category */
@@ -190,8 +194,8 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     /** Create Pin object based on JSON Object that is currently being processed */
     private Pin composePin(JSONObject jsonObj, String time) throws JSONException {
         //Name, Place ID, and Rating
-        String[] pinFields = new String[]{"name", "place_ID", "rating"};
-        String[] pinDetails = new String[3];
+        String[] pinFields = new String[]{"name", "place_ID", "rating", "formatted_address", "formatted_phone_number"};
+        String[] pinDetails = new String[5];
         for (int i = 0; i < 3; i++) {
             if (jsonObj.has(pinFields[i])) {
                 pinDetails[i] = jsonObj.getString(pinFields[i]);
@@ -216,7 +220,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         //Create Pin object
-        return new Pin(pinDetails[0], pinDetails[1], latitude, longitude, pinDetails[2], time, imgURL);
+        return new Pin(pinDetails[0], pinDetails[1], latitude, longitude, pinDetails[2], time, imgURL, pinDetails[3], pinDetails[4]);
     }
 
     /** Get current time which stays constant for all Pin objects created */
