@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,7 +16,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,18 +32,15 @@ import java.util.ArrayList;
  * Displays pins of locations user has visited on his/her current adventure
  */
 
-public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String adventureKey;
-    private String pinKey;
     private double pinLat;
     private double pinLong;
-    private FloatingActionButton continueAdventure;
-    private ImageView arrow;
-    private TextView name;
     private String pinLocName;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private ArrayList<Pin> pinList = new ArrayList<>();
+    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +54,15 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         pinLat = intentExtras.getDouble("pinLat");
         pinLong = intentExtras.getDouble("pinLong");
         adventureKey = intentExtras.getString("adventureKey");
-        //TODO: Consider whether this is necessary information
-        pinKey = intentExtras.getString("pinKey");
 
-        // Get the SupportMapFragment and request notification
-        // when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        //Set up map of pins in current adventure
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         getFirebaseData(adventureKey);
-        mapFragment.getMapAsync(this);
 
         //UI elements
-//        continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
-        arrow = (ImageView) findViewById(R.id.uparrow);
-        name = (TextView) findViewById(R.id.pinName);
+        ImageView arrow = (ImageView) findViewById(R.id.uparrow);
+        TextView name = (TextView) findViewById(R.id.pinName);
         name.setText(intentExtras.getString("name"));
 
         FloatingActionButton continueFab = (FloatingActionButton) findViewById(R.id.continueFab);
@@ -80,7 +70,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         FloatingActionButton endAdventureFab = (FloatingActionButton) findViewById(R.id.endAdventureFab);
         endAdventureFab.setIconDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
-        // on clicks
+
+        //Configure UI buttons
         continueFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,8 +97,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
-
-        Log.v("cocks", "starting maps");
         //Navigate user to destination using Google Maps
         Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
@@ -123,9 +112,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 Adventure currAdventure = dataSnapshot.getValue(Adventure.class);
                 if (currAdventure != null) {
                     ArrayList<String> pinKeys = currAdventure.getPinKeysList();
-                    if (pinKeys != null) {
-                        getPinList(pinKeys);
-                    }
+                    getPinList(pinKeys);
                 }
             }
 
@@ -145,12 +132,12 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (pinKeys.contains(ds.getKey())) {
                         Pin pin = ds.getValue(Pin.class);
-                        //TODO: Order pins by startTime
                         if (pin != null) {
                             pinList.add(pin);
                         }
                     }
                 }
+                mapFragment.getMapAsync(PinMapActivity.this);
             }
 
             @Override
@@ -160,13 +147,10 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
+    /** Updates map to include all the pins in the user's current adventure */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.e("Pin", "TEST");
-        //getFirebaseData(adventureKey);
-        Log.i("pinList", pinList.toString());
         for (Pin pin : this.pinList) {
-            Log.e("Pin", "ADDING PIN");
             double lat = Double.parseDouble(pin.getLatitude());
             double lon = Double.parseDouble(pin.getLongitude());
             LatLng loc = new LatLng(lat, lon);
@@ -176,33 +160,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         LatLng pinLoc = new LatLng(this.pinLat, this.pinLong);
         googleMap.addMarker(new MarkerOptions().position(pinLoc)
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
-        float zoomLevel = 16;
+        float zoomLevel = 10;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pinLoc, zoomLevel));
-
-        // Set a listener for marker click.
-        googleMap.setOnMarkerClickListener(this);
-    }
-
-    /** Called when the user clicks a marker. */
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
-
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        // Return false to indicate that we have not consumed the event and that we wish
-        // for the default behavior to occur (which is for the camera to move such that the
-        // marker is centered and for the marker's info window to open, if it has one).
-        return false;
     }
 }

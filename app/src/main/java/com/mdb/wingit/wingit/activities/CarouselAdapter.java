@@ -96,8 +96,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                     pinMapIntent.putExtra("pinLat", pinLat);
                     pinMapIntent.putExtra("pinLong", pinLong);
                     pinMapIntent.putExtra("name", pin.getName());
-                    //TODO: Consider whether pinKey is necessary information
-                    pinMapIntent.putExtra("pinKey", pinKey);
                     pinMapIntent.putExtra("adventureKey", adventureKey);
                     context.startActivity(pinMapIntent);
                 }
