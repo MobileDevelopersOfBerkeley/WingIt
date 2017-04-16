@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mdb.wingit.wingit.R;
@@ -39,7 +38,6 @@ import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.Pin;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -56,6 +54,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Pin> pinList = new ArrayList<>();
     private StorageReference storageReference;
     private SupportMapFragment mapFragment;
+    private LatLng center;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +140,9 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
+                        LatLng pinLoc = new LatLng(pinLat, pinLong);
+                        float zoom = googleMap.getCameraPosition().zoom - 2;
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
                         googleMap.snapshot(callback);
                     }
                 });
@@ -224,7 +226,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
 
         LatLngBounds bounds = builder.build();
-        int padding = 35;
+        center = bounds.getCenter();
+        int padding = 100;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.moveCamera(cu);
     }
