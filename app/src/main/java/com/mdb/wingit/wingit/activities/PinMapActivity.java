@@ -3,6 +3,7 @@ package com.mdb.wingit.wingit.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -110,7 +111,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                         try {
 
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
-                            bitmap = bitmap.createBitmap(bitmap, 0, 265, 480, 250);
+                            bitmap = bitmap.createBitmap(bitmap, 0, 240, 480, 200);
                             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                             byte[] data = out.toByteArray();
                             UploadTask uploadTask = storageReference.child("images/" + adventureKey + ".jpg").putBytes(data);
@@ -139,10 +140,19 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
-                    public void onMapReady(GoogleMap googleMap) {
+                    public void onMapReady(final GoogleMap googleMap) {
                         float zoom = googleMap.getCameraPosition().zoom - 2;
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
-                        googleMap.snapshot(callback);
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Do something after 5s = 5000ms
+                                googleMap.snapshot(callback);
+
+                            }
+                        }, 400);
                     }
                 });
             }
