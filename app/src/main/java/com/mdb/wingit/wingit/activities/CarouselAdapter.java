@@ -125,7 +125,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 if (currAdventure != null) {
                     currAdventure.addPinKey(pinKey);
                     adventureRef.setValue(currAdventure);
-                    Log.v("cocks", currAdventure.getPinKeysList().toString());
                 }
             }
 

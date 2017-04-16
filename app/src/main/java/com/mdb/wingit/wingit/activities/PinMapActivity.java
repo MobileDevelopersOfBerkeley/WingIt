@@ -1,7 +1,9 @@
 package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,21 +15,30 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.Pin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -40,17 +51,18 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private String pinKey;
     private double pinLat;
     private double pinLong;
-    private FloatingActionButton continueAdventure;
     private ImageView arrow;
     private TextView name;
     private String pinLocName;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private ArrayList<Pin> pinList = new ArrayList<>();
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin_map);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
@@ -64,17 +76,17 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         getFirebaseData(adventureKey);
         mapFragment.getMapAsync(this);
 
         //UI elements
-//        continueAdventure = (FloatingActionButton) findViewById(R.id.continueAdventure);
         arrow = (ImageView) findViewById(R.id.uparrow);
         name = (TextView) findViewById(R.id.pinName);
         name.setText(intentExtras.getString("name"));
 
+        // TODO: Give themes to these
         FloatingActionButton continueFab = (FloatingActionButton) findViewById(R.id.continueFab);
         continueFab.setIconDrawable(getResources().getDrawable(R.drawable.ic_arrow_forward_black_24dp));
 
@@ -93,7 +105,50 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         endAdventureFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
+
+                final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+                    Bitmap bitmap;
+
+                    @Override
+                    public void onSnapshotReady(Bitmap snapshot) {
+
+                        bitmap = snapshot;
+                        try {
+
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            bitmap = bitmap.createBitmap(bitmap, 0, 265, 480, 250);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                            byte[] data = out.toByteArray();
+                            UploadTask uploadTask = storageReference.child("images/" + adventureKey + ".jpg").putBytes(data);
+
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                                    dbRef.child("Adventures").child(adventureKey).child("imageURL").setValue(downloadUri.toString());
+                                    startActivity(new Intent(getApplicationContext(), CategorySelectorActivity.class));
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        googleMap.snapshot(callback);
+                    }
+                });
             }
         });
 
@@ -107,7 +162,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         });
 
 
-        Log.v("cocks", "starting maps");
         //Navigate user to destination using Google Maps
         Intent mapsIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?daddr=" + coordinates));
