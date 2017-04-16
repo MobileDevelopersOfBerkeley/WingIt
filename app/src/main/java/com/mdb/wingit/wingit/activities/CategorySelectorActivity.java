@@ -51,7 +51,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private String currentName = "";
     private String adventureKey = "";
     SupportMapFragment mapFragment;
-    private TextView tempView;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private User currUser;
     private DatabaseReference userRef;
@@ -66,7 +65,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         client.connect();
 
         //Get user's current location
-        tempView = (TextView) findViewById(R.id.temp_location);
         getPermissions();
 
 
@@ -142,10 +140,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                         if (p != null) {
                             currentLocation = p.getPlace().getLatLng();
                             currentName = p.getPlace().getName().toString();
-                            tempView.setText("Location: " + currentName);
                             mapFragment.getMapAsync(CategorySelectorActivity.this);
-                        } else {
-                            tempView.setText("Could not get location");
                         }
 
                         likelyPlaces.release();
@@ -159,7 +154,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         switch(requestCode) {
             case MY_PERMISSION_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0
@@ -182,10 +176,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                                 if (p != null) {
                                     currentLocation = p.getPlace().getLatLng();
                                     currentName = p.getPlace().getName().toString();
-                                    tempView.setText("Location: " + currentName);
                                     mapFragment.getMapAsync(CategorySelectorActivity.this);
-                                } else {
-                                    tempView.setText("Could not get location");
                                 }
 
                                 likelyPlaces.release();
@@ -222,7 +213,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     /** Generate adventure key in database for user's first adventure */
     private String startNewAdventure() {
         Adventure adventure = new Adventure(currentName, getDate(), getImage());
-        Log.v("cocks", adventure.getDate());
         DatabaseReference adventureRef = dbRef.child("Adventures");
         String adventureKey = adventureRef.push().getKey();
         adventureRef.child(adventureKey).setValue(adventure);

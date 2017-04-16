@@ -21,6 +21,7 @@ import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Displays user's past adventures
@@ -47,6 +48,9 @@ public class PastAdventuresActivity extends AppCompatActivity {
 
         //Read data from Firebase
         getFirebaseData();
+
+        Collections.reverse(adventureList);
+        adapter.notifyDataSetChanged();
 //
 //        //UI Elements
 //        ImageView arrow = (ImageView) findViewById(R.id.arrow);
@@ -89,9 +93,8 @@ public class PastAdventuresActivity extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (adventureKeys.contains(ds.getKey())) {
                         Adventure adventure = ds.getValue(Adventure.class);
-                        //TODO: Order adventures by startDate
                         if (adventure != null) {
-                            adventureList.add(adventure);
+                            adventureList.add(0, adventure);
                             adapter.notifyDataSetChanged();
                         }
                     }

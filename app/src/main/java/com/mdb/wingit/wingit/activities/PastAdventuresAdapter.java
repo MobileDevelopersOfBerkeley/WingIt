@@ -16,6 +16,7 @@ import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Recycler View of adventures that populate Past Adventures Activity
@@ -51,7 +52,7 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
         holder.locationName.setText(adventure.getStartLoc());
         holder.locationDate.setText(adventure.getDate());
         //TODO: Verify that getImageURL() returns a valid URL
-        //Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
+        Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
