@@ -3,9 +3,11 @@ package com.mdb.wingit.wingit.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,6 +56,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private User currUser;
     private DatabaseReference userRef;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +76,16 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
         Button logout = (Button) findViewById(R.id.temp_logout);
+        ImageView hamburger = (ImageView) findViewById(R.id.hamburger);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         logout.setOnClickListener(this);
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
         arrow.setOnClickListener(this);
+        hamburger.setOnClickListener(this);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
@@ -107,6 +114,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             case R.id.arrow:
                 Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
                 startActivity(pastAdventures);
+                break;
+            case R.id.hamburger:
+                drawerLayout.openDrawer(Gravity.LEFT);
                 break;
         }
     }
