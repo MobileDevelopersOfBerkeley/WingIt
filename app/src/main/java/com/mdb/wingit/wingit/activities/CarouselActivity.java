@@ -105,6 +105,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         int radius;
         String type;
         if (isFood) {
+            //FIXME no magic numbers pls, use static final variables
             radius = 8000;
             type = "restaurant";
         } else {
@@ -183,6 +184,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
                 pick3Random(taskResult);
                 adapter.notifyDataSetChanged();
             } else {
+                //FIXME if it's visible to the user, should be a string resource
                 Toast.makeText(CarouselActivity.this, "Could not find any results at this time", Toast.LENGTH_SHORT).show();
             }
         }

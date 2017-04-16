@@ -93,6 +93,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
             adventureKey = intentExtras.getString("adventureKey", "");
+            //FIXME use a string resource, literals are bad
             title.setText("Continue Your Adventure");
         } else {
             title.setText("Start Your Adventure");
@@ -265,6 +266,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private String getDate() {
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getTime();
+        //FIXME is this really what you want? idek the context
         DateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
         formatter.setTimeZone(cal.getTimeZone());
         return formatter.format(currentDate);

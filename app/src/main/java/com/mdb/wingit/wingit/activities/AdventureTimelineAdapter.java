@@ -30,6 +30,7 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
 
     @Override
     public int getItemCount() {
+        //FIXME lol just personal preference, but ternary operators yo
         if (pins == null) {
             return 0;
         }
@@ -52,6 +53,7 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
         Pin pin = pins.get(position);
         holder.pinName.setText(pin.getName());
         holder.pinTime.setText(pin.getStartTime());
+        //FIXME pls put in a Utils class as a final variable or at least at top of this class
         String pinImageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinImageURL).into(holder.pinImage);

@@ -44,6 +44,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
+        //FIXME it's a little confusing to people reading later that it can't be null. Use a final variable DEFAULT_STRING = ""
         String adventureKey = intentExtras.getString("adventureKey", "");
 
         //Read data from Firebase
@@ -55,6 +56,7 @@ public class AdventureTimelineActivity extends AppCompatActivity {
         }
 
         //UI Elements
+        //FIXME can be reduced to findViewById(R.id.closeButton).setOnClickListener(...)
         ImageView close = (ImageView) findViewById(R.id.closeButton);
         close.setOnClickListener(new View.OnClickListener() {
             @Override

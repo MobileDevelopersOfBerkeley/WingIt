@@ -111,6 +111,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                         try {
 
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            //FIXME this is a static method, use Bitmap (capital B)
                             bitmap = bitmap.createBitmap(bitmap, 0, 240, 480, 200);
                             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                             byte[] data = out.toByteArray();

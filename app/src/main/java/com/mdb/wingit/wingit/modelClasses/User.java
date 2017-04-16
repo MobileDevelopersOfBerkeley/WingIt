@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * User's name, email, and their past adventures
  */
 
+//FIXME I don't know exact context, but you can store name, email and even profile picture in the FirebaseUser object
 public class User {
     private String email;
     private String name;

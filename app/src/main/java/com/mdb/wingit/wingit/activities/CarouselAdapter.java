@@ -62,6 +62,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         Pin pin = pins.get(position);
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
+        //FIXME i crie everytim, use the final var from earlier
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
@@ -88,6 +89,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                     double pinLat = Double.parseDouble(pin.getLatitude());
                     double pinLong = Double.parseDouble(pin.getLongitude());
                     String coordinates = pin.getLatitude() + "," + pin.getLongitude();
+                    //FIXME delet this
                     String pinKey = startNewPin(pin);
 
                     //Open PinMapActivity
