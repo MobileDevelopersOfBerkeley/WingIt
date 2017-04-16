@@ -89,7 +89,6 @@ public class PastAdventuresActivity extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (adventureKeys.contains(ds.getKey())) {
                         Adventure adventure = ds.getValue(Adventure.class);
-                        //TODO: Order adventures by startDate
                         if (adventure != null) {
                             adventureList.add(adventure);
                             adapter.notifyDataSetChanged();

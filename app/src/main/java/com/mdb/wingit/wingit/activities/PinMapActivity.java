@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,17 +152,23 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     /** Updates map to include all the pins in the user's current adventure */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Pin pin : this.pinList) {
             double lat = Double.parseDouble(pin.getLatitude());
             double lon = Double.parseDouble(pin.getLongitude());
             LatLng loc = new LatLng(lat, lon);
+            builder.include(loc);
             googleMap.addMarker(new MarkerOptions().position(loc).title(pin.getName())
                     .icon(BitmapDescriptorFactory.defaultMarker(199)));
         }
         LatLng pinLoc = new LatLng(this.pinLat, this.pinLong);
+        builder.include(pinLoc);
         googleMap.addMarker(new MarkerOptions().position(pinLoc)
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
-        float zoomLevel = 10;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pinLoc, zoomLevel));
+
+        LatLngBounds bounds = builder.build();
+        int padding = 5;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        googleMap.moveCamera(cu);
     }
 }

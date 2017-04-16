@@ -153,7 +153,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         switch(requestCode) {
             case MY_PERMISSION_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0
