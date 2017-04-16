@@ -116,7 +116,8 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                 startActivity(pastAdventures);
                 break;
             case R.id.hamburger:
-                drawerLayout.openDrawer(Gravity.LEFT);
+                drawerLayout.openDrawer(Gravity.START);
+                Log.v("cocks", drawerLayout.isDrawerVisible(Gravity.START) + "");
                 break;
         }
     }
