@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,7 +29,7 @@ import com.mdb.wingit.wingit.modelClasses.User;
  * Sign up using name, email, and password
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private EditText name, email, password;
     private FirebaseAuth mAuth;
@@ -43,6 +46,9 @@ public class SignUpActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password);
         TextView login = (TextView) findViewById(R.id.login);
         Button signUp = (Button) findViewById(R.id.signup_button);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -91,5 +97,11 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    /** Center background map on current location */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
     }
 }

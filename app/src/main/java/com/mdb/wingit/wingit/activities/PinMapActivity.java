@@ -152,7 +152,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                                 googleMap.snapshot(callback);
 
                             }
-                        }, 400);
+                        }, 1000);
                     }
                 });
             }
