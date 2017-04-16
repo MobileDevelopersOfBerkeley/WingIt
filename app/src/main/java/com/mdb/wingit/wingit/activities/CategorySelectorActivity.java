@@ -263,6 +263,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     /** Center background map on current location */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         float zoomLevel = 16;
         if (currentLocation != null) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));

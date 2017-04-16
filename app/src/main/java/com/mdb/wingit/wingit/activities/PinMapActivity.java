@@ -140,7 +140,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        LatLng pinLoc = new LatLng(pinLat, pinLong);
                         float zoom = googleMap.getCameraPosition().zoom - 2;
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
                         googleMap.snapshot(callback);
@@ -211,6 +210,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     /** Updates map to include all the pins in the user's current adventure */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setTiltGesturesEnabled(false);
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Pin pin : this.pinList) {
             double lat = Double.parseDouble(pin.getLatitude());
