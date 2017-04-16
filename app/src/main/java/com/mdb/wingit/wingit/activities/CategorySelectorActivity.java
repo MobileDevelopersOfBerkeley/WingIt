@@ -51,7 +51,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private String currentName = "";
     private String adventureKey = "";
     SupportMapFragment mapFragment;
-    private TextView tempView;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private User currUser;
     private DatabaseReference userRef;
@@ -66,7 +65,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         client.connect();
 
         //Get user's current location
-        tempView = (TextView) findViewById(R.id.temp_location);
         getPermissions();
 
         // Set up UI elements
@@ -141,10 +139,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                         if (p != null) {
                             currentLocation = p.getPlace().getLatLng();
                             currentName = p.getPlace().getName().toString();
-                            tempView.setText("Location: " + currentName);
                             mapFragment.getMapAsync(CategorySelectorActivity.this);
-                        } else {
-                            tempView.setText("Could not get location");
                         }
 
                         likelyPlaces.release();
@@ -158,7 +153,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         switch(requestCode) {
             case MY_PERMISSION_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0
@@ -181,10 +175,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                                 if (p != null) {
                                     currentLocation = p.getPlace().getLatLng();
                                     currentName = p.getPlace().getName().toString();
-                                    tempView.setText("Location: " + currentName);
                                     mapFragment.getMapAsync(CategorySelectorActivity.this);
-                                } else {
-                                    tempView.setText("Could not get location");
                                 }
 
                                 likelyPlaces.release();
