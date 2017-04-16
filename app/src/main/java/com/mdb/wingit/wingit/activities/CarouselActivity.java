@@ -49,7 +49,6 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
 
     public static final String API_KEY_UNRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
-
     private LatLng currentLocation;
     private ArrayList<Pin> pinList = new ArrayList<>();
 
@@ -83,7 +82,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
 
         //Set up Carousel Recycler View
         RecyclerView rv = (RecyclerView) findViewById(R.id.carouselrv);
-        adapter = new CarouselAdapter(CarouselActivity.this, pinList, adventureKey);
+        adapter = new CarouselAdapter(CarouselActivity.this, pinList, adventureKey, currentLocation);
         final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
         layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
         rv.setLayoutManager(layoutManager);

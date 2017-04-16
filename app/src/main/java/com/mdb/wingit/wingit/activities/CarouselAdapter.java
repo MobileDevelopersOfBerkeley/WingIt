@@ -3,6 +3,7 @@ package com.mdb.wingit.wingit.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,12 +41,15 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     private String adventureKey;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private Adventure currAdventure;
-    DatabaseReference adventureRef;
+    private DatabaseReference adventureRef;
+    private LatLng currLoc;
 
-    CarouselAdapter(Context context, ArrayList<Pin> pins, String key) {
+
+    CarouselAdapter(Context context, ArrayList<Pin> pins, String key, LatLng location) {
         this.context = context;
         this.pins = pins;
         this.adventureKey = key;
+        this.currLoc = location;
     }
 
     @Override
@@ -62,9 +71,17 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         Pin pin = pins.get(position);
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
-        String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
-                + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+        String pinLat = pin.getLatitude();
+        String pinLong = pin.getLongitude();
+        double currLat = currLoc.latitude;
+        double currLong = currLoc.longitude;
+        String pinPicURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:red%7C"
+                + pinLat + "," + pinLong + "%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+//        String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+//                + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
+
+
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -73,6 +90,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         ImageView pinPic;
         FloatingActionButton pinSelect;
         int position;
+
 
         public CustomViewHolder (View view) {
             super(view);
@@ -103,6 +121,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 }
             });
         }
+
     }
 
     /** Generate pin key in database for user's selected pin */
@@ -137,4 +156,5 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         });
 
     }
+
 }

@@ -69,6 +69,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         tempView = (TextView) findViewById(R.id.temp_location);
         getPermissions();
 
+
         // Set up UI elements
         TextView title = (TextView) findViewById(R.id.title);
         ImageView food = (ImageView) findViewById(R.id.foodImage);
