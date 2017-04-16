@@ -75,15 +75,17 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
-        Button logout = (Button) findViewById(R.id.temp_logout);
         ImageView hamburger = (ImageView) findViewById(R.id.hamburger);
+        TextView pastAdventures = (TextView) findViewById(R.id.past_adventures_text_view);
+        TextView logoutView = (TextView) findViewById(R.id.logout_text_view);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-        logout.setOnClickListener(this);
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
         arrow.setOnClickListener(this);
         hamburger.setOnClickListener(this);
+        pastAdventures.setOnClickListener(this);
+        logoutView.setOnClickListener(this);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
@@ -100,11 +102,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.temp_logout:
-                FirebaseAuth.getInstance().signOut();
-                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(logoutIntent);
-                break;
+
             case R.id.foodImage:
                 startCarouselActivity(true);
                 break;
@@ -117,7 +115,14 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                 break;
             case R.id.hamburger:
                 drawerLayout.openDrawer(Gravity.START);
-                Log.v("cocks", drawerLayout.isDrawerVisible(Gravity.START) + "");
+                break;
+            case R.id.past_adventures_text_view:
+                startActivity(new Intent(getApplicationContext(), PastAdventuresActivity.class));
+                break;
+            case R.id.logout_text_view:
+                FirebaseAuth.getInstance().signOut();
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(logoutIntent);
                 break;
         }
     }
@@ -280,4 +285,5 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
         }
     }
+
 }
