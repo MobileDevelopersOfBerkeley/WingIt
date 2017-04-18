@@ -235,6 +235,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     /** Center background map on current location */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         float zoomLevel = 16;
         if (currentLocation != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));

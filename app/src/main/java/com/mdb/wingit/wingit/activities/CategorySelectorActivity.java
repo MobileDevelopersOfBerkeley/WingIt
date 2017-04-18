@@ -3,9 +3,11 @@ package com.mdb.wingit.wingit.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,6 +56,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private User currUser;
     private DatabaseReference userRef;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +76,19 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
         ImageView arrow = (ImageView) findViewById(R.id.arrow);
-        Button logout = (Button) findViewById(R.id.temp_logout);
+        ImageView hamburger = (ImageView) findViewById(R.id.hamburger);
+        TextView pastAdventures = (TextView) findViewById(R.id.past_adventures_text_view);
+        TextView logoutView = (TextView) findViewById(R.id.logout_text_view);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-        logout.setOnClickListener(this);
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
         arrow.setOnClickListener(this);
+        hamburger.setOnClickListener(this);
+        pastAdventures.setOnClickListener(this);
+        logoutView.setOnClickListener(this);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
@@ -94,11 +103,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.temp_logout:
-                FirebaseAuth.getInstance().signOut();
-                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(logoutIntent);
-                break;
+
             case R.id.foodImage:
                 startCarouselActivity(true);
                 break;
@@ -108,6 +113,17 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             case R.id.arrow:
                 Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
                 startActivity(pastAdventures);
+                break;
+            case R.id.hamburger:
+                drawerLayout.openDrawer(Gravity.START);
+                break;
+            case R.id.past_adventures_text_view:
+                startActivity(new Intent(getApplicationContext(), PastAdventuresActivity.class));
+                break;
+            case R.id.logout_text_view:
+                FirebaseAuth.getInstance().signOut();
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(logoutIntent);
                 break;
         }
     }
@@ -264,9 +280,11 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     /** Center background map on current location */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         float zoomLevel = 16;
         if (currentLocation != null) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
         }
     }
+
 }
