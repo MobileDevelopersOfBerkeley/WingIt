@@ -75,7 +75,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         TextView title = (TextView) findViewById(R.id.title);
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
-        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+        //ImageView arrow = (ImageView) findViewById(R.id.arrow);
         ImageView hamburger = (ImageView) findViewById(R.id.hamburger);
         TextView pastAdventures = (TextView) findViewById(R.id.past_adventures_text_view);
         TextView logoutView = (TextView) findViewById(R.id.logout_text_view);
@@ -83,7 +83,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
-        arrow.setOnClickListener(this);
+        //arrow.setOnClickListener(this);
         hamburger.setOnClickListener(this);
         pastAdventures.setOnClickListener(this);
         logoutView.setOnClickListener(this);
@@ -110,10 +110,10 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             case R.id.activityImage:
                 startCarouselActivity(false);
                 break;
-            case R.id.arrow:
-                Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
-                startActivity(pastAdventures);
-                break;
+//            case R.id.arrow:
+//                Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
+//                startActivity(pastAdventures);
+//                break;
             case R.id.hamburger:
                 drawerLayout.openDrawer(Gravity.START);
                 break;
