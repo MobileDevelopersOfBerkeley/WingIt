@@ -47,19 +47,19 @@ import java.util.ArrayList;
 class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-    public static ArrayList<Pin> pins;
-    public static String adventureKey;
+    private static ArrayList<Pin> pins;
+    private static String adventureKey;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private Adventure currAdventure;
     private DatabaseReference adventureRef;
-    public static LatLng currLoc;
+    private static LatLng currLoc;
 
 
-    CarouselAdapter(Context context, ArrayList<Pin> pins, String key, LatLng location) {
+    CarouselAdapter(Context context, ArrayList<Pin> pinsList, String key, LatLng location) {
         this.context = context;
-        this.pins = pins;
-        this.adventureKey = key;
-        this.currLoc = location;
+        pins = pinsList;
+        adventureKey = key;
+        currLoc = location;
     }
 
     @Override
@@ -85,96 +85,30 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
-
-        // expanded
-        holder.expandTitle.setText(pin.getName());
-        holder.expandRating.setText(pin.getRating());
-        holder.expandAddress.setText(pin.getAddress());
-        holder.expandPhone.setText(pin.getPhone());
-        String pinLat = pin.getLatitude();
-        String pinLong = pin.getLongitude();
-        double currLat = currLoc.latitude;
-        double currLong = currLoc.longitude;
-        String pinMapURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:red%7C"
-                + pinLat + "," + pinLong + "%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
-        Glide.with(context).load(pinMapURL).into(holder.pinMap);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         // Regular Card
+        CardView card;
         TextView pinTitle;
         TextView pinRating;
         ImageView pinPic;
-        //FloatingActionButton pinSelect;
-        int position;
-        CardView card;
-        ConstraintLayout regularCard;
-        View tint;
-
-        // Expanded Card
-        TextView expandTitle;
-        TextView expandRating;
-        ImageView pinMap;
-        FloatingActionButton go2;
-        TextView expandAddress;
-        TextView expandPhone;
-        ConstraintLayout expandedCard;
 
         public CustomViewHolder (View view) {
             super(view);
             // regular
-            this.regularCard = (ConstraintLayout) view.findViewById(R.id.choice);
-            this.expandedCard = (ConstraintLayout) view.findViewById(R.id.expanded_choice);
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
             this.pinRating = (TextView) view.findViewById(R.id.pinRating);
             this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
-            this.tint = view.findViewById(R.id.choicetint);
             this.card = (CardView) view.findViewById(R.id.card_curr_option);
             this.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //regularCard.setVisibility(View.GONE);
-                    //expandedCard.setVisibility(View.VISIBLE);
-                    //CarouselActivity.backgroundtint.setVisibility(View.VISIBLE);
-                    //tint.setVisibility(View.VISIBLE);
-
-                    /* Open dialog */
-//                    CustomDialogFragment dialog = new CustomDialogFragment();
-//                    FragmentManager fragmentManager = context.getSupportFragmentManager();
-//                    dialog.show();
-
                     Bundle args = new Bundle();
                     args.putInt("position", getAdapterPosition());
                     CustomDialogFragment dialogFragment = new CustomDialogFragment();
                     dialogFragment.setArguments(args);
                     dialogFragment.show(CarouselActivity.fragmentManager, "CustomFragment");
-                }
-            });
-            // expanded details
-            this.expandTitle = (TextView) view.findViewById(R.id.expanded_title);
-            this.expandRating = (TextView) view.findViewById(R.id.expanded_rating);
-            this.expandAddress = (TextView) view.findViewById(R.id.expanded_address);
-            this.expandPhone = (TextView) view.findViewById(R.id.expanded_phone);
-            this.pinMap = (ImageView) view.findViewById(R.id.pinMap);
-            this.go2 = (FloatingActionButton) view.findViewById(R.id.go2);
-            this.go2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    position = getAdapterPosition();
-                    Pin pin = pins.get(position);
-                    double pinLat = Double.parseDouble(pin.getLatitude());
-                    double pinLong = Double.parseDouble(pin.getLongitude());
-                    String coordinates = pin.getLatitude() + "," + pin.getLongitude();
-                    String pinKey = startNewPin(pin);
-
-                    //Open PinMapActivity
-                    Intent pinMapIntent = new Intent(context, PinMapActivity.class);
-                    pinMapIntent.putExtra("coordinates", coordinates);
-                    pinMapIntent.putExtra("pinLat", pinLat);
-                    pinMapIntent.putExtra("pinLong", pinLong);
-                    pinMapIntent.putExtra("name", pin.getName());
-                    pinMapIntent.putExtra("adventureKey", adventureKey);
-                    context.startActivity(pinMapIntent);
                 }
             });
         }
@@ -221,8 +155,8 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             String pinLong = pin.getLongitude();
             double currLat = currLoc.latitude;
             double currLong = currLoc.longitude;
-            String pinMapURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:red%7C"
-                    + pinLat + "," + pinLong + "%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+            String pinMapURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:orange%7Clabel:B%7C"
+                    + pinLat + "," + pinLong + "&markers=size:mid%7Ccolor:blue%7Clabel:A%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
             Glide.with(context).load(pinMapURL).into(pinMap);
             go2.setOnClickListener(new View.OnClickListener() {
                 @Override

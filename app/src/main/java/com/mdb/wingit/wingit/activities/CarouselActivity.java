@@ -197,6 +197,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     /** Create Pin object based on JSON Object that is currently being processed */
     private Pin composePin(JSONObject jsonObj, String time) throws JSONException {
         //Name, Place ID, and Rating
+        //Log.i("DETAILS", jsonObj.getString("name"));
         String[] pinFields = new String[]{"name", "place_ID", "rating", "formatted_address", "formatted_phone_number"};
         String[] pinDetails = new String[5];
         for (int i = 0; i < 3; i++) {
