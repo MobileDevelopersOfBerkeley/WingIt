@@ -47,12 +47,12 @@ import java.util.ArrayList;
 class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Pin> pins;
-    private String adventureKey;
+    public static ArrayList<Pin> pins;
+    public static String adventureKey;
     private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private Adventure currAdventure;
     private DatabaseReference adventureRef;
-    private LatLng currLoc;
+    public static LatLng currLoc;
 
 
     CarouselAdapter(Context context, ArrayList<Pin> pins, String key, LatLng location) {
@@ -142,7 +142,11 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 //                    CustomDialogFragment dialog = new CustomDialogFragment();
 //                    FragmentManager fragmentManager = context.getSupportFragmentManager();
 //                    dialog.show();
+
+                    Bundle args = new Bundle();
+                    args.putInt("position", getAdapterPosition());
                     CustomDialogFragment dialogFragment = new CustomDialogFragment();
+                    dialogFragment.setArguments(args);
                     dialogFragment.show(CarouselActivity.fragmentManager, "CustomFragment");
                 }
             });
@@ -179,6 +183,15 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
     public static class CustomDialogFragment extends android.support.v4.app.DialogFragment {
 
+        TextView expandTitle;
+        TextView expandRating;
+        TextView expandAddress;
+        TextView expandPhone;
+        ImageView pinMap;
+        FloatingActionButton go2;
+        int position;
+        Context context;
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -187,7 +200,49 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
-            builder.setView(inflater.inflate(R.layout.fragment_dialog, null));
+            View view = inflater.inflate(R.layout.fragment_dialog, null);
+            builder.setView(view);
+            this.expandTitle = (TextView) view.findViewById(R.id.expanded_title);
+            this.expandRating = (TextView) view.findViewById(R.id.expanded_rating);
+            this.expandAddress = (TextView) view.findViewById(R.id.expanded_address);
+            this.expandPhone = (TextView) view.findViewById(R.id.expanded_phone);
+            this.pinMap = (ImageView) view.findViewById(R.id.pinMap);
+            this.go2 = (FloatingActionButton) view.findViewById(R.id.go2);
+            Bundle args = getArguments();
+            this.position = (int) args.get("position");
+            this.context = getContext();
+
+            Pin pin = pins.get(position);
+            expandTitle.setText(pin.getName());
+            expandRating.setText(pin.getRating());
+            expandAddress.setText(pin.getAddress());
+            expandPhone.setText(pin.getPhone());
+            String pinLat = pin.getLatitude();
+            String pinLong = pin.getLongitude();
+            double currLat = currLoc.latitude;
+            double currLong = currLoc.longitude;
+            String pinMapURL = "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&markers=size:mid%7Ccolor:red%7C"
+                    + pinLat + "," + pinLong + "%7C" + currLat + "," + currLong + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
+            Glide.with(context).load(pinMapURL).into(pinMap);
+            go2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Pin pin = pins.get(position);
+                    double pinLat = Double.parseDouble(pin.getLatitude());
+                    double pinLong = Double.parseDouble(pin.getLongitude());
+                    String coordinates = pin.getLatitude() + "," + pin.getLongitude();
+
+                    //Open PinMapActivity
+                    Intent pinMapIntent = new Intent(context, PinMapActivity.class);
+                    pinMapIntent.putExtra("coordinates", coordinates);
+                    pinMapIntent.putExtra("pinLat", pinLat);
+                    pinMapIntent.putExtra("pinLong", pinLong);
+                    pinMapIntent.putExtra("name", pin.getName());
+                    pinMapIntent.putExtra("adventureKey", adventureKey);
+                    context.startActivity(pinMapIntent);
+                }
+            });
+
             return builder.create();
         }
     }
