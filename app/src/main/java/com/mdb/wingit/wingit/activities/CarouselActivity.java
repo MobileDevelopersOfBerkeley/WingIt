@@ -3,6 +3,7 @@ package com.mdb.wingit.wingit.activities;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
 
     private CarouselAdapter adapter;
     public static View backgroundtint;
+    public static FragmentManager fragmentManager;
 
     public static final String API_KEY_UNRESTRICTED = "AIzaSyDrzZ5f9o0ZAZbeCStRN87tAqKaugi-0iI";
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
@@ -58,6 +60,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carousel);
+        fragmentManager = getSupportFragmentManager();
 
         //Connect to Places API
         GoogleApiClient client = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API)

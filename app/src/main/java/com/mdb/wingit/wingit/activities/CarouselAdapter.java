@@ -1,8 +1,12 @@
 package com.mdb.wingit.wingit.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,8 +73,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view_carousel, parent, false);
-        View fragmentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_dialog, parent, false);
-        return new CustomViewHolder(view, fragmentView);
+        return new CustomViewHolder(view);
     }
 
     @Override
@@ -116,8 +120,9 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         TextView expandPhone;
         ConstraintLayout expandedCard;
 
-        public CustomViewHolder (View view, View fragmentView) {
+        public CustomViewHolder (View view) {
             super(view);
+            // regular
             this.regularCard = (ConstraintLayout) view.findViewById(R.id.choice);
             this.expandedCard = (ConstraintLayout) view.findViewById(R.id.expanded_choice);
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
@@ -128,14 +133,20 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             this.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    regularCard.setVisibility(View.GONE);
-                    tint.setVisibility(View.VISIBLE);
-                    expandedCard.setVisibility(View.VISIBLE);
-                    CarouselActivity.backgroundtint.setVisibility(View.VISIBLE);
+                    //regularCard.setVisibility(View.GONE);
+                    //expandedCard.setVisibility(View.VISIBLE);
+                    //CarouselActivity.backgroundtint.setVisibility(View.VISIBLE);
+                    //tint.setVisibility(View.VISIBLE);
 
+                    /* Open dialog */
+//                    CustomDialogFragment dialog = new CustomDialogFragment();
+//                    FragmentManager fragmentManager = context.getSupportFragmentManager();
+//                    dialog.show();
+                    CustomDialogFragment dialogFragment = new CustomDialogFragment();
+                    dialogFragment.show(CarouselActivity.fragmentManager, "CustomFragment");
                 }
             });
-
+            // expanded details
             this.expandTitle = (TextView) view.findViewById(R.id.expanded_title);
             this.expandRating = (TextView) view.findViewById(R.id.expanded_rating);
             this.expandAddress = (TextView) view.findViewById(R.id.expanded_address);
@@ -165,6 +176,22 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         }
 
     }
+
+    public static class CustomDialogFragment extends android.support.v4.app.DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.fragment_dialog, null));
+            return builder.create();
+        }
+    }
+
 
     /** Generate pin key in database for user's selected pin */
     private String startNewPin(Pin pin) {
