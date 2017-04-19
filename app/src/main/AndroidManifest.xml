@@ -29,24 +29,25 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
 
-        <!-- the API Key below is Katharine's key; make sure the API key below is your API key -->
+        <!-- the API Key below is the Production Key; make sure the API key below is your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAEBSZ7TmXI6QHRx4zrQwMP5ZR7me3pThI" />
+            android:value="AIzaSyBIW81NMty-WvOsvQA1HLEVippLX1KMCcc" />
 
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme" />
-        <activity
-            android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".activities.CarouselActivity"
