@@ -60,7 +60,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     private final String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley",
             "clothing_store", "department_store", "zoo", "shopping_mall", "park",
             "museum", "movie_theater"};
-    private ArrayList<String> typesList = (ArrayList<String>) Arrays.asList(types);
+    private ArrayList<String> typesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         rv.addOnScrollListener(new CenterScrollListener());
 
         //Compose and send searchRequest based on category user selected
+        typesList.addAll(Arrays.asList(types));
         String[] searchRequests;
         if (isFoodCategory) {
             searchRequests = new String[]{createRequestURL()};
@@ -132,7 +133,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         } else {
             //TODO: Make search request for activities with 3 different types
             radius = 50000;
-            type = getRandom(typesList);
+            type = getRandomType();
         }
 
         String radiusURL = "&radius=" + radius;
@@ -142,9 +143,9 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     /** Get random element from an array */
-    private String getRandom(ArrayList<String> list) {
-        int random = (int)(Math.random()*list.size());
-        return list.remove(random);
+    private String getRandomType() {
+        int random = (int)(Math.random()*typesList.size());
+        return typesList.remove(random);
     }
 
     /** Pick 3 random pins to populate carousel from results of search request */
