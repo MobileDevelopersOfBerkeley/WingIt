@@ -203,8 +203,6 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
             if (taskResult.size() >= numResults) {
                 pickNumRandom(numResults, taskResult);
                 adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(CarouselActivity.this, "Could not find any results at this time", Toast.LENGTH_SHORT).show();
             }
         }
     }

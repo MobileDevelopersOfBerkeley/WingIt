@@ -56,7 +56,6 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Pin> pinList = new ArrayList<>();
     private StorageReference storageReference;
     private SupportMapFragment mapFragment;
-    private LatLng center;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,12 +227,11 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                 .title(this.pinLocName).icon(BitmapDescriptorFactory.defaultMarker(24)));
 
         LatLngBounds bounds = builder.build();
-        center = bounds.getCenter();
+        LatLng center = bounds.getCenter();
         int padding = 100;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.moveCamera(cu);
         float zoom = googleMap.getCameraPosition().zoom - 2;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
-
     }
 }
