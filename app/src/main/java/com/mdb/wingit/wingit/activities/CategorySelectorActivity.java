@@ -153,8 +153,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
                 startCarouselActivity(false);
                 break;
             case R.id.arroworange:
-                Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
-                startActivity(pastAdventures);
+                Intent timeline = new Intent(getApplicationContext(), AdventureTimelineActivity.class);
+                timeline.putExtra("adventureKey", adventureKey);
+                startActivity(timeline);
                 break;
             case R.id.hamburger:
                 drawerLayout.openDrawer(Gravity.START);
