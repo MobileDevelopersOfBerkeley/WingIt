@@ -61,6 +61,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private DatabaseReference userRef;
     private DrawerLayout drawerLayout;
     private boolean continueAdventure;
+    private TextView name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         TextView activityText = (TextView) findViewById(R.id.activityText);
         TextView foodText = (TextView) findViewById(R.id.foodText);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        TextView name = (TextView) findViewById(R.id.name_text_view);
+        name = (TextView) findViewById(R.id.name_text_view);
+
+        populateNameView();
 
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
@@ -116,6 +119,26 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         pastAdventures.setTypeface(reg);
         logoutView.setTypeface(reg);
         name.setTypeface(med);
+
+    }
+
+    public void populateNameView() {
+
+        userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currUser = dataSnapshot.getValue(User.class);
+                name.setText(currUser.getName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Database Error", databaseError.toString());
+                Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
