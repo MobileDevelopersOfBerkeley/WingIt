@@ -86,9 +86,13 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         // regular
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
-        holder.ratingBar.setEnabled(false);
-        float rating = Float.parseFloat(pin.getRating());
-        holder.ratingBar.setRating(rating);
+        if (pin.getRating().equals("")) {
+            holder.ratingBar.setVisibility(View.GONE);
+        } else {
+            holder.ratingBar.setEnabled(false);
+            float rating = Float.parseFloat(pin.getRating());
+            holder.ratingBar.setRating(rating);
+        }
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
@@ -165,9 +169,13 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             expandRating.setText(pin.getRating());
             expandAddress.setText(pin.getAddress());
             expandPhone.setText(pin.getPhone());
-            ratingBar.setEnabled(false);
-            float rating = Float.parseFloat(pin.getRating());
-            ratingBar.setRating(rating);
+            if (pin.getRating().equals("")) {
+                ratingBar.setVisibility(View.GONE);
+            } else {
+                ratingBar.setEnabled(false);
+                float rating = Float.parseFloat(pin.getRating());
+                ratingBar.setRating(rating);
+            }
             String pinLat = pin.getLatitude();
             String pinLong = pin.getLongitude();
             double currLat = currLoc.latitude;
