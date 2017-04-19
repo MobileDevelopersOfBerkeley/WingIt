@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:layout_width="368dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:id="@+id/card_curr_option"
@@ -14,7 +14,8 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0">
 
 
         <android.support.constraint.ConstraintLayout

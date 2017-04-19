@@ -53,9 +53,9 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
     private Context context;
     private static ArrayList<Pin> pins;
     private static String adventureKey;
-    private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private Adventure currAdventure;
-    private DatabaseReference adventureRef;
+
+
+
     private static LatLng currLoc;
 
 
@@ -142,6 +142,9 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         int position;
         Context context;
         RatingBar ratingBar;
+        private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        private DatabaseReference adventureRef;
+        private Adventure currAdventure;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -190,6 +193,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                     double pinLat = Double.parseDouble(pin.getLatitude());
                     double pinLong = Double.parseDouble(pin.getLongitude());
                     String coordinates = pin.getLatitude() + "," + pin.getLongitude();
+                    String pinKey = startNewPin(pin);
 
                     //Open PinMapActivity
                     Intent pinMapIntent = new Intent(context, PinMapActivity.class);
@@ -210,46 +214,38 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
             return builder.create();
         }
-    }
 
+        /** Generate pin key in database for user's selected pin */
+        private String startNewPin(Pin pin) {
+            DatabaseReference pinRef = dbRef.child("Pins");
+            String pinKey = pinRef.push().getKey();
+            pinRef.child(pinKey).setValue(pin);
+            updateCurrAdventure(pinKey);
+            return pinKey;
+        }
 
-    /** Generate pin key in database for user's selected pin */
-    private String startNewPin(Pin pin) {
-        DatabaseReference pinRef = dbRef.child("Pins");
-        String pinKey = pinRef.push().getKey();
-        pinRef.child(pinKey).setValue(pin);
-        updateCurrAdventure(pinKey);
-        return pinKey;
-    }
+        /** Add pin key to Adventures node in database */
+        private void updateCurrAdventure(final String pinKey) {
+            adventureRef = dbRef.child("Adventures").child(adventureKey);
+            adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    currAdventure = dataSnapshot.getValue(Adventure.class);
 
-    /** Add pin key to Adventures node in database */
-    private void updateCurrAdventure(final String pinKey) {
-        adventureRef = dbRef.child("Adventures").child(adventureKey);
-        adventureRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currAdventure = dataSnapshot.getValue(Adventure.class);
-
-                if (currAdventure != null) {
-                    currAdventure.addPinKey(pinKey);
-                    adventureRef.setValue(currAdventure);
+                    if (currAdventure != null) {
+                        currAdventure.addPinKey(pinKey);
+                        adventureRef.setValue(currAdventure);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database Error", databaseError.toString());
-                Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("Database Error", databaseError.toString());
+                    Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-    }
-
-    public static float convertDpToPixel(float dp, Context context){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
+        }
     }
 
 }
