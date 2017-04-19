@@ -105,6 +105,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             this.continueAdventure = true;
             adventureKey = intentExtras.getString("adventureKey", "");
             title.setText("Continue Your Adventure");
+            hamburger.setVisibility(View.GONE);
         } else {
             this.continueAdventure = false;
             title.setText("Start Your Adventure");
