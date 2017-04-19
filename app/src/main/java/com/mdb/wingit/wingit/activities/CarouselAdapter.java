@@ -86,9 +86,12 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         // regular
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
-        holder.ratingBar.setEnabled(false);
-        float rating = Float.parseFloat(pin.getRating());
-        holder.ratingBar.setRating(rating);
+        if (pin.getRating().equals("")) {
+            holder.ratingBar.setVisibility(View.GONE);
+            holder.ratingBar.setEnabled(false);
+            float rating = Float.parseFloat(pin.getRating());
+            holder.ratingBar.setRating(rating);
+        }
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
