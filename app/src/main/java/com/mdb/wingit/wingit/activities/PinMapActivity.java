@@ -113,7 +113,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                         try {
 
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
-                            bitmap = bitmap.createBitmap(bitmap, 0, 240, 480, 200);
+                            bitmap = bitmap.createBitmap(bitmap, 0, (int) (0.308 * bitmap.getHeight()), bitmap.getWidth(), (int) (0.256 * bitmap.getHeight()));
                             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                             byte[] data = out.toByteArray();
                             UploadTask uploadTask = storageReference.child("images/" + adventureKey + ".jpg").putBytes(data);
