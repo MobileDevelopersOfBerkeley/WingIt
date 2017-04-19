@@ -2,6 +2,7 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -79,6 +80,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         ImageView arrow = (ImageView) findViewById(R.id.uparrow);
         TextView name = (TextView) findViewById(R.id.pinName);
         name.setText(intentExtras.getString("name"));
+        Typeface med = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Medium.ttf");
+        name.setTypeface(med);
 
         // TODO: Give themes to these
         FloatingActionButton continueFab = (FloatingActionButton) findViewById(R.id.continueFab);
