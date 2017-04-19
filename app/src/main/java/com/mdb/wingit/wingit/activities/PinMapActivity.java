@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -205,6 +204,11 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         startActivity(mapsIntent);
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     /** Retrieve list of pins from Firebase for specified adventure */
     private void getFirebaseData(String adventureKey) {
         DatabaseReference adventureRef = dbRef.child("Adventures").child(adventureKey);
@@ -220,7 +224,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database Error", databaseError.toString());
+                //Log.e("Database Error", databaseError.toString());
             }
         });
     }
@@ -244,7 +248,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database Error", databaseError.toString());
+                //Log.e("Database Error", databaseError.toString());
             }
         });
     }

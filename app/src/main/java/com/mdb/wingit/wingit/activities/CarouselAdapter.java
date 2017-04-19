@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -236,7 +235,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.e("Database Error", databaseError.toString());
+                    //Log.e("Database Error", databaseError.toString());
                     Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
                 }
             });

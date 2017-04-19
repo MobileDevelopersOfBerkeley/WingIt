@@ -7,7 +7,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -123,6 +122,11 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     public void populateNameView() {
 
         userRef = dbRef.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -136,7 +140,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database Error", databaseError.toString());
+                //Log.e("Database Error", databaseError.toString());
                 Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
             }
         });
@@ -298,7 +302,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Database Error", databaseError.toString());
+                //Log.e("Database Error", databaseError.toString());
                 Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
             }
         });

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -188,9 +187,9 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
                     result.add(pin);
                 }
             } catch (IOException e) {
-                Log.e("Error", "Error connecting to Places API", e);
+                //Log.e("Error", "Error connecting to Places API", e);
             } catch (JSONException e) {
-                Log.e("Error", "Error processing JSON results", e);
+                //Log.e("Error", "Error processing JSON results", e);
             } finally {
                 if (conn != null) conn.disconnect();
             }
@@ -213,8 +212,6 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     /** Create Pin object based on JSON Object that is currently being processed */
     private Pin composePin(JSONObject jsonObj, String time) throws JSONException {
         //Name, Place ID, and Rating
-        //Log.i("DETAILS", jsonObj.getString("name"));
-        Log.i("jsonObj", jsonObj.toString());
         String[] pinFields = new String[]{"name", "place_ID", "rating", "vicinity"};
         String[] pinDetails = new String[4];
         for (int i = 0; i < 4; i++) {
