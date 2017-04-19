@@ -214,9 +214,10 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     private Pin composePin(JSONObject jsonObj, String time) throws JSONException {
         //Name, Place ID, and Rating
         //Log.i("DETAILS", jsonObj.getString("name"));
-        String[] pinFields = new String[]{"name", "place_ID", "rating", "formatted_address", "formatted_phone_number"};
-        String[] pinDetails = new String[5];
-        for (int i = 0; i < 3; i++) {
+        Log.i("jsonObj", jsonObj.toString());
+        String[] pinFields = new String[]{"name", "place_ID", "rating", "vicinity"};
+        String[] pinDetails = new String[4];
+        for (int i = 0; i < 4; i++) {
             if (jsonObj.has(pinFields[i])) {
                 pinDetails[i] = jsonObj.getString(pinFields[i]);
             } else {
@@ -240,7 +241,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         //Create Pin object
-        return new Pin(pinDetails[0], pinDetails[1], latitude, longitude, pinDetails[2], time, imgURL, pinDetails[3], pinDetails[4]);
+        return new Pin(pinDetails[0], pinDetails[1], latitude, longitude, pinDetails[2], time, imgURL, pinDetails[3]);
     }
 
     /** Get current time which stays constant for all Pin objects created */

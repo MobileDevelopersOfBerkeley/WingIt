@@ -136,7 +136,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         TextView expandTitle;
         TextView expandRating;
         TextView expandAddress;
-        TextView expandPhone;
         ImageView pinMap;
         FloatingActionButton go2;
         int position;
@@ -159,7 +158,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             this.expandTitle = (TextView) view.findViewById(R.id.expanded_title);
             this.expandRating = (TextView) view.findViewById(R.id.expanded_rating);
             this.expandAddress = (TextView) view.findViewById(R.id.expanded_address);
-            this.expandPhone = (TextView) view.findViewById(R.id.expanded_phone);
             this.pinMap = (ImageView) view.findViewById(R.id.pinMap);
             this.go2 = (FloatingActionButton) view.findViewById(R.id.go2);
             Bundle args = getArguments();
@@ -171,7 +169,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             expandTitle.setText(pin.getName());
             expandRating.setText(pin.getRating());
             expandAddress.setText(pin.getAddress());
-            expandPhone.setText(pin.getPhone());
             if (pin.getRating().equals("")) {
                 ratingBar.setVisibility(View.GONE);
             } else {
@@ -210,7 +207,6 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             expandTitle.setTypeface(reg);
             expandRating.setTypeface(reg);
             expandAddress.setTypeface(reg);
-            expandPhone.setTypeface(reg);
 
             return builder.create();
         }
