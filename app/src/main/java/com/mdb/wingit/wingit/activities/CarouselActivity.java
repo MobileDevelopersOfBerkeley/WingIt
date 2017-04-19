@@ -37,6 +37,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -56,6 +57,10 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     private LatLng currentLocation;
     private ArrayList<Pin> pinList = new ArrayList<>();
     private boolean isFoodCategory;
+    private final String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley",
+            "clothing_store", "department_store", "zoo", "shopping_mall", "park",
+            "museum", "movie_theater"};
+    private ArrayList<String> typesList = (ArrayList<String>) Arrays.asList(types);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +132,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         } else {
             //TODO: Make search request for activities with 3 different types
             radius = 50000;
-            String[] types = {"amusement_park", "aquarium", "art_gallery", "bowling_alley",
-                    "clothing_store", "department_store", "zoo", "shopping_mall", "park",
-                    "museum", "movie_theater"};
-            type = getRandom(types);
+            type = getRandom(typesList);
         }
 
         String radiusURL = "&radius=" + radius;
@@ -140,9 +142,9 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     /** Get random element from an array */
-    private String getRandom(String[] array) {
-        int random = (int)(Math.random()*array.length);
-        return array[random];
+    private String getRandom(ArrayList<String> list) {
+        int random = (int)(Math.random()*list.size());
+        return list.remove(random);
     }
 
     /** Pick 3 random pins to populate carousel from results of search request */
