@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +85,11 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         // regular
         holder.pinTitle.setText(pin.getName());
         holder.pinRating.setText(pin.getRating());
+        holder.ratingBar.setEnabled(false);
+        float rating = Float.parseFloat(pin.getRating());
+        holder.ratingBar.setRating(rating);
+//        Drawable stars = holder.ratingBar.getProgressDrawable();
+//        stars.setTint(Color.parseColor("#ff8533"));
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
@@ -93,6 +101,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         TextView pinTitle;
         TextView pinRating;
         ImageView pinPic;
+        RatingBar ratingBar;
 
         public CustomViewHolder (View view) {
             super(view);
@@ -100,6 +109,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             this.pinTitle = (TextView) view.findViewById(R.id.pinTitle);
             this.pinRating = (TextView) view.findViewById(R.id.pinRating);
             this.pinPic = (ImageView) view.findViewById(R.id.pinPic);
+            this.ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
             this.card = (CardView) view.findViewById(R.id.card_curr_option);
             this.card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,6 +135,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         FloatingActionButton go2;
         int position;
         Context context;
+        RatingBar ratingBar;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -145,12 +156,16 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             Bundle args = getArguments();
             this.position = (int) args.get("position");
             this.context = getContext();
+            this.ratingBar = (RatingBar) view.findViewById(R.id.ratingbarexpanded);
 
             Pin pin = pins.get(position);
             expandTitle.setText(pin.getName());
             expandRating.setText(pin.getRating());
             expandAddress.setText(pin.getAddress());
             expandPhone.setText(pin.getPhone());
+            ratingBar.setEnabled(false);
+            float rating = Float.parseFloat(pin.getRating());
+            ratingBar.setRating(rating);
             String pinLat = pin.getLatitude();
             String pinLong = pin.getLongitude();
             double currLat = currLoc.latitude;
