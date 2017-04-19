@@ -2,6 +2,7 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,8 @@ import com.mdb.wingit.wingit.R;
 import com.mdb.wingit.wingit.modelClasses.Adventure;
 import com.mdb.wingit.wingit.modelClasses.User;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,6 +60,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     private User currUser;
     private DatabaseReference userRef;
     private DrawerLayout drawerLayout;
+    private boolean continueAdventure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +78,14 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         TextView title = (TextView) findViewById(R.id.title);
         ImageView food = (ImageView) findViewById(R.id.foodImage);
         ImageView activity = (ImageView) findViewById(R.id.activityImage);
-        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+        ImageView arrow = (ImageView) findViewById(R.id.arroworange);
         ImageView hamburger = (ImageView) findViewById(R.id.hamburger);
         TextView pastAdventures = (TextView) findViewById(R.id.past_adventures_text_view);
         TextView logoutView = (TextView) findViewById(R.id.logout_text_view);
+        TextView activityText = (TextView) findViewById(R.id.activityText);
+        TextView foodText = (TextView) findViewById(R.id.foodText);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        TextView name = (TextView) findViewById(R.id.name_text_view);
 
         food.setOnClickListener(this);
         activity.setOnClickListener(this);
@@ -92,11 +99,24 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
+            this.continueAdventure = true;
             adventureKey = intentExtras.getString("adventureKey", "");
             title.setText("Continue Your Adventure");
         } else {
+            this.continueAdventure = false;
             title.setText("Start Your Adventure");
+            arrow.setVisibility(View.GONE);
         }
+
+        Typeface med = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Medium.ttf");
+        Typeface reg = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
+        title.setTypeface(med);
+        activityText.setTypeface(reg);
+        foodText.setTypeface(reg);
+        pastAdventures.setTypeface(reg);
+        logoutView.setTypeface(reg);
+        name.setTypeface(med);
+
     }
 
     @Override
@@ -109,7 +129,7 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             case R.id.activityImage:
                 startCarouselActivity(false);
                 break;
-            case R.id.arrow:
+            case R.id.arroworange:
                 Intent pastAdventures = new Intent(getApplicationContext(), PastAdventuresActivity.class);
                 startActivity(pastAdventures);
                 break;
@@ -282,7 +302,11 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
         googleMap.getUiSettings().setAllGesturesEnabled(false);
         float zoomLevel = 16;
         if (currentLocation != null) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+            if (continueAdventure) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+            } else {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
+            }
         }
     }
 

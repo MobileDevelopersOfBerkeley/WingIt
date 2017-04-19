@@ -12,12 +12,14 @@ public class Pin {
     private String rating;
     private String startTime;
     private String imageURL;
+    private String address;
+    private String phone;
 
     public Pin() {
 
     }
 
-    public Pin(String name, String placeID, String latitude, String longitude, String rating, String startTime, String imageURL) {
+    public Pin(String name, String placeID, String latitude, String longitude, String rating, String startTime, String imageURL, String address, String phone) {
         this.name = name;
         this.placeID = placeID;
         this.latitude = latitude;
@@ -25,6 +27,8 @@ public class Pin {
         this.rating = rating;
         this.startTime = startTime;
         this.imageURL = imageURL;
+        this.address = address;
+        this.phone = phone;
     }
 
     public String getName() {
@@ -53,6 +57,14 @@ public class Pin {
 
     public String getImageURL() {
         return imageURL;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     @Override

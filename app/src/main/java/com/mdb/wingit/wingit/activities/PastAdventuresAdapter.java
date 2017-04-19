@@ -2,6 +2,7 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,6 +54,9 @@ class PastAdventuresAdapter extends RecyclerView.Adapter<PastAdventuresAdapter.C
         holder.locationDate.setText(adventure.getDate());
         //TODO: Verify that getImageURL() returns a valid URL
         Glide.with(context).load(adventure.getImageURL()).into(holder.locationImage);
+        Typeface reg = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+        holder.locationName.setTypeface(reg);
+        holder.locationDate.setTypeface(reg);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
