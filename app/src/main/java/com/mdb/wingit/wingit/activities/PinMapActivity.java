@@ -93,9 +93,50 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         continueFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
-                selectorIntent.putExtra("adventureKey", adventureKey);
-                startActivity(selectorIntent);
+                final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+                    Bitmap bitmap;
+
+                    @Override
+                    public void onSnapshotReady(Bitmap snapshot) {
+
+                        bitmap = snapshot;
+                        try {
+
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            bitmap = bitmap.createBitmap(bitmap, 0, (int) (0.308 * bitmap.getHeight()), bitmap.getWidth(), (int) (0.256 * bitmap.getHeight()));
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                            byte[] data = out.toByteArray();
+                            UploadTask uploadTask = storageReference.child("images/" + adventureKey + ".jpg").putBytes(data);
+
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                                    dbRef.child("Adventures").child(adventureKey).child("imageURL").setValue(downloadUri.toString());
+                                    Intent selectorIntent = new Intent(getApplicationContext(), CategorySelectorActivity.class);
+                                    selectorIntent.putExtra("adventureKey", adventureKey);
+                                    startActivity(selectorIntent);                                }
+                            });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(final GoogleMap googleMap) {
+                        googleMap.snapshot(callback);
+                    }
+                });
             }
         });
 
