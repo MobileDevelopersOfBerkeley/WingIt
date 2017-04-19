@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -88,11 +89,12 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         holder.ratingBar.setEnabled(false);
         float rating = Float.parseFloat(pin.getRating());
         holder.ratingBar.setRating(rating);
-//        Drawable stars = holder.ratingBar.getProgressDrawable();
-//        stars.setTint(Color.parseColor("#ff8533"));
         String pinPicURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinPicURL).into(holder.pinPic);
+        Typeface reg = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+        holder.pinTitle.setTypeface(reg);
+        holder.pinRating.setTypeface(reg);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -191,6 +193,12 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                     context.startActivity(pinMapIntent);
                 }
             });
+
+            Typeface reg = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+            expandTitle.setTypeface(reg);
+            expandRating.setTypeface(reg);
+            expandAddress.setTypeface(reg);
+            expandPhone.setTypeface(reg);
 
             return builder.create();
         }
