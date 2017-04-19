@@ -88,6 +88,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         holder.pinRating.setText(pin.getRating());
         if (pin.getRating().equals("")) {
             holder.ratingBar.setVisibility(View.GONE);
+        } else {
             holder.ratingBar.setEnabled(false);
             float rating = Float.parseFloat(pin.getRating());
             holder.ratingBar.setRating(rating);
@@ -168,9 +169,13 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             expandRating.setText(pin.getRating());
             expandAddress.setText(pin.getAddress());
             expandPhone.setText(pin.getPhone());
-            ratingBar.setEnabled(false);
-            float rating = Float.parseFloat(pin.getRating());
-            ratingBar.setRating(rating);
+            if (pin.getRating().equals("")) {
+                ratingBar.setVisibility(View.GONE);
+            } else {
+                ratingBar.setEnabled(false);
+                float rating = Float.parseFloat(pin.getRating());
+                ratingBar.setRating(rating);
+            }
             String pinLat = pin.getLatitude();
             String pinLong = pin.getLongitude();
             double currLat = currLoc.latitude;
