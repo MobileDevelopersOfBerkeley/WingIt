@@ -55,6 +55,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     private LatLng currentLocation;
     private ArrayList<Pin> pinList = new ArrayList<>();
+    private boolean isFoodCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
 
         //Get information from intent
         Bundle intentExtras = getIntent().getExtras();
-        boolean isFoodCategory = intentExtras.getBoolean("isFood");
+        isFoodCategory = intentExtras.getBoolean("isFood");
         currentLocation = (LatLng) intentExtras.get("location");
         String adventureKey = intentExtras.getString("adventureKey");
 
@@ -96,21 +97,31 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         rv.addOnScrollListener(new CenterScrollListener());
 
         //Compose and send searchRequest based on category user selected
-        String searchRequest = createRequestURL(isFoodCategory);
-        new RequestTask().execute(searchRequest);
+        String[] searchRequests;
+        if (isFoodCategory) {
+            searchRequests = new String[]{createRequestURL()};
+        } else {
+            searchRequests = new String[3];
+            for (int i = 0; i < 3; i++) {
+                searchRequests[i] = createRequestURL();
+            }
+        }
+        for (String request : searchRequests) {
+            new RequestTask().execute(request);
+        }
 
         this.backgroundtint = findViewById(R.id.backgroundtint);
     }
 
     /** Create request URL based on search radius and type associated with selected category */
-    private String createRequestURL(boolean isFood) {
+    private String createRequestURL() {
         String initMapsURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
         String locationURL = "location=" + currentLocation.latitude + "," + currentLocation.longitude;
         String endMapsURL = "&opennow=true&key=" + API_KEY_UNRESTRICTED;
 
         int radius;
         String type;
-        if (isFood) {
+        if (isFoodCategory) {
             radius = 8000;
             type = "restaurant";
         } else {
@@ -135,9 +146,9 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     /** Pick 3 random pins to populate carousel from results of search request */
-    private void pick3Random(ArrayList<Pin> list) {
+    private void pickNumRandom(int num, ArrayList<Pin> list) {
         Collections.shuffle(list);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < num; i++) {
             pinList.add(list.get(i));
         }
     }
@@ -185,8 +196,12 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
 
         @Override
         protected void onPostExecute(ArrayList<Pin> taskResult) {
-            if (taskResult.size() >= 3) {
-                pick3Random(taskResult);
+            int numResults = 1;
+            if (isFoodCategory) {
+                numResults = 3;
+            }
+            if (taskResult.size() >= numResults) {
+                pickNumRandom(numResults, taskResult);
                 adapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(CarouselActivity.this, "Could not find any results at this time", Toast.LENGTH_SHORT).show();
