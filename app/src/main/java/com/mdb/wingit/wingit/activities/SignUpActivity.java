@@ -2,6 +2,8 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class SignUpActivity extends AppCompatActivity implements OnMapReadyCallb
     private EditText name, email, password;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class SignUpActivity extends AppCompatActivity implements OnMapReadyCallb
         Button signUp = (Button) findViewById(R.id.signup_button);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        this.constraintLayout = (ConstraintLayout) findViewById(R.id.signupView);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -75,8 +79,10 @@ public class SignUpActivity extends AppCompatActivity implements OnMapReadyCallb
 
         //Check if name, email, and password fields are empty
         if (nameText.length() == 0 || emailText.length() == 0 || pwText.length() == 0) {
-            Toast.makeText(SignUpActivity.this, "Sign up failed, please fill in all blanks.",
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(SignUpActivity.this, "Sign up failed, please fill in all blanks.",
+//                    Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(constraintLayout, "Sign up failed, please fill in all blanks.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
             return;
         }
 
@@ -92,8 +98,10 @@ public class SignUpActivity extends AppCompatActivity implements OnMapReadyCallb
                             Intent selectorIntent = new Intent(SignUpActivity.this, CategorySelectorActivity.class);
                             startActivity(selectorIntent);
                         } else {
-                            Toast.makeText(SignUpActivity.this, "Sign up failed",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(SignUpActivity.this, "Sign up failed",
+//                                    Toast.LENGTH_LONG).show();
+                            Snackbar snackbar = Snackbar.make(constraintLayout, "Sign up failed", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
                         }
                     }
                 });

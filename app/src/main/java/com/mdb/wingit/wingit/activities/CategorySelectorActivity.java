@@ -3,6 +3,7 @@ package com.mdb.wingit.wingit.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -141,7 +142,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //Log.e("Database Error", databaseError.toString());
-                Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(drawerLayout, "Failed to get current user", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
         });
 
@@ -271,7 +274,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     /** Notify user that app is unable to get their current location */
     private void notifyNoLocation() {
-        Toast.makeText(this, "Unable to get your current location", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Unable to get your current location", Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(drawerLayout, "Failed to get current location", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     /** Generate adventure key in database for user's first adventure */
@@ -303,7 +308,9 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //Log.e("Database Error", databaseError.toString());
-                Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(CategorySelectorActivity.this, "Failed to get current user", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(drawerLayout, "Failed to get current user", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
         });
 

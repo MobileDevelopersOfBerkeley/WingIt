@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -143,6 +144,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
         private DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         private DatabaseReference adventureRef;
         private Adventure currAdventure;
+        private CardView cardView;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -163,6 +165,7 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
             this.position = (int) args.get("position");
             this.context = getContext();
             this.ratingBar = (RatingBar) view.findViewById(R.id.ratingbarexpanded);
+            this.cardView = (CardView) view.findViewById(R.id.card_curr_option);
 
             Pin pin = pins.get(position);
             expandTitle.setText(pin.getName());
@@ -236,7 +239,9 @@ class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.CustomViewHol
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     //Log.e("Database Error", databaseError.toString());
-                    Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Failed to get current adventure", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(cardView, "Failed to get current adventure", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 }
             });
 

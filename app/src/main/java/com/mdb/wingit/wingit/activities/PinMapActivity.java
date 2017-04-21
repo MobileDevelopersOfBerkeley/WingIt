@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -55,6 +57,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Pin> pinList = new ArrayList<>();
     private StorageReference storageReference;
     private SupportMapFragment mapFragment;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
         pinLat = intentExtras.getDouble("pinLat");
         pinLong = intentExtras.getDouble("pinLong");
         adventureKey = intentExtras.getString("adventureKey");
+        this.constraintLayout = (ConstraintLayout) findViewById(R.id.pinView);
 
         //Set up map of pins in current adventure
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -110,7 +114,9 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                    Snackbar snackbar = Snackbar.make(constraintLayout, "Creating a new social failed!", Snackbar.LENGTH_SHORT);
+                                    snackbar.show();
                                 }
                             });
 
@@ -161,7 +167,9 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "Creating a new social failed!", Toast.LENGTH_SHORT).show();
+                                    Snackbar snackbar = Snackbar.make(constraintLayout, "Creating a new social failed!", Snackbar.LENGTH_SHORT);
+                                    snackbar.show();
                                 }
                             });
 

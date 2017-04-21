@@ -2,6 +2,9 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email, password;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView signUp = (TextView) findViewById(R.id.signup);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        this.constraintLayout = (ConstraintLayout) findViewById(R.id.loginView);
 
         //Authenticate user with Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -96,8 +101,10 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
 
         //Check if email and password fields are empty
         if(emailText.length() == 0 || passwordText.length() == 0) {
-            Toast.makeText(LoginActivity.this, "Please enter an email and password",
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(LoginActivity.this, "Please enter an email and password",
+//                    Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(constraintLayout, "Please enter an email and password", Snackbar.LENGTH_SHORT);
+            snackbar.show();
             return;
         }
 
@@ -106,8 +113,11 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Email or password is incorrect",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "Email or password is incorrect",
+//                                    Toast.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(constraintLayout, "Email or password is incorrect", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+
                         }
                     }
                 });
