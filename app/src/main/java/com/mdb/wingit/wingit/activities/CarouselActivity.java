@@ -118,6 +118,11 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         this.backgroundtint = findViewById(R.id.backgroundtint);
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     /** Create request URL based on search radius and type associated with selected category */
     private String createRequestURL() {
         String initMapsURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";

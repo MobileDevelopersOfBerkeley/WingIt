@@ -153,7 +153,6 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
             case R.id.foodImage:
                 startCarouselActivity(true);
                 break;

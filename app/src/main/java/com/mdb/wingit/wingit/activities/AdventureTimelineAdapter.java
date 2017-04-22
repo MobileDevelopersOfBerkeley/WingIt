@@ -1,6 +1,7 @@
 package com.mdb.wingit.wingit.activities;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,9 @@ class AdventureTimelineAdapter extends RecyclerView.Adapter<AdventureTimelineAda
         String pinImageURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                 + pin.getImageURL() + "&key=" + CarouselActivity.API_KEY_UNRESTRICTED;
         Glide.with(context).load(pinImageURL).into(holder.pinImage);
+        Typeface reg = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+        holder.pinName.setTypeface(reg);
+        holder.pinTime.setTypeface(reg);
     }
 
     class TimeLineViewHolder extends RecyclerView.ViewHolder {
