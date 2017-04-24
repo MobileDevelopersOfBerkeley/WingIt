@@ -214,7 +214,8 @@ public class PinMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onBackPressed() {
-
+        Snackbar snackbar = Snackbar.make(constraintLayout, "Please continue your adventure", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     /** Retrieve list of pins from Firebase for specified adventure */

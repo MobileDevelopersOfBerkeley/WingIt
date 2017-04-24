@@ -125,7 +125,8 @@ public class CategorySelectorActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onBackPressed() {
-
+        Snackbar snackbar = Snackbar.make(drawerLayout, "Please continue your adventure", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     public void populateNameView() {

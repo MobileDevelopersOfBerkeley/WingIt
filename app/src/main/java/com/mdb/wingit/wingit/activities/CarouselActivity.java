@@ -2,6 +2,8 @@ package com.mdb.wingit.wingit.activities;
 
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -60,6 +62,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
             "clothing_store", "department_store", "zoo", "shopping_mall", "park",
             "museum", "movie_theater"};
     private ArrayList<String> typesList = new ArrayList<>();
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,7 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
 
         //Set up Carousel Recycler View
+        this.constraintLayout = (ConstraintLayout) findViewById(R.id.activity_carousel);
         RecyclerView rv = (RecyclerView) findViewById(R.id.carouselrv);
         adapter = new CarouselAdapter(CarouselActivity.this, pinList, adventureKey, currentLocation);
         final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.VERTICAL, true);
@@ -116,11 +120,13 @@ public class CarouselActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         this.backgroundtint = findViewById(R.id.backgroundtint);
+
     }
 
     @Override
     public void onBackPressed() {
-
+        Snackbar snackbar = Snackbar.make(constraintLayout, "Please continue your adventure", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     /** Create request URL based on search radius and type associated with selected category */
